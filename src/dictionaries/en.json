@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "buy": "Buy",
+    "rent": "Rent",
+    "title": "properties searcher"
+  },
+  "filters": {
+    "sortBy": "Sort By",
+    "propertyType": "Property Type",
+    "bedrooms": "Bedrooms",
+    "region": "Region",
+    "allTypes": "All Types",
+    "allRegions": "All Regions",
+    "anyBedrooms": "Any",
+    "search": "Search",
+    "minPrice": "Min price",
+    "maxPrice": "Max price"
+  },
+  "sort": {
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "priceDesc": "Price (Highest)",
+    "priceAsc": "Price (Lowest)",
+    "bedroomsDesc": "Bedrooms (Most)",
+    "areaDesc": "Area (Largest)"
+  },
+  "properties": {
+    "found": "{count} property(ies) found",
+    "noResults": "No properties found",
+    "showing": "showing {from}-{to} of {total}"
+  },
+  "propertyDetail": {
+    "about": "About This Property",
+    "details": "Details",
+    "price": "Price",
+    "propertyType": "Type",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "area": "Area",
+    "description": "Description",
+    "source": "Source",
+    "nearbyAmenities": "Nearby Amenities",
+    "nearestPlaces": "Nearest Places",
+    "restaurants": "Restaurants",
+    "hospitals": "Hospitals",
+    "schools": "Schools",
+    "banks": "Banks",
+    "pharmacies": "Pharmacies",
+    "supermarkets": "Supermarkets",
+    "school": "School",
+    "hospital": "Hospital",
+    "supermarket": "Supermarket",
+    "selectProperty": "Select a property to view details"
+  },
+  "propertyTypes": {
+    "apartment": "Apartment",
+    "house": "House",
+    "villa": "Villa",
+    "studio": "Studio",
+    "penthouse": "Penthouse",
+    "townhouse": "Townhouse"
+  },
+  "common": {
+    "previous": "Previous",
+    "next": "Next"
+  }
+}

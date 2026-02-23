@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "buy": "Comprar",
+    "rent": "Arrendar",
+    "title": "properties searcher"
+  },
+  "filters": {
+    "sortBy": "Ordenar Por",
+    "propertyType": "Tipo de Imóvel",
+    "bedrooms": "Quartos",
+    "region": "Região",
+    "allTypes": "Todos os Tipos",
+    "allRegions": "Todas as Regiões",
+    "anyBedrooms": "Qualquer",
+    "search": "Pesquisar",
+    "minPrice": "Preço mín.",
+    "maxPrice": "Preço máx."
+  },
+  "sort": {
+    "newest": "Mais Recentes",
+    "oldest": "Mais Antigos",
+    "priceDesc": "Preço (Maior)",
+    "priceAsc": "Preço (Menor)",
+    "bedroomsDesc": "Quartos (Maior)",
+    "areaDesc": "Área (Maior)"
+  },
+  "properties": {
+    "found": "{count} imóvel(is) encontrado(s)",
+    "noResults": "Nenhum imóvel encontrado",
+    "showing": "a mostrar {from}-{to} de {total}"
+  },
+  "propertyDetail": {
+    "about": "Sobre Este Imóvel",
+    "details": "Detalhes",
+    "price": "Preço",
+    "propertyType": "Tipo",
+    "bedrooms": "Quartos",
+    "bathrooms": "Casas de Banho",
+    "area": "Área",
+    "description": "Descrição",
+    "source": "Fonte",
+    "nearbyAmenities": "Serviços Próximos",
+    "nearestPlaces": "Locais Mais Próximos",
+    "restaurants": "Restaurantes",
+    "hospitals": "Hospitais",
+    "schools": "Escolas",
+    "banks": "Bancos",
+    "pharmacies": "Farmácias",
+    "supermarkets": "Supermercados",
+    "school": "Escola",
+    "hospital": "Hospital",
+    "supermarket": "Supermercado",
+    "selectProperty": "Selecione um imóvel para ver detalhes"
+  },
+  "propertyTypes": {
+    "apartment": "Apartamento",
+    "house": "Moradia",
+    "villa": "Villa",
+    "studio": "Estúdio",
+    "penthouse": "Penthouse",
+    "townhouse": "Moradia Geminada"
+  },
+  "common": {
+    "previous": "Anterior",
+    "next": "Seguinte"
+  }
+}
