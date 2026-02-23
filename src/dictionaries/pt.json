@@ -27,7 +27,8 @@
   "properties": {
     "found": "{count} imóvel(is) encontrado(s)",
     "noResults": "Nenhum imóvel encontrado",
-    "showing": "a mostrar {from}-{to} de {total}"
+    "showing": "a mostrar {from}-{to} de {total}",
+    "searchPrompt": "Utilize a barra de pesquisa para encontrar imóveis"
   },
   "propertyDetail": {
     "about": "Sobre Este Imóvel",

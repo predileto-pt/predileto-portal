@@ -64,8 +64,31 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
   if (loading) {
     return (
-      <div className="sticky top-4 border border-gray-200 p-4">
-        <p className="text-xs text-gray-400">...</p>
+      <div className="sticky top-4 border border-gray-200 p-4 space-y-4 animate-pulse">
+        <div>
+          <div className="h-3 w-3/4 bg-gray-200 rounded" />
+          <div className="h-2 w-1/2 bg-gray-100 rounded mt-2" />
+        </div>
+        <div className="h-4 w-1/3 bg-gray-200 rounded" />
+        <div className="space-y-2">
+          <div className="h-2 w-1/4 bg-gray-100 rounded" />
+          <div className="h-2 w-full bg-gray-100 rounded" />
+          <div className="h-2 w-full bg-gray-100 rounded" />
+          <div className="h-2 w-full bg-gray-100 rounded" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-2 w-1/4 bg-gray-100 rounded" />
+          <div className="h-2 w-full bg-gray-100 rounded" />
+          <div className="h-2 w-full bg-gray-100 rounded" />
+          <div className="h-2 w-5/6 bg-gray-100 rounded" />
+          <div className="h-2 w-4/6 bg-gray-100 rounded" />
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="h-10 bg-gray-100 rounded" />
+          <div className="h-10 bg-gray-100 rounded" />
+          <div className="h-10 bg-gray-100 rounded" />
+          <div className="h-10 bg-gray-100 rounded" />
+        </div>
       </div>
     );
   }

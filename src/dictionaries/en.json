@@ -27,7 +27,8 @@
   "properties": {
     "found": "{count} property(ies) found",
     "noResults": "No properties found",
-    "showing": "showing {from}-{to} of {total}"
+    "showing": "showing {from}-{to} of {total}",
+    "searchPrompt": "Use the search bar to find properties"
   },
   "propertyDetail": {
     "about": "About This Property",
