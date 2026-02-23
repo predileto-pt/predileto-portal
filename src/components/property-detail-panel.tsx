@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import posthog from "posthog-js";
 import { useDictionary } from "@/components/dictionary-provider";
 import { formatPrice, formatArea } from "@/lib/utils";
 import { NearbyAmenities } from "@/components/nearby-amenities";
@@ -38,6 +39,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
   const selectedId = searchParams.get("selected");
   const [data, setData] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const d = dict.propertyDetail as Record<string, string>;
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
@@ -45,17 +47,30 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
   useEffect(() => {
     if (!selectedId) {
       setData(null);
+      setError(false);
       return;
     }
 
     setLoading(true);
+    setError(false);
     fetch(`/api/property/${selectedId}/nearby`)
-      .then((res) => (res.ok ? res.json() : null))
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
       .then((json) => {
         setData(json);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        setData(null);
+        setError(true);
+        setLoading(false);
+        posthog.capture("property_nearby_error", {
+          property_id: selectedId,
+          error: err instanceof Error ? err.message : "Unknown error",
+        });
+      });
   }, [selectedId]);
 
   if (!selectedId) {
@@ -89,6 +104,14 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
           <div className="h-10 bg-gray-100 rounded" />
           <div className="h-10 bg-gray-100 rounded" />
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="sticky top-4 border border-gray-200 p-4">
+        <p className="text-[11px] text-gray-400">{d.loadError}</p>
       </div>
     );
   }

@@ -51,7 +51,8 @@
     "school": "Escola",
     "hospital": "Hospital",
     "supermarket": "Supermercado",
-    "selectProperty": "Selecione um imóvel para ver detalhes"
+    "selectProperty": "Selecione um imóvel para ver detalhes",
+    "loadError": "Não foi possível carregar os detalhes deste imóvel. Por favor, tente novamente mais tarde."
   },
   "propertyTypes": {
     "apartment": "Apartamento",

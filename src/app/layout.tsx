@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PostHogProvider } from "@/components/posthog-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+          <PostHogProvider>{children}</PostHogProvider>
+        </body>
     </html>
   );
 }
