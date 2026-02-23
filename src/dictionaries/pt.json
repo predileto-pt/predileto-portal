@@ -52,7 +52,8 @@
     "hospital": "Hospital",
     "supermarket": "Supermercado",
     "selectProperty": "Selecione um imóvel para ver detalhes",
-    "loadError": "Não foi possível carregar os detalhes deste imóvel. Por favor, tente novamente mais tarde."
+    "loadError": "Não foi possível carregar os detalhes deste imóvel. Por favor, tente novamente mais tarde.",
+    "nearbyError": "Não foi possível carregar locais próximos."
   },
   "propertyTypes": {
     "apartment": "Apartamento",

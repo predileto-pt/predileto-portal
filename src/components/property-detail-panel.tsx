@@ -31,6 +31,7 @@ interface PropertyData {
 interface DetailResponse {
   property: PropertyData;
   nearby: NearbyPlacesResult;
+  nearbyError?: boolean;
 }
 
 export function PropertyDetailPanel({ locale }: { locale: string }) {
@@ -61,14 +62,18 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
       .then((json) => {
         setData(json);
         setLoading(false);
+        if (json.nearbyError) {
+          posthog.captureException(new Error("getNearbyPlaces failed"), {
+            property_id: selectedId,
+          });
+        }
       })
       .catch((err) => {
         setData(null);
         setError(true);
         setLoading(false);
-        posthog.capture("property_nearby_error", {
+        posthog.captureException(err instanceof Error ? err : new Error("Unknown error"), {
           property_id: selectedId,
-          error: err instanceof Error ? err.message : "Unknown error",
         });
       });
   }, [selectedId]);
@@ -185,8 +190,14 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
         </div>
       )}
 
-      <NearbyAmenities counts={nearby.counts} dict={dict} />
-      <NearestPlaces nearest={nearby.nearest} dict={dict} />
+      {data.nearbyError ? (
+        <p className="text-[11px] text-gray-400">{d.nearbyError}</p>
+      ) : (
+        <>
+          <NearbyAmenities counts={nearby.counts} dict={dict} />
+          <NearestPlaces nearest={nearby.nearest} dict={dict} />
+        </>
+      )}
     </div>
   );
 }

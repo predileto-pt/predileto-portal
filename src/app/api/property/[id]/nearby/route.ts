@@ -24,8 +24,13 @@ export async function GET(
   const coords = await geocodeAddress(fullAddress);
 
   let nearby: NearbyPlacesResult = { counts: {}, nearest: {} };
+  let nearbyError = false;
   if (coords) {
-    nearby = await getNearbyPlaces(coords.lat, coords.lon);
+    try {
+      nearby = await getNearbyPlaces(coords.lat, coords.lon);
+    } catch {
+      nearbyError = true;
+    }
   }
 
   return NextResponse.json({
@@ -40,5 +45,6 @@ export async function GET(
       sources: property.sources,
     },
     nearby,
+    nearbyError,
   });
 }
