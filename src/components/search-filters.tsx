@@ -137,7 +137,7 @@ export function SearchFilters() {
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
 
   return (
-    <div className="flex flex-col gap-3 text-[11px]">
+    <div className="flex flex-col gap-3 text-[12px]">
       <form onSubmit={handleSubmit} className="flex gap-1">
         <div ref={containerRef} className="relative flex-1">
           <input
@@ -151,7 +151,7 @@ export function SearchFilters() {
             aria-expanded={isOpen}
             aria-autocomplete="list"
             aria-activedescendant={activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined}
-            className="border border-gray-200 px-2 py-1 w-full text-[11px] focus:outline-none focus:border-gray-400"
+            className="border border-gray-200 px-2 py-1 w-full text-[12px] focus:outline-none focus:border-gray-400"
           />
 
           {isLoading && (
@@ -176,12 +176,12 @@ export function SearchFilters() {
                   aria-selected={index === activeIndex}
                   onMouseDown={(e) => { e.preventDefault(); selectResult(result); }}
                   onMouseEnter={() => setActiveIndex(index)}
-                  className={`cursor-pointer px-2 py-1.5 text-[11px] ${
+                  className={`cursor-pointer px-2 py-1.5 text-[12px] ${
                     index === activeIndex ? "bg-gray-100" : "hover:bg-gray-50"
                   }`}
                 >
                   <div className="font-medium">{result.city || result.district}</div>
-                  <div className="text-[10px] text-gray-400 truncate">{result.formatted}</div>
+                  <div className="text-[11px] text-gray-400 truncate">{result.formatted}</div>
                 </li>
               ))}
             </ul>
@@ -196,11 +196,11 @@ export function SearchFilters() {
       </form>
 
       <div>
-        <label className="text-[10px] text-gray-400 uppercase">{dict.filters.sortBy}</label>
+        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.sortBy}</label>
         <select
           value={searchParams.get("sort") || "newest"}
           onChange={(e) => updateParam("sort", e.target.value)}
-          className="border border-gray-200 px-2 py-1 text-[11px] focus:outline-none w-full"
+          className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -211,11 +211,11 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-[10px] text-gray-400 uppercase">{dict.filters.propertyType}</label>
+        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.propertyType}</label>
         <select
           value={searchParams.get("propertyType") || ""}
           onChange={(e) => updateParam("propertyType", e.target.value)}
-          className="border border-gray-200 px-2 py-1 text-[11px] focus:outline-none w-full"
+          className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
         >
           <option value="">{dict.filters.allTypes}</option>
           {PROPERTY_TYPES.map((type) => (
@@ -227,11 +227,11 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-[10px] text-gray-400 uppercase">{dict.filters.bedrooms}</label>
+        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.bedrooms}</label>
         <select
           value={searchParams.get("bedrooms") || ""}
           onChange={(e) => updateParam("bedrooms", e.target.value)}
-          className="border border-gray-200 px-2 py-1 text-[11px] focus:outline-none w-full"
+          className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
         >
           <option value="">{dict.filters.anyBedrooms}</option>
           <option value="1">1+</option>
@@ -242,33 +242,33 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-[10px] text-gray-400 uppercase">{dict.filters.minPrice}</label>
+        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.minPrice}</label>
         <input
           type="number"
           placeholder={dict.filters.minPrice}
           defaultValue={searchParams.get("minPrice") || ""}
           onBlur={(e) => updateParam("minPrice", e.target.value)}
-          className="border border-gray-200 px-2 py-1 w-full text-[11px] focus:outline-none focus:border-gray-400"
+          className="border border-gray-200 px-2 py-1 w-full text-[12px] focus:outline-none focus:border-gray-400"
         />
       </div>
 
       <div>
-        <label className="text-[10px] text-gray-400 uppercase">{dict.filters.maxPrice}</label>
+        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.maxPrice}</label>
         <input
           type="number"
           placeholder={dict.filters.maxPrice}
           defaultValue={searchParams.get("maxPrice") || ""}
           onBlur={(e) => updateParam("maxPrice", e.target.value)}
-          className="border border-gray-200 px-2 py-1 w-full text-[11px] focus:outline-none focus:border-gray-400"
+          className="border border-gray-200 px-2 py-1 w-full text-[12px] focus:outline-none focus:border-gray-400"
         />
       </div>
 
       <div>
-        <label className="text-[10px] text-gray-400 uppercase">{dict.filters.region}</label>
+        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.region}</label>
         <select
           value={searchParams.get("region") || ""}
           onChange={(e) => updateParam("region", e.target.value)}
-          className="border border-gray-200 px-2 py-1 text-[11px] focus:outline-none w-full"
+          className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
         >
           <option value="">{dict.filters.allRegions}</option>
           {REGIONS.map((region) => (

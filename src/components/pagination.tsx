@@ -47,7 +47,7 @@ export async function Pagination({
   }
 
   return (
-    <nav className="flex items-center gap-1 mt-4 text-xs">
+    <nav className="flex items-center gap-1 mt-4 text-[13px]">
       {page > 1 && (
         <Link
           href={buildHref(basePath, searchParams, page - 1)}
