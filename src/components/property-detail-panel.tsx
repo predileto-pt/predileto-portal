@@ -116,7 +116,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
   if (error) {
     return (
       <div className="sticky top-4 border border-gray-200 p-4">
-        <p className="text-[11px] text-gray-400">{d.loadError}</p>
+        <p className="text-[12px] text-gray-400">{d.loadError}</p>
       </div>
     );
   }
@@ -130,8 +130,8 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
   return (
     <div className="sticky top-4 border border-gray-200 p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
       <div>
-        <h2 className="text-xs font-bold">{property.title}</h2>
-        <p className="text-[10px] text-gray-400">
+        <h2 className="text-[13px] font-bold">{property.title}</h2>
+        <p className="text-[11px] text-gray-400">
           {property.address.city}
           {property.address.region ? `, ${property.address.region}` : ""}
         </p>
@@ -141,8 +141,8 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
         {property.price > 0 ? formatPrice(property.price, locale) : "-"}
       </div>
 
-      <div className="space-y-1 text-[11px]">
-        <h3 className="text-[10px] text-gray-400 uppercase">{d.details}</h3>
+      <div className="space-y-1 text-[12px]">
+        <h3 className="text-[11px] text-gray-400 uppercase">{d.details}</h3>
         <div className="flex justify-between">
           <span className="text-gray-400">{d.propertyType}</span>
           <span>{propertyTypesDict[property.propertyType] || property.propertyType}</span>
@@ -169,8 +169,8 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
       {property.fullDescription && (
         <div>
-          <h3 className="text-[10px] text-gray-400 uppercase mb-1">{d.description}</h3>
-          <p className="text-[11px] text-gray-600 whitespace-pre-line leading-relaxed">
+          <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.description}</h3>
+          <p className="text-[12px] text-gray-600 whitespace-pre-line leading-relaxed">
             {property.fullDescription}
           </p>
         </div>
@@ -178,12 +178,12 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
       {sourceUrl && (
         <div>
-          <h3 className="text-[10px] text-gray-400 uppercase mb-1">{d.source}</h3>
+          <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.source}</h3>
           <a
             href={sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] underline underline-offset-2 hover:text-gray-600"
+            className="text-[12px] underline underline-offset-2 hover:text-gray-600"
           >
             {sourceName}
           </a>
@@ -191,7 +191,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
       )}
 
       {data.nearbyError ? (
-        <p className="text-[11px] text-gray-400">{d.nearbyError}</p>
+        <p className="text-[12px] text-gray-400">{d.nearbyError}</p>
       ) : (
         <>
           <NearbyAmenities counts={nearby.counts} dict={dict} />

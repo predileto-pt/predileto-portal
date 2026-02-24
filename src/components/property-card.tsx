@@ -46,15 +46,15 @@ export function PropertyCard({ property, selected, locale }: PropertyCardProps) 
           <div className="w-20 h-20 shrink-0 bg-gray-100" />
         )}
         <div className="min-w-0 flex-1">
-          <div className="text-[13px] font-bold">
+          <div className="text-[14px] font-bold">
             {property.price > 0 ? formatPrice(property.price, locale) : "-"}
           </div>
-          <div className="text-[10px] text-gray-400 truncate">
+          <div className="text-[11px] text-gray-400 truncate">
             {property.address.city}
             {property.address.region ? `, ${property.address.region}` : ""}
           </div>
-          <div className="text-xs font-medium truncate">{property.title}</div>
-          <div className="flex gap-3 mt-1 text-[10px] text-gray-400">
+          <div className="text-[13px] font-medium truncate">{property.title}</div>
+          <div className="flex gap-3 mt-1 text-[11px] text-gray-400">
             <span>{propertyTypesDict[property.propertyType] || property.propertyType}</span>
             {property.features.bedrooms > 0 && (
               <span>T{property.features.bedrooms}</span>
@@ -63,7 +63,7 @@ export function PropertyCard({ property, selected, locale }: PropertyCardProps) 
               <span>{formatArea(property.features.areaSqm)}</span>
             )}
           </div>
-          <div className="flex justify-between mt-1.5 text-[10px] text-gray-400">
+          <div className="flex justify-between mt-1.5 text-[11px] text-gray-400">
             <span>{property.sources?.[0]?.name || ""}</span>
             <span>{formatDate(property.updatedAt, locale)}</span>
           </div>

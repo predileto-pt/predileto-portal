@@ -32,7 +32,7 @@ export function TopNav({ locale }: { locale: Locale }) {
                 key={item.key}
                 href={href}
                 className={cn(
-                  "text-xs",
+                  "text-[13px]",
                   active
                     ? "font-bold underline underline-offset-4"
                     : "text-gray-400 hover:text-gray-600",

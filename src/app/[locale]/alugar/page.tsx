@@ -47,7 +47,7 @@ export default async function AlugarPage({
             <ResultsSection locale={locale} sp={sp} rawParams={rawParams} selectedId={selectedId} dict={dict} />
           </Suspense>
         ) : (
-          <div className="text-xs text-gray-400 py-8">
+          <div className="text-[13px] text-gray-400 py-8">
             {dict.properties.searchPrompt}
           </div>
         )}
@@ -90,7 +90,7 @@ async function ResultsSection({
 
   return (
     <>
-      <div className="text-[10px] text-gray-400 mb-2">
+      <div className="text-[11px] text-gray-400 mb-2">
         {dict.properties.found.replace("{count}", String(result.total))}
       </div>
       <PropertyList
