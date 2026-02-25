@@ -1,6 +1,15 @@
 import { getRegions, type LocationNode } from "@/lib/locations";
 import { cn } from "@/lib/utils";
 
+// TODO: Replace with real API call
+function getMockPropertyCount(slug: string): number {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash = (hash * 31 + slug.charCodeAt(i)) | 0;
+  }
+  return (Math.abs(hash) % 500) + 1;
+}
+
 interface LocationBrowserProps {
   locale: string;
   listingSlug: string;
@@ -17,6 +26,7 @@ export function LocationBrowser({ locale, listingSlug }: LocationBrowserProps) {
           <a href={`${base}/${region.slug}`} className="font-bold hover:underline">
             {region.name}
           </a>
+          <span className="ml-1 text-gray-400">({getMockPropertyCount(region.slug)})</span>
           {region.children.map((district, idx) => {
             const isLast = idx === region.children.length - 1;
             return (
@@ -34,6 +44,7 @@ export function LocationBrowser({ locale, listingSlug }: LocationBrowserProps) {
               >
                 {district.name}
               </a>
+              <span className="ml-1 text-gray-400">({getMockPropertyCount(district.slug)})</span>
               {district.children.length > 0 && (
                 <span className="ml-1 text-gray-500">
                   {district.children.map((mun, i) => (
@@ -45,6 +56,7 @@ export function LocationBrowser({ locale, listingSlug }: LocationBrowserProps) {
                       >
                         {mun.name}
                       </a>
+                      <span className="text-gray-400"> ({getMockPropertyCount(mun.slug)})</span>
                     </span>
                   ))}
                 </span>
