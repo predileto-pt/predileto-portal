@@ -62,9 +62,9 @@ function buildEsQuery(params: PropertySearchParams): EsQuery {
           "address.full_address",
           "address.full_address._2gram",
           "address.full_address._3gram",
-          "address.city",
-          "address.city._2gram",
-          "address.city._3gram",
+          "address.municipality",
+          "address.municipality._2gram",
+          "address.municipality._3gram",
           "address.district",
           "address.district._2gram",
           "address.district._3gram",
@@ -98,24 +98,25 @@ function buildEsQuery(params: PropertySearchParams): EsQuery {
     }
   }
 
-  // Hierarchical location filters
-  if (params.region) {
+  // Hierarchical location filter — only the deepest level (it implies ancestors)
+  // Use match_phrase instead of term because address fields are search_as_you_type,
+  // which tokenizes slugs like "viana-do-castelo" into ["viana","do","castelo"].
+  if (params.parish) {
+    filter.push({ match_phrase: { "address.parish": params.parish } });
+  } else if (params.municipality) {
+    filter.push({ match_phrase: { "address.municipality": params.municipality } });
+  } else if (params.district) {
+    filter.push({ match_phrase: { "address.district": params.district } });
+  } else if (params.region) {
     const districtSlugs = getDistrictSlugsForRegion(params.region);
     if (districtSlugs.length > 0) {
-      filter.push({ terms: { "address.district": districtSlugs } });
+      filter.push({
+        bool: {
+          should: districtSlugs.map(s => ({ match_phrase: { "address.district": s } })),
+          minimum_should_match: 1,
+        },
+      });
     }
-  }
-
-  if (params.district) {
-    filter.push({ term: { "address.district": params.district } });
-  }
-
-  if (params.municipality) {
-    filter.push({ term: { "address.city": params.municipality } });
-  }
-
-  if (params.parish) {
-    filter.push({ term: { "address.parish": params.parish } });
   }
 
   if (params.minPrice || params.maxPrice) {
@@ -180,7 +181,7 @@ interface EsPropertySource {
   description?: string;
   address?: {
     full_address?: string;
-    city?: string;
+    municipality?: string;
     district?: string;
     parish?: string;
     postal_code?: string;
@@ -210,11 +211,11 @@ function mapEsHitToPropertyRow(
     area_m2: source.area_m2 ?? null,
     description: source.description ?? null,
     address_full_address: source.address?.full_address ?? null,
-    address_city: source.address?.city ?? null,
+    address_city: source.address?.municipality ?? null,
     address_district: source.address?.district ?? null,
     address_postal_code: source.address?.postal_code ?? null,
     address_region: source.address?.region ?? null,
-    address_municipality: source.address?.city ?? null,
+    address_municipality: source.address?.municipality ?? null,
     address_parish: source.address?.parish ?? null,
     images: source.images ?? null,
     features: source.features ?? null,
