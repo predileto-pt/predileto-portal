@@ -117,49 +117,6 @@ export async function getNearbyPlaces(
   return { counts, nearest };
 }
 
-export interface GeoapifyResult {
-  formatted: string;
-  city: string;
-  district: string;
-  lat: number;
-  lon: number;
-}
-
-export async function searchAddress(
-  text: string,
-  lang: string,
-): Promise<GeoapifyResult[]> {
-  if (text.length < 3) return [];
-
-  const apiKey = getApiKey();
-  if (!apiKey) return [];
-
-  const params = new URLSearchParams({
-    text,
-    format: "json",
-    lang,
-    filter: "countrycode:pt",
-    limit: "6",
-    apiKey,
-  });
-
-  const res = await fetch(
-    `https://api.geoapify.com/v1/geocode/autocomplete?${params}`,
-  );
-
-  if (!res.ok) return [];
-
-  const data: GeoapifyApiResponse = await res.json();
-
-  return data.results.map((r) => ({
-    formatted: r.formatted,
-    city: r.city || r.county || "",
-    district: r.state || r.county || "",
-    lat: r.lat,
-    lon: r.lon,
-  }));
-}
-
 interface GeoapifyApiResult {
   formatted: string;
   city?: string;

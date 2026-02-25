@@ -4,12 +4,9 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, useState, useRef, useEffect } from "react";
 import { PROPERTY_TYPES, SORT_OPTIONS } from "@/lib/constants";
 import { useDictionary } from "@/components/dictionary-provider";
-import { searchAddress, type GeoapifyResult } from "@/lib/geoapify";
 import {
-  getRegioes,
-  getDistritos,
-  getConcelhos,
-  getFreguesias,
+  searchLocations,
+  type LocationSearchResult,
   type ResolvedLocation,
 } from "@/lib/locations";
 
@@ -36,10 +33,10 @@ export function SearchFilters({
   const locale = localeProp || pathParts[0] || "pt";
   const listingSlug = listingSlugProp || pathParts[1] || "comprar";
 
-  const currentRegiao = resolved?.regiao?.slug || "";
-  const currentDistrito = resolved?.distrito?.slug || "";
-  const currentConcelho = resolved?.concelho?.slug || "";
-  const currentFreguesia = resolved?.freguesia?.slug || "";
+  const currentRegion = resolved?.region?.slug || "";
+  const currentDistrict = resolved?.district?.slug || "";
+  const currentMunicipality = resolved?.municipality?.slug || "";
+  const currentParish = resolved?.parish?.slug || "";
 
   const updateParam = useCallback(
     (key: string, value: string) => {
@@ -55,29 +52,11 @@ export function SearchFilters({
     [searchParams, router, pathname],
   );
 
-  const updateParams = useCallback(
-    (updates: Record<string, string>) => {
-      const params = new URLSearchParams(searchParams.toString());
-      for (const [key, value] of Object.entries(updates)) {
-        if (value) {
-          params.set(key, value);
-        } else {
-          params.delete(key);
-        }
-      }
-      params.delete("page");
-      router.push(`${pathname}?${params.toString()}`);
-    },
-    [searchParams, router, pathname],
-  );
-
   // Navigate to a location path
   const navigateToLocation = useCallback(
     (slugs: string[]) => {
       const params = new URLSearchParams(searchParams.toString());
       params.delete("page");
-      params.delete("region");
-      params.delete("city");
       const base = `/${locale}/${listingSlug}`;
       const path = slugs.length > 0 ? `${base}/${slugs.join("/")}` : base;
       const qs = params.toString();
@@ -88,12 +67,10 @@ export function SearchFilters({
 
   // Autocomplete state
   const [query, setQuery] = useState(searchParams.get("q") || "");
-  const [results, setResults] = useState<GeoapifyResult[]>([]);
+  const [results, setResults] = useState<LocationSearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -108,39 +85,24 @@ export function SearchFilters({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const fetchSuggestions = useCallback(
-    async (text: string) => {
-      if (text.length < 3) {
-        setResults([]);
-        setIsOpen(false);
-        return;
-      }
-      setIsLoading(true);
-      const data = await searchAddress(text, locale);
-      setResults(data);
-      setIsOpen(data.length > 0);
-      setActiveIndex(-1);
-      setIsLoading(false);
-    },
-    [locale],
-  );
-
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setQuery(value);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      fetchSuggestions(value);
-    }, 300);
+    if (value.trim().length < 2) {
+      setResults([]);
+      setIsOpen(false);
+      return;
+    }
+    const matches = searchLocations(value);
+    setResults(matches);
+    setIsOpen(matches.length > 0);
+    setActiveIndex(-1);
   }
 
-  function selectResult(result: GeoapifyResult) {
-    setQuery(result.formatted);
+  function selectResult(result: LocationSearchResult) {
+    setQuery("");
     setIsOpen(false);
-    const updates: Record<string, string> = { q: result.formatted };
-    if (result.district) updates.region = result.district;
-    if (result.city) updates.city = result.city;
-    updateParams(updates);
+    navigateToLocation(result.slugs);
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -149,8 +111,14 @@ export function SearchFilters({
       selectResult(results[activeIndex]);
       return;
     }
+    if (results.length > 0) {
+      selectResult(results[0]);
+      return;
+    }
     setIsOpen(false);
-    updateParam("q", query.trim());
+    if (query.trim()) {
+      updateParam("q", query.trim());
+    }
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -177,21 +145,21 @@ export function SearchFilters({
     }
   }
 
+  function clearLocation() {
+    navigateToLocation([]);
+  }
+
   const sortDict = dict.sort as Record<string, string>;
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
   const filtersDict = dict.filters as Record<string, string>;
 
-  // Location dropdown data
-  const regioes = getRegioes();
-  const distritos = currentRegiao ? getDistritos(currentRegiao) : [];
-  const concelhos =
-    currentRegiao && currentDistrito
-      ? getConcelhos(currentRegiao, currentDistrito)
-      : [];
-  const freguesias =
-    currentRegiao && currentDistrito && currentConcelho
-      ? getFreguesias(currentRegiao, currentDistrito, currentConcelho)
-      : [];
+  // Build current location label
+  const locationLabel =
+    resolved?.parish?.name ??
+    resolved?.municipality?.name ??
+    resolved?.district?.name ??
+    resolved?.region?.name;
+  const hasLocation = !!(currentRegion || currentDistrict || currentMunicipality || currentParish);
 
   return (
     <div className="flex flex-col gap-3 text-[12px]">
@@ -215,30 +183,6 @@ export function SearchFilters({
             className="border border-gray-200 px-2 py-1 w-full text-[12px] focus:outline-none focus:border-gray-400"
           />
 
-          {isLoading && (
-            <div className="absolute right-2 top-1/2 -translate-y-1/2">
-              <svg
-                className="h-3 w-3 animate-spin text-gray-400"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
-              </svg>
-            </div>
-          )}
-
           {isOpen && (
             <ul
               role="listbox"
@@ -246,7 +190,7 @@ export function SearchFilters({
             >
               {results.map((result, index) => (
                 <li
-                  key={index}
+                  key={`${result.level}-${result.slugs.join("/")}`}
                   id={`suggestion-${index}`}
                   role="option"
                   aria-selected={index === activeIndex}
@@ -261,11 +205,9 @@ export function SearchFilters({
                       : "hover:bg-gray-50"
                   }`}
                 >
-                  <div className="font-medium">
-                    {result.city || result.district}
-                  </div>
+                  <div className="font-medium">{result.name}</div>
                   <div className="text-[11px] text-gray-400 truncate">
-                    {result.formatted}
+                    {result.context}
                   </div>
                 </li>
               ))}
@@ -279,6 +221,19 @@ export function SearchFilters({
           go
         </button>
       </form>
+
+      {hasLocation && locationLabel && (
+        <div className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 px-2 py-1 border border-gray-200">
+          <span className="truncate flex-1">{locationLabel}</span>
+          <button
+            onClick={clearLocation}
+            className="shrink-0 text-gray-400 hover:text-gray-600"
+            aria-label="Clear location"
+          >
+            &times;
+          </button>
+        </div>
+      )}
 
       <div>
         <label className="text-[11px] text-gray-400 uppercase">
@@ -357,107 +312,6 @@ export function SearchFilters({
           className="border border-gray-200 px-2 py-1 w-full text-[12px] focus:outline-none focus:border-gray-400"
         />
       </div>
-
-      {/* Cascading location dropdowns */}
-      <div>
-        <label className="text-[11px] text-gray-400 uppercase">
-          {filtersDict.regiao}
-        </label>
-        <select
-          value={currentRegiao}
-          onChange={(e) => {
-            const slug = e.target.value;
-            navigateToLocation(slug ? [slug] : []);
-          }}
-          className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
-        >
-          <option value="">{filtersDict.allRegions}</option>
-          {regioes.map((r) => (
-            <option key={r.slug} value={r.slug}>
-              {r.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {distritos.length > 0 && (
-        <div>
-          <label className="text-[11px] text-gray-400 uppercase">
-            {filtersDict.distrito}
-          </label>
-          <select
-            value={currentDistrito}
-            onChange={(e) => {
-              const slug = e.target.value;
-              navigateToLocation(
-                slug ? [currentRegiao, slug] : [currentRegiao],
-              );
-            }}
-            className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
-          >
-            <option value="">{filtersDict.allDistritos}</option>
-            {distritos.map((d) => (
-              <option key={d.slug} value={d.slug}>
-                {d.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {concelhos.length > 0 && (
-        <div>
-          <label className="text-[11px] text-gray-400 uppercase">
-            {filtersDict.concelho}
-          </label>
-          <select
-            value={currentConcelho}
-            onChange={(e) => {
-              const slug = e.target.value;
-              navigateToLocation(
-                slug
-                  ? [currentRegiao, currentDistrito, slug]
-                  : [currentRegiao, currentDistrito],
-              );
-            }}
-            className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
-          >
-            <option value="">{filtersDict.allConcelhos}</option>
-            {concelhos.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {freguesias.length > 0 && (
-        <div>
-          <label className="text-[11px] text-gray-400 uppercase">
-            {filtersDict.freguesia}
-          </label>
-          <select
-            value={currentFreguesia}
-            onChange={(e) => {
-              const slug = e.target.value;
-              navigateToLocation(
-                slug
-                  ? [currentRegiao, currentDistrito, currentConcelho, slug]
-                  : [currentRegiao, currentDistrito, currentConcelho],
-              );
-            }}
-            className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
-          >
-            <option value="">{filtersDict.allFreguesias}</option>
-            {freguesias.map((f) => (
-              <option key={f.slug} value={f.slug}>
-                {f.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
     </div>
   );
 }

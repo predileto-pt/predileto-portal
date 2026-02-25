@@ -9,16 +9,14 @@ export interface PropertyVideo {
 }
 
 export interface Address {
-  street: string;
-  city: string;
-  region: string;
+  fullAddress: string;
+  region?: string;
+  district?: string;
+  municipality?: string;
+  parish?: string;
   postalCode: string;
   country: string;
   coordinates?: { lat: number; lng: number };
-  regiao?: string;
-  distrito?: string;
-  concelho?: string;
-  freguesia?: string;
 }
 
 export interface Agent {
@@ -80,15 +78,13 @@ export interface PropertySearchParams {
   minPrice?: string;
   maxPrice?: string;
   bedrooms?: string;
-  region?: string;
-  city?: string;
   featured?: string;
   sort?: string;
   page?: string;
-  regiao?: string;
-  distrito?: string;
-  concelho?: string;
-  freguesia?: string;
+  region?: string;
+  district?: string;
+  municipality?: string;
+  parish?: string;
 }
 
 export interface PaginatedResult<T> {

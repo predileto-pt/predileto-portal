@@ -3,7 +3,7 @@ import type { SortCombinations } from "@elastic/elasticsearch/lib/api/types";
 import type { PropertyRow } from "./db-types";
 import type { PropertySearchParams } from "./types";
 import { DEFAULT_PAGE_SIZE } from "./constants";
-import { getDistritoSlugsForRegiao } from "./locations";
+import { getDistrictSlugsForRegion } from "./locations";
 
 // --- Lazy singleton client ---
 
@@ -98,33 +98,24 @@ function buildEsQuery(params: PropertySearchParams): EsQuery {
     }
   }
 
-  // Hierarchical location filters (new URL-based)
-  if (params.regiao) {
-    const distritoSlugs = getDistritoSlugsForRegiao(params.regiao);
-    if (distritoSlugs.length > 0) {
-      filter.push({ terms: { "address.district": distritoSlugs } });
+  // Hierarchical location filters
+  if (params.region) {
+    const districtSlugs = getDistrictSlugsForRegion(params.region);
+    if (districtSlugs.length > 0) {
+      filter.push({ terms: { "address.district": districtSlugs } });
     }
   }
 
-  if (params.distrito) {
-    filter.push({ term: { "address.district": params.distrito } });
+  if (params.district) {
+    filter.push({ term: { "address.district": params.district } });
   }
 
-  if (params.concelho) {
-    filter.push({ term: { "address.city": params.concelho } });
+  if (params.municipality) {
+    filter.push({ term: { "address.city": params.municipality } });
   }
 
-  if (params.freguesia) {
-    filter.push({ term: { "address.parish": params.freguesia } });
-  }
-
-  // Legacy query-param filters (backward compat)
-  if (params.region) {
-    filter.push({ match_phrase: { "address.district": params.region } });
-  }
-
-  if (params.city) {
-    filter.push({ match_phrase: { "address.city": params.city } });
+  if (params.parish) {
+    filter.push({ term: { "address.parish": params.parish } });
   }
 
   if (params.minPrice || params.maxPrice) {
@@ -193,7 +184,7 @@ interface EsPropertySource {
     district?: string;
     parish?: string;
     postal_code?: string;
-    regiao?: string;
+    region?: string;
   };
   images?: string[];
   features?: string[];
@@ -222,9 +213,9 @@ function mapEsHitToPropertyRow(
     address_city: source.address?.city ?? null,
     address_district: source.address?.district ?? null,
     address_postal_code: source.address?.postal_code ?? null,
-    address_regiao: source.address?.regiao ?? null,
-    address_concelho: source.address?.city ?? null,
-    address_freguesia: source.address?.parish ?? null,
+    address_region: source.address?.region ?? null,
+    address_municipality: source.address?.city ?? null,
+    address_parish: source.address?.parish ?? null,
     images: source.images ?? null,
     features: source.features ?? null,
     sources: source.sources ?? null,

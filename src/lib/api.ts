@@ -4,7 +4,7 @@ import { supabase } from "./supabase";
 import type { PropertyRow } from "./db-types";
 import { mapRowToProperty } from "./property-mapper";
 import { searchProperties } from "./elasticsearch";
-import { getDistritoSlugsForRegiao } from "./locations";
+import { getDistrictSlugsForRegion } from "./locations";
 
 // --- Property type / listing type mapping for DB queries ---
 
@@ -52,7 +52,7 @@ export async function getProperties(
   const to = from + pageSize - 1;
 
   // Try Elasticsearch first for text queries or hierarchical location filters
-  const hasLocationFilter = !!(params.regiao || params.distrito || params.concelho || params.freguesia);
+  const hasLocationFilter = !!(params.region || params.district || params.municipality || params.parish);
   if (params.q || hasLocationFilter) {
     const esResult = await searchProperties(params);
     if (esResult) {
@@ -87,33 +87,24 @@ export async function getProperties(
     }
   }
 
-  // Hierarchical location filters (new URL-based)
-  if (params.regiao) {
-    const distritoSlugs = getDistritoSlugsForRegiao(params.regiao);
-    if (distritoSlugs.length > 0) {
-      query = query.in("address_district", distritoSlugs);
+  // Hierarchical location filters
+  if (params.region) {
+    const districtSlugs = getDistrictSlugsForRegion(params.region);
+    if (districtSlugs.length > 0) {
+      query = query.in("address_district", districtSlugs);
     }
   }
 
-  if (params.distrito) {
-    query = query.eq("address_district", params.distrito);
+  if (params.district) {
+    query = query.eq("address_district", params.district);
   }
 
-  if (params.concelho) {
-    query = query.eq("address_city", params.concelho);
+  if (params.municipality) {
+    query = query.eq("address_city", params.municipality);
   }
 
-  if (params.freguesia) {
-    query = query.eq("address_freguesia", params.freguesia);
-  }
-
-  // Legacy query-param filters (backward compat)
-  if (params.region) {
-    query = query.eq("address_district", params.region);
-  }
-
-  if (params.city) {
-    query = query.eq("address_city", params.city);
+  if (params.parish) {
+    query = query.eq("address_freguesia", params.parish);
   }
 
   if (params.minPrice) {

@@ -50,8 +50,8 @@ export function PropertyCard({ property, selected, locale }: PropertyCardProps) 
             {property.price > 0 ? formatPrice(property.price, locale) : "-"}
           </div>
           <div className="text-[11px] text-gray-400 truncate">
-            {property.address.city}
-            {property.address.region ? `, ${property.address.region}` : ""}
+            {property.address.municipality}
+            {property.address.district ? `, ${property.address.district}` : ""}
           </div>
           <div className="text-[13px] font-medium truncate">{property.title}</div>
           <div className="flex gap-3 mt-1 text-[11px] text-gray-400">

@@ -21,8 +21,6 @@ const FILTER_KEYS = [
   "minPrice",
   "maxPrice",
   "bedrooms",
-  "region",
-  "city",
 ];
 
 function hasActiveFilters(sp: Record<string, string | string[] | undefined>) {
@@ -125,10 +123,10 @@ function getTitle(
 ): string {
   const base = listingType === "buy" ? dict.nav.buy : dict.nav.rent;
   const locationName =
-    resolved.freguesia?.name ??
-    resolved.concelho?.name ??
-    resolved.distrito?.name ??
-    resolved.regiao?.name;
+    resolved.parish?.name ??
+    resolved.municipality?.name ??
+    resolved.district?.name ??
+    resolved.region?.name;
   if (locationName) return `${base} - ${locationName}`;
   return base;
 }
@@ -160,14 +158,13 @@ async function ResultsSection({
     minPrice: typeof sp.minPrice === "string" ? sp.minPrice : undefined,
     maxPrice: typeof sp.maxPrice === "string" ? sp.maxPrice : undefined,
     bedrooms: typeof sp.bedrooms === "string" ? sp.bedrooms : undefined,
-    region: typeof sp.region === "string" ? sp.region : undefined,
     sort: typeof sp.sort === "string" ? sp.sort : undefined,
     page: typeof sp.page === "string" ? sp.page : undefined,
     // Hierarchical location from URL path
-    regiao: resolved.regiao?.slug,
-    distrito: resolved.distrito?.slug,
-    concelho: resolved.concelho?.slug,
-    freguesia: resolved.freguesia?.slug,
+    region: resolved.region?.slug,
+    district: resolved.district?.slug,
+    municipality: resolved.municipality?.slug,
+    parish: resolved.parish?.slug,
   };
 
   const result = await getProperties(search);

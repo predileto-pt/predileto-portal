@@ -14,9 +14,9 @@ export async function GET(
   }
 
   const addressParts = [
-    property.address.street,
-    property.address.city,
-    property.address.region,
+    property.address.fullAddress,
+    property.address.municipality,
+    property.address.district,
     property.address.country,
   ].filter(Boolean);
 
@@ -24,12 +24,12 @@ export async function GET(
   const coords = await geocodeAddress(fullAddress);
 
   let nearby: NearbyPlacesResult = { counts: {}, nearest: {} };
-  let nearbyError = false;
+  let nearbyError: string | false = false;
   if (coords) {
     try {
       nearby = await getNearbyPlaces(coords.lat, coords.lon);
-    } catch {
-      nearbyError = true;
+    } catch (err) {
+      nearbyError = err instanceof Error ? err.message : "Unknown error";
     }
   }
 

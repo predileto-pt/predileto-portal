@@ -15,9 +15,9 @@ interface PropertyData {
   price: number;
   propertyType: string;
   address: {
-    street: string;
-    city: string;
-    region: string;
+    fullAddress: string;
+    municipality: string;
+    district: string;
   };
   features: {
     bedrooms: number;
@@ -31,7 +31,7 @@ interface PropertyData {
 interface DetailResponse {
   property: PropertyData;
   nearby: NearbyPlacesResult;
-  nearbyError?: boolean;
+  nearbyError?: string | false;
 }
 
 export function PropertyDetailPanel({ locale }: { locale: string }) {
@@ -63,8 +63,9 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
         setData(json);
         setLoading(false);
         if (json.nearbyError) {
-          posthog.captureException(new Error("getNearbyPlaces failed"), {
+          posthog.captureException(new Error(json.nearbyError), {
             property_id: selectedId,
+            address: json.property?.address,
           });
         }
       })
@@ -132,8 +133,8 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
       <div>
         <h2 className="text-[13px] font-bold">{property.title}</h2>
         <p className="text-[11px] text-gray-400">
-          {property.address.city}
-          {property.address.region ? `, ${property.address.region}` : ""}
+          {property.address.municipality}
+          {property.address.district ? `, ${property.address.district}` : ""}
         </p>
       </div>
 
