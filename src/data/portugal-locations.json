@@ -1,0 +1,227 @@
+[
+  {
+    "name": "Açores",
+    "slug": "acores",
+    "children": [
+      {
+        "name": "São Miguel",
+        "slug": "sao-miguel",
+        "children": [
+          { "name": "Ponta Delgada", "slug": "ponta-delgada", "children": [] }
+        ]
+      },
+      {
+        "name": "Terceira",
+        "slug": "terceira",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Alentejo",
+    "slug": "alentejo",
+    "children": [
+      {
+        "name": "Beja",
+        "slug": "beja",
+        "children": [
+          { "name": "Vila Nova de Milfontes", "slug": "vila-nova-de-milfontes", "children": [] }
+        ]
+      },
+      {
+        "name": "Évora",
+        "slug": "evora",
+        "children": []
+      },
+      {
+        "name": "Portalegre",
+        "slug": "portalegre",
+        "children": []
+      },
+      {
+        "name": "Santarém",
+        "slug": "santarem",
+        "children": [
+          { "name": "Torres Novas", "slug": "torres-novas", "children": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Algarve",
+    "slug": "algarve",
+    "children": [
+      {
+        "name": "Faro",
+        "slug": "faro",
+        "children": [
+          { "name": "Albufeira", "slug": "albufeira", "children": [] },
+          { "name": "Alvor", "slug": "alvor", "children": [] },
+          { "name": "Conceição e Cabanas de Tavira", "slug": "conceicao-e-cabanas-de-tavira", "children": [] },
+          { "name": "Faro", "slug": "faro", "children": [] },
+          { "name": "Lagos", "slug": "lagos", "children": [] },
+          { "name": "Monte Gordo", "slug": "monte-gordo", "children": [] },
+          { "name": "Portimão", "slug": "portimao", "children": [] },
+          { "name": "Quarteira", "slug": "quarteira", "children": [] },
+          { "name": "Sagres", "slug": "sagres", "children": [] },
+          { "name": "Tavira", "slug": "tavira", "children": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Área Metropolitana de Lisboa",
+    "slug": "area-metropolitana-de-lisboa",
+    "children": [
+      {
+        "name": "Lisboa",
+        "slug": "lisboa",
+        "children": [
+          { "name": "Cascais", "slug": "cascais", "children": [] },
+          { "name": "Ericeira", "slug": "ericeira", "children": [] },
+          { "name": "Lisboa", "slug": "lisboa", "children": [] },
+          { "name": "Odivelas", "slug": "odivelas", "children": [] },
+          { "name": "Oeiras", "slug": "oeiras", "children": [] },
+          { "name": "Torres Vedras", "slug": "torres-vedras", "children": [] }
+        ]
+      },
+      {
+        "name": "Setúbal",
+        "slug": "setubal",
+        "children": [
+          { "name": "Almada", "slug": "almada", "children": [] },
+          { "name": "Barreiro", "slug": "barreiro", "children": [] },
+          { "name": "Costa de Caparica", "slug": "costa-de-caparica", "children": [] },
+          { "name": "Montijo", "slug": "montijo", "children": [] },
+          { "name": "Sesimbra", "slug": "sesimbra", "children": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Centro",
+    "slug": "centro",
+    "children": [
+      {
+        "name": "Aveiro",
+        "slug": "aveiro",
+        "children": [
+          { "name": "Aveiro", "slug": "aveiro", "children": [] },
+          { "name": "Espinho", "slug": "espinho", "children": [] },
+          { "name": "Santa Maria da Feira", "slug": "santa-maria-da-feira", "children": [] }
+        ]
+      },
+      {
+        "name": "Castelo Branco",
+        "slug": "castelo-branco",
+        "children": [
+          { "name": "Castelo Branco", "slug": "castelo-branco", "children": [] }
+        ]
+      },
+      {
+        "name": "Coimbra",
+        "slug": "coimbra",
+        "children": [
+          { "name": "Coimbra", "slug": "coimbra", "children": [] },
+          { "name": "Figueira da Foz", "slug": "figueira-da-foz", "children": [] }
+        ]
+      },
+      {
+        "name": "Guarda",
+        "slug": "guarda",
+        "children": [
+          { "name": "Guarda", "slug": "guarda", "children": [] }
+        ]
+      },
+      {
+        "name": "Leiria",
+        "slug": "leiria",
+        "children": [
+          { "name": "Caldas da Rainha", "slug": "caldas-da-rainha", "children": [] },
+          { "name": "Leiria", "slug": "leiria", "children": [] },
+          { "name": "Marinha Grande", "slug": "marinha-grande", "children": [] },
+          { "name": "Nazaré", "slug": "nazare", "children": [] },
+          { "name": "Peniche", "slug": "peniche", "children": [] },
+          { "name": "Pombal", "slug": "pombal", "children": [] },
+          { "name": "São Martinho do Porto", "slug": "sao-martinho-do-porto", "children": [] }
+        ]
+      },
+      {
+        "name": "Viseu",
+        "slug": "viseu",
+        "children": [
+          { "name": "Viseu", "slug": "viseu", "children": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Madeira",
+    "slug": "madeira",
+    "children": [
+      {
+        "name": "Madeira",
+        "slug": "madeira",
+        "children": [
+          { "name": "Funchal", "slug": "funchal", "children": [] }
+        ]
+      },
+      {
+        "name": "Porto Santo",
+        "slug": "porto-santo",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Norte",
+    "slug": "norte",
+    "children": [
+      {
+        "name": "Braga",
+        "slug": "braga",
+        "children": [
+          { "name": "Barcelos", "slug": "barcelos", "children": [] },
+          { "name": "Braga", "slug": "braga", "children": [] }
+        ]
+      },
+      {
+        "name": "Bragança",
+        "slug": "braganca",
+        "children": [
+          { "name": "Bragança", "slug": "braganca", "children": [] }
+        ]
+      },
+      {
+        "name": "Porto",
+        "slug": "porto",
+        "children": [
+          { "name": "Maia", "slug": "maia", "children": [] },
+          { "name": "Matosinhos", "slug": "matosinhos", "children": [] },
+          { "name": "Penafiel", "slug": "penafiel", "children": [] },
+          { "name": "Porto", "slug": "porto", "children": [] },
+          { "name": "Póvoa de Varzim", "slug": "povoa-de-varzim", "children": [] },
+          { "name": "Santo Tirso", "slug": "santo-tirso", "children": [] },
+          { "name": "Valongo", "slug": "valongo", "children": [] },
+          { "name": "Vila Nova de Gaia", "slug": "vila-nova-de-gaia", "children": [] },
+          { "name": "Vila do Conde", "slug": "vila-do-conde", "children": [] }
+        ]
+      },
+      {
+        "name": "Viana do Castelo",
+        "slug": "viana-do-castelo",
+        "children": [
+          { "name": "Ponte de Lima", "slug": "ponte-de-lima", "children": [] },
+          { "name": "Viana do Castelo", "slug": "viana-do-castelo", "children": [] }
+        ]
+      },
+      {
+        "name": "Vila Real",
+        "slug": "vila-real",
+        "children": [
+          { "name": "Vila Real", "slug": "vila-real", "children": [] }
+        ]
+      }
+    ]
+  }
+]

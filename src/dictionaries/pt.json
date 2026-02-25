@@ -9,8 +9,15 @@
     "propertyType": "Tipo de Imóvel",
     "bedrooms": "Quartos",
     "region": "Região",
+    "regiao": "Região",
+    "distrito": "Distrito",
+    "concelho": "Concelho",
+    "freguesia": "Freguesia",
     "allTypes": "Todos os Tipos",
     "allRegions": "Todas as Regiões",
+    "allDistritos": "Todos os Distritos",
+    "allConcelhos": "Todos os Concelhos",
+    "allFreguesias": "Todas as Freguesias",
     "anyBedrooms": "Qualquer",
     "search": "Pesquisar",
     "minPrice": "Preço mín.",
@@ -62,6 +69,9 @@
     "studio": "Estúdio",
     "penthouse": "Penthouse",
     "townhouse": "Moradia Geminada"
+  },
+  "breadcrumbs": {
+    "home": "Início"
   },
   "common": {
     "previous": "Anterior",

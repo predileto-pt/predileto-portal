@@ -1,6 +1,7 @@
 import type { Property, PropertyType, ListingType } from "./types";
 import type { PropertyRow } from "./db-types";
 import { slugify, truncate } from "./utils";
+import { lookupRegiaoForDistritoName } from "./locations";
 
 function mapListingType(dbValue: string | null): ListingType {
   if (dbValue === "comprar" || dbValue === "venda") return "buy";
@@ -70,6 +71,10 @@ export function mapRowToProperty(row: PropertyRow): Property {
       region: row.address_district || "",
       postalCode: row.address_postal_code || "",
       country: "Portugal",
+      regiao: row.address_regiao ?? lookupRegiaoForDistritoName(row.address_district || "")?.slug,
+      distrito: row.address_district || undefined,
+      concelho: row.address_concelho ?? (row.address_city || undefined),
+      freguesia: row.address_freguesia ?? undefined,
     },
     features: {
       bedrooms: parseBedrooms(row.bedrooms),

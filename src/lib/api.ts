@@ -4,6 +4,7 @@ import { supabase } from "./supabase";
 import type { PropertyRow } from "./db-types";
 import { mapRowToProperty } from "./property-mapper";
 import { searchProperties } from "./elasticsearch";
+import { getDistritoSlugsForRegiao } from "./locations";
 
 // --- Property type / listing type mapping for DB queries ---
 
@@ -50,8 +51,9 @@ export async function getProperties(
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // When a text query is present, try Elasticsearch first for better relevance
-  if (params.q) {
+  // Try Elasticsearch first for text queries or hierarchical location filters
+  const hasLocationFilter = !!(params.regiao || params.distrito || params.concelho || params.freguesia);
+  if (params.q || hasLocationFilter) {
     const esResult = await searchProperties(params);
     if (esResult) {
       const total = esResult.total;
@@ -85,6 +87,27 @@ export async function getProperties(
     }
   }
 
+  // Hierarchical location filters (new URL-based)
+  if (params.regiao) {
+    const distritoSlugs = getDistritoSlugsForRegiao(params.regiao);
+    if (distritoSlugs.length > 0) {
+      query = query.in("address_district", distritoSlugs);
+    }
+  }
+
+  if (params.distrito) {
+    query = query.eq("address_district", params.distrito);
+  }
+
+  if (params.concelho) {
+    query = query.eq("address_city", params.concelho);
+  }
+
+  if (params.freguesia) {
+    query = query.eq("address_freguesia", params.freguesia);
+  }
+
+  // Legacy query-param filters (backward compat)
   if (params.region) {
     query = query.eq("address_district", params.region);
   }

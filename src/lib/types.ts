@@ -15,6 +15,10 @@ export interface Address {
   postalCode: string;
   country: string;
   coordinates?: { lat: number; lng: number };
+  regiao?: string;
+  distrito?: string;
+  concelho?: string;
+  freguesia?: string;
 }
 
 export interface Agent {
@@ -81,6 +85,10 @@ export interface PropertySearchParams {
   featured?: string;
   sort?: string;
   page?: string;
+  regiao?: string;
+  distrito?: string;
+  concelho?: string;
+  freguesia?: string;
 }
 
 export interface PaginatedResult<T> {

@@ -2,18 +2,44 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, useState, useRef, useEffect } from "react";
-import { PROPERTY_TYPES, REGIONS, SORT_OPTIONS } from "@/lib/constants";
+import { PROPERTY_TYPES, SORT_OPTIONS } from "@/lib/constants";
 import { useDictionary } from "@/components/dictionary-provider";
 import { searchAddress, type GeoapifyResult } from "@/lib/geoapify";
+import {
+  getRegioes,
+  getDistritos,
+  getConcelhos,
+  getFreguesias,
+  type ResolvedLocation,
+} from "@/lib/locations";
 
-export function SearchFilters() {
+interface SearchFiltersProps {
+  locationSlugs?: string[];
+  resolved?: ResolvedLocation;
+  locale?: string;
+  listingSlug?: string;
+}
+
+export function SearchFilters({
+  locationSlugs = [],
+  resolved,
+  locale: localeProp,
+  listingSlug: listingSlugProp,
+}: SearchFiltersProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const dict = useDictionary();
 
-  // Extract locale from pathname (e.g. /pt/comprar → pt)
-  const locale = pathname.split("/")[1] || "pt";
+  // Extract locale and listing slug from pathname if not provided as props
+  const pathParts = pathname.split("/").filter(Boolean);
+  const locale = localeProp || pathParts[0] || "pt";
+  const listingSlug = listingSlugProp || pathParts[1] || "comprar";
+
+  const currentRegiao = resolved?.regiao?.slug || "";
+  const currentDistrito = resolved?.distrito?.slug || "";
+  const currentConcelho = resolved?.concelho?.slug || "";
+  const currentFreguesia = resolved?.freguesia?.slug || "";
 
   const updateParam = useCallback(
     (key: string, value: string) => {
@@ -45,6 +71,21 @@ export function SearchFilters() {
     [searchParams, router, pathname],
   );
 
+  // Navigate to a location path
+  const navigateToLocation = useCallback(
+    (slugs: string[]) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("page");
+      params.delete("region");
+      params.delete("city");
+      const base = `/${locale}/${listingSlug}`;
+      const path = slugs.length > 0 ? `${base}/${slugs.join("/")}` : base;
+      const qs = params.toString();
+      router.push(qs ? `${path}?${qs}` : path);
+    },
+    [searchParams, router, locale, listingSlug],
+  );
+
   // Autocomplete state
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [results, setResults] = useState<GeoapifyResult[]>([]);
@@ -56,7 +97,10 @@ export function SearchFilters() {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -135,6 +179,19 @@ export function SearchFilters() {
 
   const sortDict = dict.sort as Record<string, string>;
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
+  const filtersDict = dict.filters as Record<string, string>;
+
+  // Location dropdown data
+  const regioes = getRegioes();
+  const distritos = currentRegiao ? getDistritos(currentRegiao) : [];
+  const concelhos =
+    currentRegiao && currentDistrito
+      ? getConcelhos(currentRegiao, currentDistrito)
+      : [];
+  const freguesias =
+    currentRegiao && currentDistrito && currentConcelho
+      ? getFreguesias(currentRegiao, currentDistrito, currentConcelho)
+      : [];
 
   return (
     <div className="flex flex-col gap-3 text-[12px]">
@@ -145,20 +202,39 @@ export function SearchFilters() {
             value={query}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            onFocus={() => { if (results.length > 0) setIsOpen(true); }}
-            placeholder={dict.filters.search + "..."}
+            onFocus={() => {
+              if (results.length > 0) setIsOpen(true);
+            }}
+            placeholder={filtersDict.search + "..."}
             role="combobox"
             aria-expanded={isOpen}
             aria-autocomplete="list"
-            aria-activedescendant={activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined}
+            aria-activedescendant={
+              activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
+            }
             className="border border-gray-200 px-2 py-1 w-full text-[12px] focus:outline-none focus:border-gray-400"
           />
 
           {isLoading && (
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
-              <svg className="h-3 w-3 animate-spin text-gray-400" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              <svg
+                className="h-3 w-3 animate-spin text-gray-400"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
               </svg>
             </div>
           )}
@@ -174,14 +250,23 @@ export function SearchFilters() {
                   id={`suggestion-${index}`}
                   role="option"
                   aria-selected={index === activeIndex}
-                  onMouseDown={(e) => { e.preventDefault(); selectResult(result); }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    selectResult(result);
+                  }}
                   onMouseEnter={() => setActiveIndex(index)}
                   className={`cursor-pointer px-2 py-1.5 text-[12px] ${
-                    index === activeIndex ? "bg-gray-100" : "hover:bg-gray-50"
+                    index === activeIndex
+                      ? "bg-gray-100"
+                      : "hover:bg-gray-50"
                   }`}
                 >
-                  <div className="font-medium">{result.city || result.district}</div>
-                  <div className="text-[11px] text-gray-400 truncate">{result.formatted}</div>
+                  <div className="font-medium">
+                    {result.city || result.district}
+                  </div>
+                  <div className="text-[11px] text-gray-400 truncate">
+                    {result.formatted}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -196,7 +281,9 @@ export function SearchFilters() {
       </form>
 
       <div>
-        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.sortBy}</label>
+        <label className="text-[11px] text-gray-400 uppercase">
+          {filtersDict.sortBy}
+        </label>
         <select
           value={searchParams.get("sort") || "newest"}
           onChange={(e) => updateParam("sort", e.target.value)}
@@ -211,13 +298,15 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.propertyType}</label>
+        <label className="text-[11px] text-gray-400 uppercase">
+          {filtersDict.propertyType}
+        </label>
         <select
           value={searchParams.get("propertyType") || ""}
           onChange={(e) => updateParam("propertyType", e.target.value)}
           className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
         >
-          <option value="">{dict.filters.allTypes}</option>
+          <option value="">{filtersDict.allTypes}</option>
           {PROPERTY_TYPES.map((type) => (
             <option key={type} value={type}>
               {propertyTypesDict[type] || type}
@@ -227,13 +316,15 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.bedrooms}</label>
+        <label className="text-[11px] text-gray-400 uppercase">
+          {filtersDict.bedrooms}
+        </label>
         <select
           value={searchParams.get("bedrooms") || ""}
           onChange={(e) => updateParam("bedrooms", e.target.value)}
           className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
         >
-          <option value="">{dict.filters.anyBedrooms}</option>
+          <option value="">{filtersDict.anyBedrooms}</option>
           <option value="1">1+</option>
           <option value="2">2+</option>
           <option value="3">3+</option>
@@ -242,10 +333,12 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.minPrice}</label>
+        <label className="text-[11px] text-gray-400 uppercase">
+          {filtersDict.minPrice}
+        </label>
         <input
           type="number"
-          placeholder={dict.filters.minPrice}
+          placeholder={filtersDict.minPrice}
           defaultValue={searchParams.get("minPrice") || ""}
           onBlur={(e) => updateParam("minPrice", e.target.value)}
           className="border border-gray-200 px-2 py-1 w-full text-[12px] focus:outline-none focus:border-gray-400"
@@ -253,31 +346,118 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.maxPrice}</label>
+        <label className="text-[11px] text-gray-400 uppercase">
+          {filtersDict.maxPrice}
+        </label>
         <input
           type="number"
-          placeholder={dict.filters.maxPrice}
+          placeholder={filtersDict.maxPrice}
           defaultValue={searchParams.get("maxPrice") || ""}
           onBlur={(e) => updateParam("maxPrice", e.target.value)}
           className="border border-gray-200 px-2 py-1 w-full text-[12px] focus:outline-none focus:border-gray-400"
         />
       </div>
 
+      {/* Cascading location dropdowns */}
       <div>
-        <label className="text-[11px] text-gray-400 uppercase">{dict.filters.region}</label>
+        <label className="text-[11px] text-gray-400 uppercase">
+          {filtersDict.regiao}
+        </label>
         <select
-          value={searchParams.get("region") || ""}
-          onChange={(e) => updateParam("region", e.target.value)}
+          value={currentRegiao}
+          onChange={(e) => {
+            const slug = e.target.value;
+            navigateToLocation(slug ? [slug] : []);
+          }}
           className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
         >
-          <option value="">{dict.filters.allRegions}</option>
-          {REGIONS.map((region) => (
-            <option key={region} value={region}>
-              {region}
+          <option value="">{filtersDict.allRegions}</option>
+          {regioes.map((r) => (
+            <option key={r.slug} value={r.slug}>
+              {r.name}
             </option>
           ))}
         </select>
       </div>
+
+      {distritos.length > 0 && (
+        <div>
+          <label className="text-[11px] text-gray-400 uppercase">
+            {filtersDict.distrito}
+          </label>
+          <select
+            value={currentDistrito}
+            onChange={(e) => {
+              const slug = e.target.value;
+              navigateToLocation(
+                slug ? [currentRegiao, slug] : [currentRegiao],
+              );
+            }}
+            className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
+          >
+            <option value="">{filtersDict.allDistritos}</option>
+            {distritos.map((d) => (
+              <option key={d.slug} value={d.slug}>
+                {d.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {concelhos.length > 0 && (
+        <div>
+          <label className="text-[11px] text-gray-400 uppercase">
+            {filtersDict.concelho}
+          </label>
+          <select
+            value={currentConcelho}
+            onChange={(e) => {
+              const slug = e.target.value;
+              navigateToLocation(
+                slug
+                  ? [currentRegiao, currentDistrito, slug]
+                  : [currentRegiao, currentDistrito],
+              );
+            }}
+            className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
+          >
+            <option value="">{filtersDict.allConcelhos}</option>
+            {concelhos.map((c) => (
+              <option key={c.slug} value={c.slug}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {freguesias.length > 0 && (
+        <div>
+          <label className="text-[11px] text-gray-400 uppercase">
+            {filtersDict.freguesia}
+          </label>
+          <select
+            value={currentFreguesia}
+            onChange={(e) => {
+              const slug = e.target.value;
+              navigateToLocation(
+                slug
+                  ? [currentRegiao, currentDistrito, currentConcelho, slug]
+                  : [currentRegiao, currentDistrito, currentConcelho],
+              );
+            }}
+            className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none w-full"
+          >
+            <option value="">{filtersDict.allFreguesias}</option>
+            {freguesias.map((f) => (
+              <option key={f.slug} value={f.slug}>
+                {f.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
     </div>
   );
 }

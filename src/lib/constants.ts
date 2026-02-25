@@ -9,16 +9,6 @@ export const PROPERTY_TYPES = [
 
 export const LISTING_TYPES = ["rent", "buy"] as const;
 
-export const REGIONS = [
-  "Lisboa",
-  "Porto",
-  "Algarve",
-  "Braga",
-  "Coimbra",
-  "Aveiro",
-  "Setúbal",
-  "Madeira",
-] as const;
 
 export const SORT_OPTIONS = [
   { key: "newest", value: "newest" },

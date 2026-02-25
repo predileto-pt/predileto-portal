@@ -12,6 +12,9 @@ export interface PropertyRow {
   address_city: string | null;
   address_district: string | null;
   address_postal_code: string | null;
+  address_regiao?: string | null;
+  address_concelho?: string | null;
+  address_freguesia?: string | null;
   images: string[] | null;
   features: string[] | null;
   sources: { name: string; url: string }[] | null;
