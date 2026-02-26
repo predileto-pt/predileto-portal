@@ -73,6 +73,12 @@
   "breadcrumbs": {
     "home": "Início"
   },
+  "hero": {
+    "buyHeading": "Encontre o imóvel ideal para comprar em Portugal",
+    "buySubheading": "Compare preços e características de milhares de imóveis à venda. Pesquise por região, tipo ou preço e encontre a casa dos seus sonhos.",
+    "rentHeading": "Encontre o imóvel ideal para arrendar em Portugal",
+    "rentSubheading": "Compare preços e características de milhares de imóveis para arrendar. Pesquise por região, tipo ou preço e encontre a casa perfeita."
+  },
   "common": {
     "previous": "Anterior",
     "next": "Seguinte"

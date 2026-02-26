@@ -73,6 +73,12 @@
   "breadcrumbs": {
     "home": "Home"
   },
+  "hero": {
+    "buyHeading": "Find your ideal property to buy in Portugal",
+    "buySubheading": "Compare prices and features from thousands of properties for sale. Search by region, type, or price and find your dream home.",
+    "rentHeading": "Find your ideal property to rent in Portugal",
+    "rentSubheading": "Compare prices and features from thousands of rental properties. Search by region, type, or price and find your perfect home."
+  },
   "common": {
     "previous": "Previous",
     "next": "Next"
