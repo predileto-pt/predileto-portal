@@ -1,7 +1,8 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import posthog from "posthog-js";
 import { useDictionary } from "@/components/dictionary-provider";
 import { formatPrice, formatArea } from "@/lib/utils";
@@ -37,8 +38,17 @@ const nearbyCache = new Map<string, NearbyData>();
 
 export function PropertyDetailPanel({ locale }: { locale: string }) {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const dict = useDictionary();
   const selectedId = searchParams.get("selected");
+
+  const dismiss = useCallback(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("selected");
+    const qs = params.toString();
+    router.push(qs ? `${pathname}?${qs}` : pathname);
+  }, [searchParams, router, pathname]);
   const [property, setProperty] = useState<PropertyData | null>(null);
   const [nearby, setNearby] = useState<NearbyData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -111,12 +121,13 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
     }
   }, [selectedId]);
 
-  if (!selectedId) {
-    return null;
-  }
+  const sourceUrl = property?.sources?.[0]?.url;
+  const sourceName = property?.sources?.[0]?.name || "";
 
-  if (loading) {
-    return (
+  let content: React.ReactNode = null;
+
+  if (selectedId && loading) {
+    content = (
       <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 animate-pulse">
         <div>
           <div className="h-3 w-3/4 bg-gray-200 rounded" />
@@ -144,108 +155,126 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
         </div>
       </div>
     );
-  }
-
-  if (error) {
-    return (
+  } else if (selectedId && error) {
+    content = (
       <div className="lg:sticky lg:top-4 border border-gray-200 p-4">
         <p className="text-[12px] text-gray-400">{d.loadError}</p>
       </div>
     );
-  }
-
-  if (!property) return null;
-
-  const sourceUrl = property.sources?.[0]?.url;
-  const sourceName = property.sources?.[0]?.name || "";
-
-  return (
-    <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
-      <div>
-        <h2 className="text-[13px] font-bold">{property.title}</h2>
-        <p className="text-[11px] text-gray-400">
-          {property.address.municipality}
-          {property.address.district ? `, ${property.address.district}` : ""}
-        </p>
-      </div>
-
-      <div className="text-sm font-bold">
-        {property.price > 0 ? formatPrice(property.price, locale) : "-"}
-      </div>
-
-      <div className="space-y-1 text-[12px]">
-        <h3 className="text-[11px] text-gray-400 uppercase">{d.details}</h3>
-        <div className="flex justify-between">
-          <span className="text-gray-400">{d.propertyType}</span>
-          <span>{propertyTypesDict[property.propertyType] || property.propertyType}</span>
-        </div>
-        {property.features.bedrooms > 0 && (
-          <div className="flex justify-between">
-            <span className="text-gray-400">{d.bedrooms}</span>
-            <span>T{property.features.bedrooms}</span>
-          </div>
-        )}
-        {property.features.bathrooms > 0 && (
-          <div className="flex justify-between">
-            <span className="text-gray-400">{d.bathrooms}</span>
-            <span>{property.features.bathrooms}</span>
-          </div>
-        )}
-        {property.features.areaSqm > 0 && (
-          <div className="flex justify-between">
-            <span className="text-gray-400">{d.area}</span>
-            <span>{formatArea(property.features.areaSqm)}</span>
-          </div>
-        )}
-      </div>
-
-      {property.fullDescription && (
-        <div>
-          <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.description}</h3>
-          <p className={`text-[12px] text-gray-600 whitespace-pre-line leading-relaxed ${descExpanded ? "" : "line-clamp-4"}`}>
-            {property.fullDescription}
-          </p>
+  } else if (selectedId && property) {
+    content = (
+      <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+        <div className="flex justify-end">
           <button
             type="button"
-            onClick={() => setDescExpanded((v) => !v)}
-            className="text-[11px] text-blue-400 hover:text-blue-500 mt-1"
+            onClick={dismiss}
+            className="text-[11px] text-gray-400 hover:text-gray-600"
           >
-            {descExpanded ? d.showLess || "Show less" : d.showMore || "Show more"}
+            &#x2715; close
           </button>
         </div>
-      )}
-
-      {sourceUrl && (
         <div>
-          <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.source}</h3>
-          <a
-            href={sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[12px] underline underline-offset-2 hover:text-gray-600"
-          >
-            {sourceName}
-          </a>
+          <h2 className="text-[13px] font-bold">{property.title}</h2>
+          <p className="text-[11px] text-gray-400">
+            {property.address.municipality}
+            {property.address.district ? `, ${property.address.district}` : ""}
+          </p>
         </div>
-      )}
 
-      {nearby === null ? (
-        <div className="space-y-2 animate-pulse">
-          <div className="grid grid-cols-2 gap-2">
-            <div className="h-10 bg-gray-100 rounded" />
-            <div className="h-10 bg-gray-100 rounded" />
-            <div className="h-10 bg-gray-100 rounded" />
-            <div className="h-10 bg-gray-100 rounded" />
-          </div>
+        <div className="text-sm font-bold">
+          {property.price > 0 ? formatPrice(property.price, locale) : "-"}
         </div>
-      ) : nearby.nearbyError ? (
-        <p className="text-[12px] text-gray-400">{d.nearbyError}</p>
-      ) : (
-        <>
-          <NearbyAmenities counts={nearby.nearby.counts} dict={dict} />
-          <NearestPlaces nearest={nearby.nearby.nearest} dict={dict} />
-        </>
+
+        <div className="space-y-1 text-[12px]">
+          <h3 className="text-[11px] text-gray-400 uppercase">{d.details}</h3>
+          <div className="flex justify-between">
+            <span className="text-gray-400">{d.propertyType}</span>
+            <span>{propertyTypesDict[property.propertyType] || property.propertyType}</span>
+          </div>
+          {property.features.bedrooms > 0 && (
+            <div className="flex justify-between">
+              <span className="text-gray-400">{d.bedrooms}</span>
+              <span>T{property.features.bedrooms}</span>
+            </div>
+          )}
+          {property.features.bathrooms > 0 && (
+            <div className="flex justify-between">
+              <span className="text-gray-400">{d.bathrooms}</span>
+              <span>{property.features.bathrooms}</span>
+            </div>
+          )}
+          {property.features.areaSqm > 0 && (
+            <div className="flex justify-between">
+              <span className="text-gray-400">{d.area}</span>
+              <span>{formatArea(property.features.areaSqm)}</span>
+            </div>
+          )}
+        </div>
+
+        {property.fullDescription && (
+          <div>
+            <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.description}</h3>
+            <p className={`text-[12px] text-gray-600 whitespace-pre-line leading-relaxed ${descExpanded ? "" : "line-clamp-4"}`}>
+              {property.fullDescription}
+            </p>
+            <button
+              type="button"
+              onClick={() => setDescExpanded((v) => !v)}
+              className="text-[11px] text-blue-400 hover:text-blue-500 mt-1"
+            >
+              {descExpanded ? d.showLess || "Show less" : d.showMore || "Show more"}
+            </button>
+          </div>
+        )}
+
+        {sourceUrl && (
+          <div>
+            <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.source}</h3>
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[12px] underline underline-offset-2 hover:text-gray-600"
+            >
+              {sourceName}
+            </a>
+          </div>
+        )}
+
+        {nearby === null ? (
+          <div className="space-y-2 animate-pulse">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="h-10 bg-gray-100 rounded" />
+              <div className="h-10 bg-gray-100 rounded" />
+              <div className="h-10 bg-gray-100 rounded" />
+              <div className="h-10 bg-gray-100 rounded" />
+            </div>
+          </div>
+        ) : nearby.nearbyError ? (
+          <p className="text-[12px] text-gray-400">{d.nearbyError}</p>
+        ) : (
+          <>
+            <NearbyAmenities counts={nearby.nearby.counts} dict={dict} />
+            <NearestPlaces nearest={nearby.nearby.nearest} dict={dict} />
+          </>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <AnimatePresence>
+      {content && (
+        <motion.div
+          key={selectedId}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 20 }}
+          transition={{ duration: 0.25 }}
+        >
+          {content}
+        </motion.div>
       )}
-    </div>
+    </AnimatePresence>
   );
 }

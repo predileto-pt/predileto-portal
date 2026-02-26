@@ -16,6 +16,7 @@ import { PropertyDetailPanel } from "@/components/property-detail-panel";
 import { UpdatesSidebar } from "@/components/updates-sidebar";
 import { LocationBreadcrumbs } from "@/components/location-breadcrumbs";
 import { LocationBrowser } from "@/components/location-browser";
+import { LayoutColumn } from "@/components/layout-column";
 
 const FILTER_KEYS = [
   "q",
@@ -100,7 +101,7 @@ export async function SearchPage({
           />
         </Suspense>
       </div>
-      <div className="lg:col-span-8">
+      <LayoutColumn className={selectedId ? "lg:col-span-6" : "lg:col-span-8"}>
         <LocationBreadcrumbs
           items={breadcrumbs}
           homeLabel={(dict as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
@@ -125,15 +126,15 @@ export async function SearchPage({
         ) : (
           <LocationBrowser locale={locale} listingSlug={listingSlug} />
         )}
-      </div>
-      <div className="lg:col-span-2">
+      </LayoutColumn>
+      <LayoutColumn className={selectedId ? "lg:col-span-4" : "lg:col-span-2"}>
         <Suspense>
           <PropertyDetailPanel locale={locale} />
         </Suspense>
         <Suspense>
           <UpdatesSidebar />
         </Suspense>
-      </div>
+      </LayoutColumn>
     </div>
   );
 }
