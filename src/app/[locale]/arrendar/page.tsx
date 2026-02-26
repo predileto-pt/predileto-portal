@@ -14,7 +14,7 @@ export default async function AlugarPage({
     <SearchPage
       locationSlugs={[]}
       listingType="rent"
-      listingSlug="alugar"
+      listingSlug="arrendar"
       locale={locale}
       searchParams={sp}
     />

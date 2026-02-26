@@ -13,7 +13,9 @@ import { PropertyList } from "@/components/property-list";
 import { PropertyListSkeleton } from "@/components/property-list-skeleton";
 import { Pagination } from "@/components/pagination";
 import { PropertyDetailPanel } from "@/components/property-detail-panel";
+import { UpdatesSidebar } from "@/components/updates-sidebar";
 import { LocationBreadcrumbs } from "@/components/location-breadcrumbs";
+import { LocationBrowser } from "@/components/location-browser";
 
 const FILTER_KEYS = [
   "q",
@@ -32,7 +34,7 @@ function hasActiveFilters(sp: Record<string, string | string[] | undefined>) {
 interface SearchPageProps {
   locationSlugs: string[];
   listingType: "buy" | "rent";
-  listingSlug: "comprar" | "alugar";
+  listingSlug: "comprar" | "arrendar";
   locale: string;
   searchParams: Record<string, string | string[] | undefined>;
 }
@@ -79,7 +81,7 @@ export async function SearchPage({
           />
         </Suspense>
       </div>
-      <div className="col-span-6">
+      <div className="col-span-8">
         <LocationBreadcrumbs
           items={breadcrumbs}
           homeLabel={(dict as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
@@ -102,14 +104,15 @@ export async function SearchPage({
             />
           </Suspense>
         ) : (
-          <div className="text-[13px] text-gray-400 py-8">
-            {dict.properties.searchPrompt}
-          </div>
+          <LocationBrowser locale={locale} listingSlug={listingSlug} />
         )}
       </div>
-      <div className="col-span-4">
+      <div className="col-span-2">
         <Suspense>
           <PropertyDetailPanel locale={locale} />
+        </Suspense>
+        <Suspense>
+          <UpdatesSidebar />
         </Suspense>
       </div>
     </div>
