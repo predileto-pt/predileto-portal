@@ -160,7 +160,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
   const sourceName = property.sources?.[0]?.name || "";
 
   return (
-    <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 lg:max-h-[calc(100vh-6rem)] overflow-y-auto">
+    <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
       <div>
         <h2 className="text-[13px] font-bold">{property.title}</h2>
         <p className="text-[11px] text-gray-400">
