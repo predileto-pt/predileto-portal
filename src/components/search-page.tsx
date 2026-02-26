@@ -128,9 +128,11 @@ export async function SearchPage({
         )}
       </div>
       <div className="lg:col-span-4">
-        <Suspense>
-          <PropertyDetailPanel locale={locale} />
-        </Suspense>
+        <div className="hidden lg:block">
+          <Suspense>
+            <PropertyDetailPanel locale={locale} />
+          </Suspense>
+        </div>
         <Suspense>
           <UpdatesSidebar />
         </Suspense>
