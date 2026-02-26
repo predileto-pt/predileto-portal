@@ -59,7 +59,8 @@
     "supermarket": "Supermarket",
     "selectProperty": "Select a property to view details",
     "loadError": "Could not load details for this property. Please try again later.",
-    "nearbyError": "Could not load nearby places."
+    "nearbyError": "Could not load nearby places.",
+    "seePhotos": "See photos"
   },
   "propertyTypes": {
     "apartment": "Apartment",

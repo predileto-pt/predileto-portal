@@ -59,7 +59,8 @@
     "supermarket": "Supermercado",
     "selectProperty": "Selecione um imóvel para ver detalhes",
     "loadError": "Não foi possível carregar os detalhes deste imóvel. Por favor, tente novamente mais tarde.",
-    "nearbyError": "Não foi possível carregar locais próximos."
+    "nearbyError": "Não foi possível carregar locais próximos.",
+    "seePhotos": "Ver fotos"
   },
   "propertyTypes": {
     "apartment": "Apartamento",

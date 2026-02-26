@@ -181,8 +181,24 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
           </p>
         </div>
 
-        <div className="text-sm font-bold">
-          {property.price > 0 ? formatPrice(property.price, locale) : "-"}
+        <div className="mb-2">
+          <div className="text-sm font-bold">
+            {property.price > 0 ? formatPrice(property.price, locale) : "-"}
+          </div>
+
+          {sourceUrl && (
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-0.5 text-[12px] text-blue-500 underline underline-offset-2 hover:text-blue-700"
+            >
+              {d.seePhotos}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-3">
+                <path fillRule="evenodd" d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0Z" clipRule="evenodd" />
+              </svg>
+            </a>
+          )}
         </div>
 
         <div className="space-y-1 text-[12px]">
