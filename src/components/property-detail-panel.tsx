@@ -43,6 +43,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
   const [nearby, setNearby] = useState<NearbyData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [descExpanded, setDescExpanded] = useState(false);
 
   const d = dict.propertyDetail as Record<string, string>;
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
@@ -59,6 +60,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
     setError(false);
     setProperty(null);
     setNearby(null);
+    setDescExpanded(false);
 
     // Property fetch — resolves quickly, unblocks rendering
     fetch(`/api/property/${selectedId}`)
@@ -200,9 +202,16 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
       {property.fullDescription && (
         <div>
           <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.description}</h3>
-          <p className="text-[12px] text-gray-600 whitespace-pre-line leading-relaxed">
+          <p className={`text-[12px] text-gray-600 whitespace-pre-line leading-relaxed ${descExpanded ? "" : "line-clamp-4"}`}>
             {property.fullDescription}
           </p>
+          <button
+            type="button"
+            onClick={() => setDescExpanded((v) => !v)}
+            className="text-[11px] text-blue-400 hover:text-blue-500 mt-1"
+          >
+            {descExpanded ? d.showLess || "Show less" : d.showMore || "Show more"}
+          </button>
         </div>
       )}
 
