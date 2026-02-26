@@ -1,0 +1,23 @@
+{
+  "id": "test-property-1",
+  "title": "Beautiful Apartment in Lisbon",
+  "price": 250000,
+  "propertyType": "apartment",
+  "address": {
+    "fullAddress": "Rua Augusta 100, Lisboa",
+    "municipality": "Lisboa",
+    "district": "Lisboa",
+    "region": "area-metropolitana-de-lisboa",
+    "postalCode": "1100-001",
+    "country": "Portugal"
+  },
+  "features": {
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "areaSqm": 85
+  },
+  "fullDescription": "A stunning apartment located in the heart of Lisbon, featuring modern finishes, natural light, and a fantastic view of the river. This property is perfect for families or professionals looking for a central location with easy access to public transport, restaurants, and cultural attractions.",
+  "sources": [
+    { "name": "Idealista", "url": "https://www.idealista.pt/example" }
+  ]
+}

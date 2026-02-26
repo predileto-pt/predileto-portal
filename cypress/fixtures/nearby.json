@@ -1,0 +1,46 @@
+{
+  "property": {
+    "id": "test-property-1",
+    "title": "Beautiful Apartment in Lisbon",
+    "price": 250000,
+    "propertyType": "apartment",
+    "address": {
+      "fullAddress": "Rua Augusta 100, Lisboa",
+      "municipality": "Lisboa",
+      "district": "Lisboa"
+    },
+    "features": {
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "areaSqm": 85
+    }
+  },
+  "nearby": {
+    "counts": {
+      "restaurants": 15,
+      "hospitals": 2,
+      "schools": 5,
+      "banks": 8,
+      "pharmacies": 4,
+      "supermarkets": 3
+    },
+    "nearest": {
+      "schools": {
+        "name": "Escola Básica da Baixa",
+        "distance": 350,
+        "mapUrl": "https://www.google.com/maps/search/?api=1&query=38.71,-9.14"
+      },
+      "hospitals": {
+        "name": "Hospital de São José",
+        "distance": 1200,
+        "mapUrl": "https://www.google.com/maps/search/?api=1&query=38.72,-9.13"
+      },
+      "supermarkets": {
+        "name": "Pingo Doce Baixa",
+        "distance": 200,
+        "mapUrl": "https://www.google.com/maps/search/?api=1&query=38.71,-9.14"
+      }
+    }
+  },
+  "nearbyError": false
+}
