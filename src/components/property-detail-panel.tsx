@@ -28,17 +28,19 @@ interface PropertyData {
   sources: { name: string; url: string }[];
 }
 
-interface DetailResponse {
-  property: PropertyData;
+interface NearbyData {
   nearby: NearbyPlacesResult;
   nearbyError?: string | false;
 }
+
+const nearbyCache = new Map<string, NearbyData>();
 
 export function PropertyDetailPanel({ locale }: { locale: string }) {
   const searchParams = useSearchParams();
   const dict = useDictionary();
   const selectedId = searchParams.get("selected");
-  const [data, setData] = useState<DetailResponse | null>(null);
+  const [property, setProperty] = useState<PropertyData | null>(null);
+  const [nearby, setNearby] = useState<NearbyData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -47,36 +49,64 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
   useEffect(() => {
     if (!selectedId) {
-      setData(null);
+      setProperty(null);
+      setNearby(null);
       setError(false);
       return;
     }
 
     setLoading(true);
     setError(false);
-    fetch(`/api/property/${selectedId}/nearby`)
+    setProperty(null);
+    setNearby(null);
+
+    // Property fetch — resolves quickly, unblocks rendering
+    fetch(`/api/property/${selectedId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.json();
       })
       .then((json) => {
-        setData(json);
+        setProperty(json);
         setLoading(false);
-        if (json.nearbyError) {
-          posthog.captureException(new Error(json.nearbyError), {
-            property_id: selectedId,
-            address: json.property?.address,
-          });
-        }
       })
       .catch((err) => {
-        setData(null);
         setError(true);
         setLoading(false);
         posthog.captureException(err instanceof Error ? err : new Error("Unknown error"), {
           property_id: selectedId,
         });
       });
+
+    // Nearby fetch — slower, renders independently when ready (cached client-side)
+    const cached = nearbyCache.get(selectedId);
+    if (cached) {
+      setNearby(cached);
+    } else {
+      fetch(`/api/property/${selectedId}/nearby`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch nearby");
+          return res.json();
+        })
+        .then((json) => {
+          const data: NearbyData = { nearby: json.nearby, nearbyError: json.nearbyError };
+          nearbyCache.set(selectedId, data);
+          setNearby(data);
+          if (json.nearbyError) {
+            posthog.captureException(new Error(json.nearbyError), {
+              property_id: selectedId,
+              address: json.property?.address,
+            });
+          }
+        })
+        .catch((err) => {
+          setNearby({ nearby: { counts: {}, nearest: {} }, nearbyError: "Failed to load" });
+          posthog.captureException(err instanceof Error ? err : new Error("Unknown error"), {
+            property_id: selectedId,
+            context: "nearby",
+          });
+        });
+    }
   }, [selectedId]);
 
   if (!selectedId) {
@@ -122,9 +152,8 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
     );
   }
 
-  if (!data) return null;
+  if (!property) return null;
 
-  const { property, nearby } = data;
   const sourceUrl = property.sources?.[0]?.url;
   const sourceName = property.sources?.[0]?.name || "";
 
@@ -191,12 +220,21 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
         </div>
       )}
 
-      {data.nearbyError ? (
+      {nearby === null ? (
+        <div className="space-y-2 animate-pulse">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="h-10 bg-gray-100 rounded" />
+            <div className="h-10 bg-gray-100 rounded" />
+            <div className="h-10 bg-gray-100 rounded" />
+            <div className="h-10 bg-gray-100 rounded" />
+          </div>
+        </div>
+      ) : nearby.nearbyError ? (
         <p className="text-[12px] text-gray-400">{d.nearbyError}</p>
       ) : (
         <>
-          <NearbyAmenities counts={nearby.counts} dict={dict} />
-          <NearestPlaces nearest={nearby.nearest} dict={dict} />
+          <NearbyAmenities counts={nearby.nearby.counts} dict={dict} />
+          <NearestPlaces nearest={nearby.nearby.nearest} dict={dict} />
         </>
       )}
     </div>

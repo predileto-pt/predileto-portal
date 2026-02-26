@@ -64,6 +64,10 @@ export function NearestPlaces({ nearest, dict }: NearestPlacesProps) {
                 <p className="truncate text-[12px] font-medium">
                   {place.name}
                 </p>
+                <a href={place.mapUrl} target="_blank" rel="noopener noreferrer"
+                   className="block truncate text-[10px] text-blue-400 hover:text-blue-500">
+                  View on Google Maps
+                </a>
                 <p className="text-[11px] text-gray-400">
                   {d[item.labelKey]} · {formatDistance(place.distance)}
                 </p>

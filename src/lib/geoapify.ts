@@ -6,6 +6,7 @@ export interface GeoCoords {
 export interface NearbyPlace {
   name: string;
   distance: number;
+  mapUrl: string;
 }
 
 export interface NearbyPlacesResult {
@@ -78,7 +79,7 @@ export async function getNearbyPlaces(
     PLACE_CATEGORIES.map(async (category) => {
       const params = new URLSearchParams({
         categories: category,
-        filter: `circle:${lon},${lat},1500`,
+        filter: `circle:${lon},${lat},20000`,
         bias: `proximity:${lon},${lat}`,
         limit: "20",
         apiKey,
@@ -105,9 +106,12 @@ export async function getNearbyPlaces(
 
     if (features.length > 0) {
       const f = features[0];
+      const placeLat = f.properties?.lat;
+      const placeLon = f.properties?.lon;
       nearest[key] = {
         name: f.properties?.name || f.properties?.address_line1 || key,
         distance: Math.round(f.properties?.distance || 0),
+        mapUrl: `https://www.google.com/maps/search/?api=1&query=${placeLat},${placeLon}`,
       };
     } else {
       nearest[key] = null;
