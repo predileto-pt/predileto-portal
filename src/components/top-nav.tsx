@@ -18,8 +18,8 @@ export function TopNav({ locale }: { locale: Locale }) {
 
   return (
     <nav className="border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-      <div className="flex items-center gap-6">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex items-center justify-between">
+      <div className="flex items-center gap-4 lg:gap-6">
         <Link href={`/${locale}/comprar`} className="text-sm font-bold">
           {dict.nav.title}
         </Link>

@@ -70,8 +70,27 @@ export async function SearchPage({
   const listingLabel = listingType === "buy" ? dict.nav.buy : dict.nav.rent;
 
   return (
-    <div className="grid grid-cols-12 gap-4">
-      <div className="col-span-2">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      {/* Mobile filter toggle */}
+      <div className="lg:hidden">
+        <details>
+          <summary className="text-[13px] font-medium cursor-pointer border border-gray-200 px-3 py-2 rounded select-none">
+            Filtros
+          </summary>
+          <div className="mt-2">
+            <Suspense>
+              <SearchFilters
+                locationSlugs={locationSlugs}
+                resolved={resolved}
+                locale={locale}
+                listingSlug={listingSlug}
+              />
+            </Suspense>
+          </div>
+        </details>
+      </div>
+      {/* Desktop filters sidebar */}
+      <div className="hidden lg:block lg:col-span-2">
         <Suspense>
           <SearchFilters
             locationSlugs={locationSlugs}
@@ -81,7 +100,7 @@ export async function SearchPage({
           />
         </Suspense>
       </div>
-      <div className="col-span-8">
+      <div className="lg:col-span-8">
         <LocationBreadcrumbs
           items={breadcrumbs}
           homeLabel={(dict as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
@@ -107,7 +126,7 @@ export async function SearchPage({
           <LocationBrowser locale={locale} listingSlug={listingSlug} />
         )}
       </div>
-      <div className="col-span-2">
+      <div className="lg:col-span-2">
         <Suspense>
           <PropertyDetailPanel locale={locale} />
         </Suspense>

@@ -19,7 +19,7 @@ export default async function LocaleLayout({
   return (
     <DictionaryProvider dictionary={dictionary}>
       <TopNav locale={locale} />
-      <main className="max-w-7xl mx-auto px-6 py-4">{children}</main>
+      <main className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">{children}</main>
     </DictionaryProvider>
   );
 }

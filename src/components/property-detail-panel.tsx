@@ -117,7 +117,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
   if (loading) {
     return (
-      <div className="sticky top-4 border border-gray-200 p-4 space-y-4 animate-pulse">
+      <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 animate-pulse">
         <div>
           <div className="h-3 w-3/4 bg-gray-200 rounded" />
           <div className="h-2 w-1/2 bg-gray-100 rounded mt-2" />
@@ -148,7 +148,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
   if (error) {
     return (
-      <div className="sticky top-4 border border-gray-200 p-4">
+      <div className="lg:sticky lg:top-4 border border-gray-200 p-4">
         <p className="text-[12px] text-gray-400">{d.loadError}</p>
       </div>
     );
@@ -160,7 +160,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
   const sourceName = property.sources?.[0]?.name || "";
 
   return (
-    <div className="sticky top-4 border border-gray-200 p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+    <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 lg:max-h-[calc(100vh-6rem)] overflow-y-auto">
       <div>
         <h2 className="text-[13px] font-bold">{property.title}</h2>
         <p className="text-[11px] text-gray-400">
