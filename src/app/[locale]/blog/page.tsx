@@ -27,25 +27,23 @@ export default async function BlogPage({
         <p className="text-[12px] text-gray-500">{blog.subheading}</p>
       </div>
 
-      <div>
-        {posts.map((post, i) => (
-          <Link
-            key={post.slug}
-            href={`/${locale}/blog/${post.slug}`}
-            className={`block border border-gray-200 px-4 py-4 hover:bg-gray-50 transition-colors ${i > 0 ? "-mt-px" : ""}`}
-          >
-            <h2 className="text-[14px] font-bold">{post.title}</h2>
-            <p className="text-[13px] text-gray-600 mt-1">{post.excerpt}</p>
-            <p className="text-[11px] text-gray-400 mt-2">
-              {new Date(post.date).toLocaleDateString(
-                localeToDateLocale[locale as Locale],
-                { year: "numeric", month: "long", day: "numeric" },
-              )}{" "}
-              &middot; {post.author}
-            </p>
-          </Link>
+      <ul className="space-y-1">
+        {posts.map((post) => (
+          <li key={post.slug} className="text-[12px]">
+            <Link
+              href={`/${locale}/blog/${post.slug}`}
+              className="hover:underline underline-offset-2"
+            >
+              <span className="text-gray-400">
+                {new Date(post.date).toLocaleDateString(
+                  localeToDateLocale[locale as Locale],
+                )}
+              </span>{" "}
+              <span>{post.title}</span>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
