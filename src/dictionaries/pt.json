@@ -2,6 +2,7 @@
   "nav": {
     "buy": "Comprar",
     "rent": "Arrendar",
+    "blog": "Blog",
     "title": "Predileto"
   },
   "filters": {
@@ -79,8 +80,24 @@
     "rentHeading": "Encontre o imóvel ideal para arrendar em Portugal",
     "rentSubheading": "Compare preços e características de milhares de imóveis para arrendar. Pesquise por região, tipo ou preço e encontre a casa perfeita."
   },
+  "carousel": {
+    "heading": "Imóveis Recentes"
+  },
+  "homepage": {
+    "heading": "Encontre a sua próxima casa em Portugal",
+    "subheading": "Compare milhares de imóveis à venda e para arrendar em todo o país.",
+    "newsHeading": "Últimas Novidades"
+  },
   "common": {
     "previous": "Anterior",
     "next": "Seguinte"
+  },
+  "blog": {
+    "heading": "Blog",
+    "subheading": "Artigos e guias sobre o mercado imobiliário em Portugal.",
+    "readMore": "Ler mais",
+    "backToList": "Voltar ao blog",
+    "by": "Por",
+    "publishedOn": "Publicado em"
   }
 }

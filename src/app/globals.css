@@ -7,3 +7,88 @@ body {
   color: #111;
   font-size: 14px;
 }
+
+.blog-content h2 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.blog-content h3 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+.blog-content p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #4b5563;
+  margin-bottom: 0.75em;
+}
+
+.blog-content ul,
+.blog-content ol {
+  font-size: 13px;
+  color: #4b5563;
+  margin-bottom: 0.75em;
+  padding-left: 1.5em;
+}
+
+.blog-content ul {
+  list-style-type: disc;
+}
+
+.blog-content ol {
+  list-style-type: decimal;
+}
+
+.blog-content li {
+  margin-bottom: 0.25em;
+  line-height: 1.7;
+}
+
+.blog-content img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #e5e7eb;
+  margin: 1em 0;
+}
+
+.blog-content a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-content blockquote {
+  border-left: 2px solid #e5e7eb;
+  padding-left: 1em;
+  margin: 1em 0;
+  color: #4b5563;
+}
+
+.blog-content strong {
+  font-weight: 700;
+  color: #111;
+}
+
+.blog-content table {
+  font-size: 12px;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.blog-content th,
+.blog-content td {
+  border: 1px solid #e5e7eb;
+  padding: 0.375em 0.625em;
+  text-align: left;
+}
+
+.blog-content th {
+  font-weight: 700;
+  background: #f9fafb;
+}

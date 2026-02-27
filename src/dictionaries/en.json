@@ -2,6 +2,7 @@
   "nav": {
     "buy": "Buy",
     "rent": "Rent",
+    "blog": "Blog",
     "title": "Predileto"
   },
   "filters": {
@@ -79,8 +80,24 @@
     "rentHeading": "Find your ideal property to rent in Portugal",
     "rentSubheading": "Compare prices and features from thousands of rental properties. Search by region, type, or price and find your perfect home."
   },
+  "carousel": {
+    "heading": "Latest Properties"
+  },
+  "homepage": {
+    "heading": "Find your next home in Portugal",
+    "subheading": "Compare thousands of properties for sale and rent across the country.",
+    "newsHeading": "Latest Updates"
+  },
   "common": {
     "previous": "Previous",
     "next": "Next"
+  },
+  "blog": {
+    "heading": "Blog",
+    "subheading": "Articles and guides about the real estate market in Portugal.",
+    "readMore": "Read more",
+    "backToList": "Back to blog",
+    "by": "By",
+    "publishedOn": "Published on"
   }
 }

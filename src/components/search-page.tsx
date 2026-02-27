@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { getProperties } from "@/lib/api";
+import { getProperties, getLatestProperties } from "@/lib/api";
 import type { PropertySearchParams } from "@/lib/types";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import {
@@ -16,7 +16,7 @@ import { PropertyDetailPanel } from "@/components/property-detail-panel";
 import { UpdatesSidebar } from "@/components/updates-sidebar";
 import { LocationBreadcrumbs } from "@/components/location-breadcrumbs";
 import { LocationBrowser } from "@/components/location-browser";
-import { PixelHouse, PixelApartment } from "@/components/pixel-art";
+import { FeaturedCarousel } from "@/components/featured-carousel";
 
 
 const FILTER_KEYS = [
@@ -54,6 +54,9 @@ export async function SearchPage({
   const dict = await getDictionary(locale as Locale);
   const hasLocation = locationSlugs.length > 0;
   const hasFilters = hasActiveFilters(sp) || hasLocation;
+  const latestProperties = !hasFilters
+    ? await getLatestProperties(listingType)
+    : [];
 
   const rawParams: Record<string, string | undefined> = {};
   for (const [key, value] of Object.entries(sp)) {
@@ -111,22 +114,12 @@ export async function SearchPage({
           listingHref={`/${locale}/${listingSlug}`}
         />
         <h1 className="text-sm font-bold mb-4">{title}</h1>
-        {!hasFilters && (
-          <div className="mb-6 border border-gray-200 px-4 py-5 flex items-start gap-4">
-            {listingType === "buy" ? (
-              <PixelHouse className="size-12 shrink-0 hidden sm:block" />
-            ) : (
-              <PixelApartment className="size-12 shrink-0 hidden sm:block" />
-            )}
-            <div>
-              <h2 className="text-[14px] font-bold mb-1">
-                {listingType === "buy" ? dict.hero.buyHeading : dict.hero.rentHeading}
-              </h2>
-              <p className="text-[12px] text-gray-500 leading-relaxed">
-                {listingType === "buy" ? dict.hero.buySubheading : dict.hero.rentSubheading}
-              </p>
-            </div>
-          </div>
+        {!hasFilters && latestProperties.length > 0 && (
+          <FeaturedCarousel
+            properties={latestProperties}
+            locale={locale}
+            heading={(dict as Record<string, Record<string, string>>).carousel?.heading ?? "Latest Properties"}
+          />
         )}
         {hasFilters ? (
           <Suspense fallback={<PropertyListSkeleton />}>

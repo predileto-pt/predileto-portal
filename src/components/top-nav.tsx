@@ -10,6 +10,7 @@ import type { Locale } from "@/lib/i18n";
 const navItems = [
   { key: "buy" as const, href: "comprar" },
   { key: "rent" as const, href: "arrendar" },
+  { key: "blog" as const, href: "blog" },
 ];
 
 export function TopNav({ locale }: { locale: Locale }) {
@@ -20,7 +21,7 @@ export function TopNav({ locale }: { locale: Locale }) {
     <nav className="border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4 lg:gap-6">
-        <Link href={`/${locale}/comprar`} className="text-sm font-bold">
+        <Link href={`/${locale}`} className="text-sm font-bold">
           {dict.nav.title}
         </Link>
         <div className="flex gap-4">
