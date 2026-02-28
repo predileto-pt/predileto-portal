@@ -87,24 +87,18 @@ export async function getProperties(
     }
   }
 
-  // Hierarchical location filters
-  if (params.region) {
+  // Hierarchical location filter — only the deepest level (it implies ancestors)
+  if (params.parish) {
+    query = query.eq("address_parish", params.parish);
+  } else if (params.municipality) {
+    query = query.eq("address_municipality", params.municipality);
+  } else if (params.district) {
+    query = query.eq("address_district", params.district);
+  } else if (params.region) {
     const districtSlugs = getDistrictSlugsForRegion(params.region);
     if (districtSlugs.length > 0) {
       query = query.in("address_district", districtSlugs);
     }
-  }
-
-  if (params.district) {
-    query = query.eq("address_district", params.district);
-  }
-
-  if (params.municipality) {
-    query = query.eq("address_city", params.municipality);
-  }
-
-  if (params.parish) {
-    query = query.eq("address_freguesia", params.parish);
   }
 
   if (params.minPrice) {
@@ -118,7 +112,7 @@ export async function getProperties(
   if (params.q) {
     const q = `"%${params.q}%"`;
     query = query.or(
-      `title.ilike.${q},description.ilike.${q},address_city.ilike.${q},address_district.ilike.${q}`,
+      `title.ilike.${q},description.ilike.${q},address_municipality.ilike.${q},address_district.ilike.${q}`,
     );
   }
 
@@ -138,6 +132,25 @@ export async function getProperties(
   const properties = (data as PropertyRow[]).map(mapRowToProperty);
 
   return { data: properties, total, page, pageSize, totalPages };
+}
+
+export async function getLatestProperties(
+  listingType: "buy" | "rent",
+  limit = 6,
+): Promise<Property[]> {
+  const conditions = listingTypeConditions[listingType];
+  if (!conditions) return [];
+
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*")
+    .or(conditions)
+    .not("images", "eq", "[]")
+    .order("scraped_at", { ascending: false })
+    .limit(limit);
+
+  if (error || !data) return [];
+  return (data as PropertyRow[]).map(mapRowToProperty);
 }
 
 export async function getPropertyById(

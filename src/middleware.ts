@@ -22,7 +22,7 @@ export function middleware(request: NextRequest) {
 
   // Redirect bare paths to default locale
   const url = request.nextUrl.clone();
-  url.pathname = `/${defaultLocale}${pathname === "/" ? "/comprar" : pathname}`;
+  url.pathname = `/${defaultLocale}${pathname === "/" ? "" : pathname}`;
   return NextResponse.redirect(url);
 }
 
