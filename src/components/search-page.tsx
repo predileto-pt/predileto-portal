@@ -13,10 +13,11 @@ import { PropertyList } from "@/components/property-list";
 import { PropertyListSkeleton } from "@/components/property-list-skeleton";
 import { Pagination } from "@/components/pagination";
 import { PropertyDetailPanel } from "@/components/property-detail-panel";
-import { UpdatesSidebar } from "@/components/updates-sidebar";
+import { BlogSidebar } from "@/components/blog-sidebar";
 import { LocationBreadcrumbs } from "@/components/location-breadcrumbs";
 import { LocationBrowser } from "@/components/location-browser";
 import { FeaturedCarousel } from "@/components/featured-carousel";
+import { getAllPosts } from "@/lib/blog";
 
 
 const FILTER_KEYS = [
@@ -105,7 +106,7 @@ export async function SearchPage({
           />
         </Suspense>
       </div>
-      <div className="lg:col-span-6">
+      <div className="lg:col-span-7">
         <LocationBreadcrumbs
           items={breadcrumbs}
           homeLabel={(dict as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
@@ -138,15 +139,13 @@ export async function SearchPage({
           <LocationBrowser locale={locale} listingSlug={listingSlug} />
         )}
       </div>
-      <div className="lg:col-span-4">
+      <div className="lg:col-span-3">
         <div className="hidden lg:block">
           <Suspense>
             <PropertyDetailPanel locale={locale} />
           </Suspense>
         </div>
-        <Suspense>
-          <UpdatesSidebar />
-        </Suspense>
+        <BlogSidebar locale={locale} posts={getAllPosts().slice(0, 3)} />
       </div>
     </div>
   );

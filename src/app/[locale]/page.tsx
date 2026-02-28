@@ -6,10 +6,7 @@ import {
   localeToDateLocale,
   type Locale,
 } from "@/lib/i18n";
-import { getLatestProperties } from "@/lib/api";
 import { getAllPosts } from "@/lib/blog";
-import { FeaturedCarousel } from "@/components/featured-carousel";
-import { NewsFeed } from "@/components/news-feed";
 
 export default async function HomePage({
   params,
@@ -21,10 +18,6 @@ export default async function HomePage({
 
   const dict = await getDictionary(locale as Locale);
   const hp = (dict as Record<string, Record<string, string>>).homepage;
-  const carouselHeading =
-    (dict as Record<string, Record<string, string>>).carousel?.heading ??
-    "Latest Properties";
-  const latestProperties = await getLatestProperties("buy");
   const latestPosts = getAllPosts().slice(0, 3);
 
   return (
@@ -53,15 +46,6 @@ export default async function HomePage({
         </Link>
       </div>
 
-      {/* Featured carousel */}
-      {latestProperties.length > 0 && (
-        <FeaturedCarousel
-          properties={latestProperties}
-          locale={locale}
-          heading={carouselHeading}
-        />
-      )}
-
       {/* Latest blog posts */}
       {latestPosts.length > 0 && (
         <div>
@@ -87,9 +71,6 @@ export default async function HomePage({
           </ul>
         </div>
       )}
-
-      {/* News feed */}
-      <NewsFeed heading={hp?.newsHeading ?? "Latest Updates"} />
     </div>
   );
 }
