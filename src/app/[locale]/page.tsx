@@ -46,6 +46,37 @@ export default async function HomePage({
         </Link>
       </div>
 
+      {/* Sources */}
+      <div>
+        <h2 className="text-[13px] font-bold mb-2">
+          {hp?.sourcesHeading ?? "We search for you on"}
+        </h2>
+        <ul className="space-y-1">
+          {[
+            { name: "Idealista", url: "https://www.idealista.pt" },
+            { name: "SAPO Imobiliário", url: "https://casa.sapo.pt" },
+            { name: "Imovirtual", url: "https://www.imovirtual.com" },
+            { name: "ERA", url: "https://www.era.pt" },
+            { name: "RE/MAX", url: "https://www.remax.pt" },
+            { name: "Century 21", url: "https://www.century21.pt" },
+            { name: "Supercasa", url: "https://supercasa.pt" },
+            { name: "CasaYes", url: "https://www.casayes.pt" },
+          ].map((source) => (
+            <li key={source.name} className="text-[12px]">
+              <a
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline underline-offset-2"
+              >
+                <span>{source.name}</span>{" "}
+                <span className="text-gray-400">{source.url.replace("https://", "")}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {/* Latest blog posts */}
       {latestPosts.length > 0 && (
         <div>
