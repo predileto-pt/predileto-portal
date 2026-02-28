@@ -23,6 +23,7 @@ export function formatDate(dateString: string, locale: string = "pt"): string {
     year: "numeric",
     month: "short",
     day: "numeric",
+    timeZone: "UTC",
   });
 }
 

@@ -15,8 +15,7 @@ import { PropertyListSkeleton } from "@/components/property-list-skeleton";
 import { Pagination } from "@/components/pagination";
 import { PropertyDetailPanel } from "@/components/property-detail-panel";
 import { LocationBreadcrumbs } from "@/components/location-breadcrumbs";
-import { LocationBrowser } from "@/components/location-browser";
-import { FeaturedCarousel } from "@/components/featured-carousel";
+// import { FeaturedCarousel } from "@/components/featured-carousel";
 
 
 const FILTER_KEYS = [
@@ -110,13 +109,11 @@ export async function SearchPage({
           </Suspense>
         </div>
 
-        {!hasFilters && latestProperties.length > 0 && (
-          <FeaturedCarousel
+        {/* <FeaturedCarousel
             properties={latestProperties}
             locale={locale}
             heading={(dict as Record<string, Record<string, string>>).carousel?.heading ?? "Latest Properties"}
-          />
-        )}
+          /> */}
 
         <LocationBreadcrumbs
           items={breadcrumbs}
@@ -139,9 +136,15 @@ export async function SearchPage({
               basePath={basePath}
             />
           </Suspense>
-        ) : (
-          <LocationBrowser locale={locale} listingSlug={listingSlug} />
-        )}
+        ) : latestProperties.length > 0 ? (
+          <PropertyList
+            properties={latestProperties}
+            total={latestProperties.length}
+            page={1}
+            pageSize={10}
+            locale={locale}
+          />
+        ) : null}
       </div>
 
       {/* Right sidebar */}

@@ -7,6 +7,7 @@ import {
   type Locale,
 } from "@/lib/i18n";
 import { getAllPosts } from "@/lib/blog";
+import { LocationBrowser } from "@/components/location-browser";
 
 export default async function HomePage({
   params,
@@ -101,6 +102,10 @@ export default async function HomePage({
           </ul>
         </div>
       )}
+
+      {/* Location browsers */}
+      <LocationBrowser locale={locale} listingSlug="comprar" />
+      <LocationBrowser locale={locale} listingSlug="arrendar" />
     </div>
   );
 }

@@ -38,15 +38,15 @@ export function PropertyCard({ property, selected, locale }: PropertyCardProps) 
         )}
       >
         <div className="flex gap-3">
-          {property.images?.[0]?.url ? (
-            <img
-              src={property.images[0].url}
-              alt={property.images[0].alt || property.title}
-              className="w-20 h-20 object-cover shrink-0 bg-gray-100"
-            />
-          ) : (
-            <div className="w-20 h-20 shrink-0 bg-gray-100" />
-          )}
+          <div className="w-20 h-20 shrink-0 bg-gray-100 overflow-hidden">
+            {property.images?.[0]?.url ? (
+              <img
+                src={property.images[0].url}
+                alt={property.images[0].alt || property.title}
+                className="w-full h-full object-cover"
+              />
+            ) : null}
+          </div>
           <div className="min-w-0 flex-1">
             <div className="text-[14px] font-bold">
               {property.price > 0 ? formatPrice(property.price, locale) : "-"}
