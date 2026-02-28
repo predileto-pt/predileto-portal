@@ -20,6 +20,7 @@
     "allParishes": "Todas as Freguesias",
     "anyBedrooms": "Qualquer",
     "search": "Pesquisar",
+    "searchPlaceholder": "Pesquisar por localização...",
     "minPrice": "Preço mín.",
     "maxPrice": "Preço máx."
   },

@@ -20,6 +20,7 @@
     "allParishes": "All Parishes",
     "anyBedrooms": "Any",
     "search": "Search",
+    "searchPlaceholder": "Search by location...",
     "minPrice": "Min price",
     "maxPrice": "Max price"
   },

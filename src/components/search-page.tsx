@@ -9,15 +9,14 @@ import {
   type ResolvedLocation,
 } from "@/lib/locations";
 import { SearchFilters } from "@/components/search-filters";
+import { SearchBar } from "@/components/search-bar";
 import { PropertyList } from "@/components/property-list";
 import { PropertyListSkeleton } from "@/components/property-list-skeleton";
 import { Pagination } from "@/components/pagination";
 import { PropertyDetailPanel } from "@/components/property-detail-panel";
-import { BlogSidebar } from "@/components/blog-sidebar";
 import { LocationBreadcrumbs } from "@/components/location-breadcrumbs";
 import { LocationBrowser } from "@/components/location-browser";
 import { FeaturedCarousel } from "@/components/featured-carousel";
-import { getAllPosts } from "@/lib/blog";
 
 
 const FILTER_KEYS = [
@@ -56,7 +55,7 @@ export async function SearchPage({
   const hasLocation = locationSlugs.length > 0;
   const hasFilters = hasActiveFilters(sp) || hasLocation;
   const latestProperties = !hasFilters
-    ? await getLatestProperties(listingType)
+    ? await getLatestProperties(listingType, 10)
     : [];
 
   const rawParams: Record<string, string | undefined> = {};
@@ -85,28 +84,40 @@ export async function SearchPage({
           </summary>
           <div className="mt-2">
             <Suspense>
-              <SearchFilters
-                locationSlugs={locationSlugs}
-                resolved={resolved}
-                locale={locale}
-                listingSlug={listingSlug}
-              />
+              <SearchFilters />
             </Suspense>
           </div>
         </details>
       </div>
+
       {/* Desktop filters sidebar */}
       <div className="hidden lg:block lg:col-span-2">
         <Suspense>
-          <SearchFilters
-            locationSlugs={locationSlugs}
-            resolved={resolved}
-            locale={locale}
-            listingSlug={listingSlug}
-          />
+          <SearchFilters />
         </Suspense>
       </div>
+
+      {/* Main content */}
       <div className="lg:col-span-7">
+        <div className="mb-4">
+          <Suspense>
+            <SearchBar
+              locale={locale}
+              listingSlug={listingSlug}
+              locationSlugs={locationSlugs}
+              resolved={resolved}
+            />
+          </Suspense>
+        </div>
+
+        {!hasFilters && latestProperties.length > 0 && (
+          <FeaturedCarousel
+            properties={latestProperties}
+            locale={locale}
+            heading={(dict as Record<string, Record<string, string>>).carousel?.heading ?? "Latest Properties"}
+          />
+        )}
+
         <LocationBreadcrumbs
           items={breadcrumbs}
           homeLabel={(dict as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
@@ -115,13 +126,6 @@ export async function SearchPage({
           listingHref={`/${locale}/${listingSlug}`}
         />
         <h1 className="text-sm font-bold mb-4">{title}</h1>
-        {!hasFilters && latestProperties.length > 0 && (
-          <FeaturedCarousel
-            properties={latestProperties}
-            locale={locale}
-            heading={(dict as Record<string, Record<string, string>>).carousel?.heading ?? "Latest Properties"}
-          />
-        )}
         {hasFilters ? (
           <Suspense fallback={<PropertyListSkeleton />}>
             <ResultsSection
@@ -139,13 +143,14 @@ export async function SearchPage({
           <LocationBrowser locale={locale} listingSlug={listingSlug} />
         )}
       </div>
+
+      {/* Right sidebar */}
       <div className="lg:col-span-3">
         <div className="hidden lg:block">
           <Suspense>
             <PropertyDetailPanel locale={locale} />
           </Suspense>
         </div>
-        <BlogSidebar locale={locale} posts={getAllPosts().slice(0, 3)} />
       </div>
     </div>
   );

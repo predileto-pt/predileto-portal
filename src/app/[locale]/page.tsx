@@ -57,7 +57,6 @@ export default async function HomePage({
             { name: "SAPO Imobiliário", url: "https://casa.sapo.pt" },
             { name: "Imovirtual", url: "https://www.imovirtual.com" },
             { name: "ERA", url: "https://www.era.pt" },
-            { name: "RE/MAX", url: "https://www.remax.pt" },
             { name: "Century 21", url: "https://www.century21.pt" },
             { name: "Supercasa", url: "https://supercasa.pt" },
             { name: "CasaYes", url: "https://www.casayes.pt" },
