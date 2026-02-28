@@ -1,5 +1,7 @@
 import { SearchPage } from "@/components/search-page";
 
+export const dynamic = "force-dynamic";
+
 export default async function AlugarPage({
   params,
   searchParams,
