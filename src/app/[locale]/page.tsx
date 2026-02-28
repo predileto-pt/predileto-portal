@@ -35,15 +35,51 @@ export default async function HomePage({
       <div className="grid grid-cols-2 gap-4">
         <Link
           href={`/${locale}/comprar`}
-          className="border border-gray-200 px-4 py-4 hover:bg-gray-50 transition-colors"
+          className="group relative overflow-hidden border border-gray-200 px-4 py-4"
         >
-          <span className="text-[13px] font-bold">{dict.nav.buy}</span>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 z-0 transition-opacity duration-300 group-hover:opacity-0"
+            style={{
+              background:
+                "linear-gradient(135deg, #d1d5db 0%, #9ca3af 50%, #d1d5db 100%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style={{
+              background:
+                "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
+            }}
+          />
+          <span className="relative z-10 text-[13px] font-bold group-hover:text-white transition-colors duration-300">
+            {dict.nav.buy}
+          </span>
         </Link>
         <Link
           href={`/${locale}/arrendar`}
-          className="border border-gray-200 px-4 py-4 hover:bg-gray-50 transition-colors"
+          className="group relative overflow-hidden border border-gray-200 px-4 py-4"
         >
-          <span className="text-[13px] font-bold">{dict.nav.rent}</span>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 z-0 transition-opacity duration-300 group-hover:opacity-0"
+            style={{
+              background:
+                "linear-gradient(135deg, #d1d5db 0%, #9ca3af 50%, #d1d5db 100%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style={{
+              background:
+                "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
+            }}
+          />
+          <span className="relative z-10 text-[13px] font-bold group-hover:text-white transition-colors duration-300">
+            {dict.nav.rent}
+          </span>
         </Link>
       </div>
 

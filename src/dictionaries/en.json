@@ -95,6 +95,9 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "banner": {
+    "prototype": "This website is a prototype — we're still building!"
+  },
   "blog": {
     "heading": "Blog",
     "subheading": "Articles and guides about the real estate market in Portugal.",

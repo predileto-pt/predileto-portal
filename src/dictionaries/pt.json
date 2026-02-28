@@ -95,6 +95,9 @@
     "previous": "Anterior",
     "next": "Seguinte"
   },
+  "banner": {
+    "prototype": "Este website é um protótipo — ainda estamos a construir!"
+  },
   "blog": {
     "heading": "Blog",
     "subheading": "Artigos e guias sobre o mercado imobiliário em Portugal.",
