@@ -97,7 +97,7 @@ export async function SearchPage({
       </div>
 
       {/* Main content */}
-      <div className="lg:col-span-7">
+      <div className="lg:col-span-6">
         <div className="mb-4">
           <Suspense>
             <SearchBar
@@ -148,7 +148,7 @@ export async function SearchPage({
       </div>
 
       {/* Right sidebar */}
-      <div className="lg:col-span-3">
+      <div className="lg:col-span-4">
         <div className="hidden lg:block">
           <Suspense>
             <PropertyDetailPanel locale={locale} />

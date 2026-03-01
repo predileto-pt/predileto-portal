@@ -13,7 +13,11 @@ interface PropertyCardProps {
   locale: string;
 }
 
-export function PropertyCard({ property, selected, locale }: PropertyCardProps) {
+export function PropertyCard({
+  property,
+  selected,
+  locale,
+}: PropertyCardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -31,14 +35,12 @@ export function PropertyCard({ property, selected, locale }: PropertyCardProps) 
       <button
         onClick={handleClick}
         className={cn(
-          "w-full text-left border px-3 py-2 hover:bg-gray-50 transition-colors",
-          selected
-            ? "border-gray-900 bg-gray-50"
-            : "border-gray-200",
+          "w-full text-left border  hover:bg-gray-50 transition-colors",
+          selected ? "border-gray-900 bg-gray-50" : "border-gray-200",
         )}
       >
         <div className="flex gap-3">
-          <div className="w-20 h-20 shrink-0 bg-gray-100 overflow-hidden">
+          <div className="w-1/3 shrink-0 bg-gray-100 overflow-hidden">
             {property.images?.[0]?.url ? (
               <img
                 src={property.images[0].url}
@@ -47,17 +49,23 @@ export function PropertyCard({ property, selected, locale }: PropertyCardProps) 
               />
             ) : null}
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="text-[14px] font-bold">
+          <div className="min-w-0 flex-1 px-3 py-2">
+            <div className="text-[13px] truncate">{property.title}</div>
+
+            <div className="text-md font-extrabold">
               {property.price > 0 ? formatPrice(property.price, locale) : "-"}
             </div>
             <div className="text-[11px] text-gray-400 truncate">
               {property.address.municipality}
-              {property.address.district ? `, ${property.address.district}` : ""}
+              {property.address.district
+                ? `, ${property.address.district}`
+                : ""}
             </div>
-            <div className="text-[13px] font-medium truncate">{property.title}</div>
             <div className="flex gap-3 mt-1 text-[11px] text-gray-400">
-              <span>{propertyTypesDict[property.propertyType] || property.propertyType}</span>
+              <span>
+                {propertyTypesDict[property.propertyType] ||
+                  property.propertyType}
+              </span>
               {property.features.bedrooms > 0 && (
                 <span>T{property.features.bedrooms}</span>
               )}
