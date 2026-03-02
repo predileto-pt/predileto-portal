@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { locales, localeNames, type Locale } from "@/lib/i18n";
+import { Select } from "@/components/ui/select";
 
 export function LanguageSwitcher({ locale }: { locale: Locale }) {
   const pathname = usePathname();
@@ -12,18 +13,17 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
     window.location.href = segments.join("/");
   }
 
+  const options = locales.map((l) => ({
+    value: l,
+    label: localeNames[l],
+  }));
+
   return (
-    <select
+    <Select
       value={locale}
-      onChange={(e) => switchLocale(e.target.value)}
-      className="border border-gray-200 px-2 py-1 text-sm focus:outline-none focus:border-gray-400"
-      aria-label="Language"
-    >
-      {locales.map((l) => (
-        <option key={l} value={l}>
-          {localeNames[l]}
-        </option>
-      ))}
-    </select>
+      onValueChange={switchLocale}
+      options={options}
+      ariaLabel="Language"
+    />
   );
 }

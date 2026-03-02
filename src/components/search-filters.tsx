@@ -4,6 +4,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback } from "react";
 import { PROPERTY_TYPES, SORT_OPTIONS } from "@/lib/constants";
 import { useDictionary } from "@/components/dictionary-provider";
+import { Select } from "@/components/ui/select";
 
 export function SearchFilters() {
   const searchParams = useSearchParams();
@@ -29,58 +30,63 @@ export function SearchFilters() {
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
   const filtersDict = dict.filters as Record<string, string>;
 
+  const sortOptions = SORT_OPTIONS.map((opt) => ({
+    value: opt.value,
+    label: sortDict[opt.key] || opt.key,
+  }));
+
+  const propertyTypeOptions = [
+    { value: "", label: filtersDict.allTypes },
+    ...PROPERTY_TYPES.map((type) => ({
+      value: type,
+      label: propertyTypesDict[type] || type,
+    })),
+  ];
+
+  const bedroomOptions = [
+    { value: "", label: filtersDict.anyBedrooms },
+    { value: "1", label: "1+" },
+    { value: "2", label: "2+" },
+    { value: "3", label: "3+" },
+    { value: "4", label: "4+" },
+  ];
+
   return (
     <div className="flex flex-col gap-3 text-sm">
       <div>
         <label className="text-xs text-gray-400 uppercase">
           {filtersDict.sortBy}
         </label>
-        <select
+        <Select
           value={searchParams.get("sort") || "newest"}
-          onChange={(e) => updateParam("sort", e.target.value)}
-          className="border border-gray-200 px-2 py-1 text-sm focus:outline-none w-full"
-        >
-          {SORT_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {sortDict[opt.key] || opt.key}
-            </option>
-          ))}
-        </select>
+          onValueChange={(value) => updateParam("sort", value)}
+          options={sortOptions}
+          className="w-full"
+        />
       </div>
 
       <div>
         <label className="text-xs text-gray-400 uppercase">
           {filtersDict.propertyType}
         </label>
-        <select
+        <Select
           value={searchParams.get("propertyType") || ""}
-          onChange={(e) => updateParam("propertyType", e.target.value)}
-          className="border border-gray-200 px-2 py-1 text-sm focus:outline-none w-full"
-        >
-          <option value="">{filtersDict.allTypes}</option>
-          {PROPERTY_TYPES.map((type) => (
-            <option key={type} value={type}>
-              {propertyTypesDict[type] || type}
-            </option>
-          ))}
-        </select>
+          onValueChange={(value) => updateParam("propertyType", value)}
+          options={propertyTypeOptions}
+          className="w-full"
+        />
       </div>
 
       <div>
         <label className="text-xs text-gray-400 uppercase">
           {filtersDict.bedrooms}
         </label>
-        <select
+        <Select
           value={searchParams.get("bedrooms") || ""}
-          onChange={(e) => updateParam("bedrooms", e.target.value)}
-          className="border border-gray-200 px-2 py-1 text-sm focus:outline-none w-full"
-        >
-          <option value="">{filtersDict.anyBedrooms}</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-        </select>
+          onValueChange={(value) => updateParam("bedrooms", value)}
+          options={bedroomOptions}
+          className="w-full"
+        />
       </div>
 
       <div>
