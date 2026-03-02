@@ -6,6 +6,7 @@ import { formatPrice, formatArea, formatDate } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { useDictionary } from "@/components/dictionary-provider";
 import { PropertyDetailPanel } from "@/components/property-detail-panel";
+import { Badge } from "@/components/ui/badge";
 
 interface PropertyCardProps {
   property: Property;
@@ -35,7 +36,7 @@ export function PropertyCard({
       <button
         onClick={handleClick}
         className={cn(
-          "w-full text-left border  hover:bg-gray-50 transition-colors",
+          "w-full text-left border bg-white hover:bg-gray-50 transition-colors",
           selected ? "border-gray-900 bg-gray-50" : "border-gray-200",
         )}
       >
@@ -50,28 +51,29 @@ export function PropertyCard({
             ) : null}
           </div>
           <div className="min-w-0 flex-1 px-3 py-2">
-            <div className="text-sm font-semibold text-blue-800 truncate">{property.title}</div>
+            <div className="text-sm font-semibold text-blue-800 truncate font-heading">{property.title}</div>
 
             <div className="text-lg font-extrabold">
               {property.price > 0 ? formatPrice(property.price, locale) : "-"}
             </div>
-            <div className="text-xs text-gray-400 truncate">
+            <div className="text-xs text-gray-400 font-medium truncate">
               {property.address.municipality}
               {property.address.district
                 ? `, ${property.address.district}`
                 : ""}
             </div>
             <div className="flex gap-3 mt-1 text-xs text-gray-400">
-              <span>
-                {propertyTypesDict[property.propertyType] ||
-                  property.propertyType}
-              </span>
               {property.features.bedrooms > 0 && (
                 <span>T{property.features.bedrooms}</span>
               )}
               {property.features.areaSqm > 0 && (
                 <span>{formatArea(property.features.areaSqm)}</span>
               )}
+            </div>
+            <div className="mt-1.5">
+              <Badge>
+                {propertyTypesDict[property.propertyType] || property.propertyType}
+              </Badge>
             </div>
             <div className="flex justify-between mt-1.5 text-xs text-gray-400">
               <span>{property.sources?.[0]?.name || ""}</span>

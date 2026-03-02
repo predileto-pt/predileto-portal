@@ -20,7 +20,7 @@ export function PrototypeBanner() {
         }}
       />
       <div className="relative z-10 flex items-center justify-center h-full px-4">
-        <span className="text-xs font-medium font-mono leading-snug tracking-wide uppercase whitespace-nowrap overflow-hidden text-ellipsis">
+        <span className="text-xs font-medium font-heading leading-snug tracking-wide uppercase whitespace-nowrap overflow-hidden text-ellipsis">
           {dict.banner.prototype}
         </span>
         <button

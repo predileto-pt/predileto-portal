@@ -41,7 +41,7 @@ export function Select({
     >
       <SelectPrimitive.Trigger
         aria-label={ariaLabel}
-        className={`flex items-center justify-between border border-gray-200 px-2 py-1 text-sm focus:outline-none ${className}`}
+        className={`flex items-center justify-between border border-gray-200 bg-white px-2 py-1 text-sm focus:outline-none ${className}`}
       >
         <SelectPrimitive.Value placeholder={placeholder} />
         <SelectPrimitive.Icon className="ml-1">

@@ -1,6 +1,7 @@
 import type { Property } from "@/lib/types";
 import { PropertyCard } from "./property-card";
 import { getDictionary, type Locale } from "@/lib/i18n";
+import { Text } from "@/components/ui/text";
 
 interface PropertyListProps {
   properties: Property[];
@@ -23,7 +24,7 @@ export async function PropertyList({
 
   if (properties.length === 0) {
     return (
-      <div className="text-sm text-gray-400 py-8">{dict.properties.noResults}</div>
+      <Text variant="muted" className="py-8">{dict.properties.noResults}</Text>
     );
   }
 

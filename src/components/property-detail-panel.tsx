@@ -9,6 +9,8 @@ import { formatPrice, formatArea } from "@/lib/utils";
 import { NearbyAmenities } from "@/components/nearby-amenities";
 import { NearestPlaces } from "@/components/nearest-places";
 import type { NearbyPlacesResult } from "@/lib/geoapify";
+import { Text } from "@/components/ui/text";
+import { Small } from "@/components/ui/small";
 
 interface PropertyData {
   id: string;
@@ -128,7 +130,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
   if (selectedId && loading) {
     content = (
-      <div className="border border-gray-200 p-4 space-y-4 animate-pulse">
+      <div className="border border-gray-200 bg-white p-4 space-y-4 animate-pulse">
         <div>
           <div className="h-3 w-3/4 bg-gray-200 rounded" />
           <div className="h-2 w-1/2 bg-gray-100 rounded mt-2" />
@@ -157,13 +159,13 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
     );
   } else if (selectedId && error) {
     content = (
-      <div className="border border-gray-200 p-4">
-        <p className="text-sm text-gray-400">{d.loadError}</p>
+      <div className="border border-gray-200 bg-white p-4">
+        <Text variant="muted">{d.loadError}</Text>
       </div>
     );
   } else if (selectedId && property) {
     content = (
-      <div className="border border-gray-200 p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+      <div className="border border-gray-200 bg-white p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
         <div className="flex justify-end">
           <button
             type="button"
@@ -175,10 +177,10 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
         </div>
         <div>
           <h2 className="text-sm font-bold">{property.title}</h2>
-          <p className="text-xs text-gray-400">
+          <Small>
             {property.address.municipality}
             {property.address.district ? `, ${property.address.district}` : ""}
-          </p>
+          </Small>
         </div>
 
         <div className="mb-2">
@@ -230,9 +232,9 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
         {property.fullDescription && (
           <div>
             <h3 className="text-xs text-gray-400 uppercase mb-1">{d.description}</h3>
-            <p className={`text-sm text-gray-600 whitespace-pre-line leading-relaxed ${descExpanded ? "" : "line-clamp-4"}`}>
+            <Text className={`whitespace-pre-line ${descExpanded ? "" : "line-clamp-4"}`}>
               {property.fullDescription}
-            </p>
+            </Text>
             <button
               type="button"
               onClick={() => setDescExpanded((v) => !v)}
@@ -267,7 +269,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
             </div>
           </div>
         ) : nearby.nearbyError ? (
-          <p className="text-sm text-gray-400">{d.nearbyError}</p>
+          <Text variant="muted">{d.nearbyError}</Text>
         ) : (
           <>
             <NearbyAmenities counts={nearby.nearby.counts} dict={dict} />

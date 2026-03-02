@@ -78,7 +78,7 @@ export async function SearchPage({
       {/* Mobile filter toggle */}
       <div className="lg:hidden">
         <details>
-          <summary className="text-sm font-medium cursor-pointer border border-gray-200 px-3 py-2 rounded select-none">
+          <summary className="text-sm font-medium cursor-pointer border border-gray-200 bg-white px-3 py-2 rounded select-none">
             Filtros
           </summary>
           <div className="mt-2">

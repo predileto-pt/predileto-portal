@@ -18,10 +18,10 @@ export function TopNav({ locale }: { locale: Locale }) {
   const dict = useDictionary();
 
   return (
-    <nav className="border-b border-gray-200">
+    <nav className="border-b border-gray-200 bg-white">
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4 lg:gap-6">
-        <Link href={`/${locale}`} className="text-sm font-bold">
+        <Link href={`/${locale}`} className="text-sm font-bold font-heading">
           {dict.nav.title}
         </Link>
         <div className="flex gap-4">
@@ -33,7 +33,7 @@ export function TopNav({ locale }: { locale: Locale }) {
                 key={item.key}
                 href={href}
                 className={cn(
-                  "text-sm",
+                  "text-sm font-heading",
                   active
                     ? "font-bold underline underline-offset-4"
                     : "text-gray-400 hover:text-gray-600",

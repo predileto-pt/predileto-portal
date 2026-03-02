@@ -166,7 +166,7 @@ export function SearchBar({
             aria-activedescendant={
               activeIndex >= 0 ? `search-suggestion-${activeIndex}` : undefined
             }
-            className="border border-gray-200 px-3 py-1.5 w-full text-sm focus:outline-none focus:border-gray-400"
+            className="border border-gray-200 bg-white px-3 py-1.5 w-full text-sm focus:outline-none focus:border-gray-400"
           />
 
           {isOpen && (
@@ -202,7 +202,7 @@ export function SearchBar({
         </div>
         <button
           type="submit"
-          className="border border-gray-200 px-3 py-1.5 text-sm hover:bg-gray-50"
+          className="border border-gray-200 bg-white px-3 py-1.5 text-sm hover:bg-gray-50 font-heading"
         >
           {filtersDict.search}
         </button>

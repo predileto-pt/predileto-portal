@@ -1,5 +1,6 @@
 import type { Dictionary } from "@/lib/i18n";
 import type { NearbyPlace } from "@/lib/geoapify";
+import { Small } from "@/components/ui/small";
 
 interface NearestPlacesProps {
   nearest: Record<string, NearbyPlace | null>;
@@ -68,9 +69,9 @@ export function NearestPlaces({ nearest, dict }: NearestPlacesProps) {
                    className="block truncate text-xs text-blue-400 hover:text-blue-500">
                   View on Google Maps
                 </a>
-                <p className="text-xs text-gray-400">
+                <Small>
                   {d[item.labelKey]} · {formatDistance(place.distance)}
-                </p>
+                </Small>
               </div>
             </div>
           );

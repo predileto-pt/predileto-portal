@@ -99,6 +99,14 @@ export function lookupRegionForDistrict(
   return districtBySlug.get(districtSlug)?.region;
 }
 
+export function lookupDistrictName(slug: string): string | undefined {
+  return districtBySlug.get(slug)?.district.name;
+}
+
+export function lookupMunicipalityName(slug: string): string | undefined {
+  return municipalityBySlug.get(slug)?.municipality.name;
+}
+
 export function lookupRegionForDistrictName(
   districtName: string,
 ): LocationNode | undefined {

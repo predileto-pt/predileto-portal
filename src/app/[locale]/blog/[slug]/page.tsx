@@ -7,6 +7,7 @@ import {
   type Locale,
 } from "@/lib/i18n";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { Small } from "@/components/ui/small";
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
@@ -35,16 +36,16 @@ export default async function BlogPostPage({
         &larr; {blog.backToList}
       </Link>
 
-      <article className="border border-gray-200 px-4 py-4">
+      <article className="border border-gray-200 bg-white px-4 py-4">
         <header className="pb-3 mb-4 border-b border-gray-100">
           <h1 className="text-base font-bold">{post.title}</h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <Small className="mt-1">
             {blog.by} {post.author} &middot; {blog.publishedOn}{" "}
             {new Date(post.date).toLocaleDateString(
               localeToDateLocale[locale as Locale],
               { year: "numeric", month: "long", day: "numeric" },
             )}
-          </p>
+          </Small>
         </header>
 
         <div

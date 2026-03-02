@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { PROPERTY_TYPES, SORT_OPTIONS } from "@/lib/constants";
 import { useDictionary } from "@/components/dictionary-provider";
 import { Select } from "@/components/ui/select";
+import { Small } from "@/components/ui/small";
 
 export function SearchFilters() {
   const searchParams = useSearchParams();
@@ -54,9 +55,9 @@ export function SearchFilters() {
   return (
     <div className="flex flex-col gap-3 text-sm">
       <div>
-        <label className="text-xs text-gray-400 uppercase">
+        <Small variant="label" as="label">
           {filtersDict.sortBy}
-        </label>
+        </Small>
         <Select
           value={searchParams.get("sort") || "newest"}
           onValueChange={(value) => updateParam("sort", value)}
@@ -66,9 +67,9 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-xs text-gray-400 uppercase">
+        <Small variant="label" as="label">
           {filtersDict.propertyType}
-        </label>
+        </Small>
         <Select
           value={searchParams.get("propertyType") || ""}
           onValueChange={(value) => updateParam("propertyType", value)}
@@ -78,9 +79,9 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-xs text-gray-400 uppercase">
+        <Small variant="label" as="label">
           {filtersDict.bedrooms}
-        </label>
+        </Small>
         <Select
           value={searchParams.get("bedrooms") || ""}
           onValueChange={(value) => updateParam("bedrooms", value)}
@@ -90,28 +91,28 @@ export function SearchFilters() {
       </div>
 
       <div>
-        <label className="text-xs text-gray-400 uppercase">
+        <Small variant="label" as="label">
           {filtersDict.minPrice}
-        </label>
+        </Small>
         <input
           type="number"
           placeholder={filtersDict.minPrice}
           defaultValue={searchParams.get("minPrice") || ""}
           onBlur={(e) => updateParam("minPrice", e.target.value)}
-          className="border border-gray-200 px-2 py-1 w-full text-sm focus:outline-none focus:border-gray-400"
+          className="border border-gray-200 bg-white px-2 py-1 w-full text-sm focus:outline-none focus:border-gray-400"
         />
       </div>
 
       <div>
-        <label className="text-xs text-gray-400 uppercase">
+        <Small variant="label" as="label">
           {filtersDict.maxPrice}
-        </label>
+        </Small>
         <input
           type="number"
           placeholder={filtersDict.maxPrice}
           defaultValue={searchParams.get("maxPrice") || ""}
           onBlur={(e) => updateParam("maxPrice", e.target.value)}
-          className="border border-gray-200 px-2 py-1 w-full text-sm focus:outline-none focus:border-gray-400"
+          className="border border-gray-200 bg-white px-2 py-1 w-full text-sm focus:outline-none focus:border-gray-400"
         />
       </div>
     </div>

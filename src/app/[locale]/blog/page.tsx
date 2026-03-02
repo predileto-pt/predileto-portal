@@ -7,6 +7,7 @@ import {
   type Locale,
 } from "@/lib/i18n";
 import { getAllPosts } from "@/lib/blog";
+import { Text } from "@/components/ui/text";
 
 export default async function BlogPage({
   params,
@@ -24,7 +25,7 @@ export default async function BlogPage({
     <div className="max-w-2xl mx-auto">
       <div className="mb-4">
         <h1 className="text-base font-bold">{blog.heading}</h1>
-        <p className="text-sm text-gray-500">{blog.subheading}</p>
+        <Text>{blog.subheading}</Text>
       </div>
 
       <ul className="space-y-1">

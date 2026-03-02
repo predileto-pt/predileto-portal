@@ -8,6 +8,7 @@ import {
 } from "@/lib/i18n";
 import { getAllPosts } from "@/lib/blog";
 import { LocationBrowser } from "@/components/location-browser";
+import { Text } from "@/components/ui/text";
 
 export default async function HomePage({
   params,
@@ -24,11 +25,9 @@ export default async function HomePage({
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Hero */}
-      <div className="border border-gray-200 px-4 py-5">
+      <div className="border border-gray-200 bg-white px-4 py-5">
         <h1 className="text-base font-bold mb-1">{hp?.heading}</h1>
-        <p className="text-sm text-gray-500 leading-relaxed">
-          {hp?.subheading}
-        </p>
+        <Text>{hp?.subheading}</Text>
       </div>
 
       {/* Buy / Rent links */}
@@ -53,7 +52,7 @@ export default async function HomePage({
                 "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
             }}
           />
-          <span className="relative z-10 text-sm font-bold group-hover:text-white transition-colors duration-300">
+          <span className="relative z-10 text-sm font-bold font-heading group-hover:text-white transition-colors duration-300">
             {dict.nav.buy}
           </span>
         </Link>
@@ -77,7 +76,7 @@ export default async function HomePage({
                 "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
             }}
           />
-          <span className="relative z-10 text-sm font-bold group-hover:text-white transition-colors duration-300">
+          <span className="relative z-10 text-sm font-bold font-heading group-hover:text-white transition-colors duration-300">
             {dict.nav.rent}
           </span>
         </Link>

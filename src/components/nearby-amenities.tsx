@@ -1,4 +1,5 @@
 import type { Dictionary } from "@/lib/i18n";
+import { Small } from "@/components/ui/small";
 
 interface NearbyAmenitiesProps {
   counts: Record<string, number>;
@@ -58,7 +59,7 @@ export function NearbyAmenities({ counts, dict }: NearbyAmenitiesProps) {
             <span className="text-gray-400">{AMENITY_ICONS[key]}</span>
             <div className="min-w-0">
               <p className="text-sm font-medium">{counts[key]}</p>
-              <p className="truncate text-xs text-gray-400">{d[key]}</p>
+              <Small className="truncate block">{d[key]}</Small>
             </div>
           </div>
         ))}

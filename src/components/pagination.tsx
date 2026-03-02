@@ -51,7 +51,7 @@ export async function Pagination({
       {page > 1 && (
         <Link
           href={buildHref(basePath, searchParams, page - 1)}
-          className="px-2 py-1 border border-gray-200 hover:bg-gray-50"
+          className="px-2 py-1 border border-gray-200 bg-white hover:bg-gray-50"
         >
           {dict.common.previous}
         </Link>
@@ -61,7 +61,7 @@ export async function Pagination({
           key={p}
           href={buildHref(basePath, searchParams, p)}
           className={cn(
-            "px-2 py-1 border border-gray-200",
+            "px-2 py-1 border border-gray-200 bg-white",
             p === page ? "font-bold bg-gray-50" : "hover:bg-gray-50",
           )}
         >
@@ -71,7 +71,7 @@ export async function Pagination({
       {page < totalPages && (
         <Link
           href={buildHref(basePath, searchParams, page + 1)}
-          className="px-2 py-1 border border-gray-200 hover:bg-gray-50"
+          className="px-2 py-1 border border-gray-200 bg-white hover:bg-gray-50"
         >
           {dict.common.next}
         </Link>

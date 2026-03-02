@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { formatPrice } from "@/lib/utils";
 import type { Property } from "@/lib/types";
+import { Small } from "@/components/ui/small";
 
 interface FeaturedCarouselProps {
   properties: Property[];
@@ -41,7 +42,7 @@ export function FeaturedCarousel({
 
   return (
     <div
-      className="mb-6 border border-gray-200"
+      className="mb-6 border border-gray-200 bg-white"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -73,7 +74,7 @@ export function FeaturedCarousel({
               <p className="text-sm font-bold leading-tight truncate">
                 {property.title}
               </p>
-              <p className="text-xs opacity-80">{location}</p>
+              <Small className="opacity-80 text-white">{location}</Small>
               <p className="text-sm font-bold mt-1">
                 {property.price > 0
                   ? formatPrice(property.price, locale)
