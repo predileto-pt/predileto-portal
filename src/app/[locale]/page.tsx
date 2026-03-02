@@ -8,7 +8,7 @@ import {
 } from "@/lib/i18n";
 import { getAllPosts } from "@/lib/blog";
 import { LocationBrowser } from "@/components/location-browser";
-import { Text } from "@/components/ui/text";
+
 
 export default async function HomePage({
   params,
@@ -25,9 +25,15 @@ export default async function HomePage({
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Hero */}
-      <div className="border border-gray-200 bg-white px-4 py-5">
-        <h1 className="text-base font-bold mb-1">{hp?.heading}</h1>
-        <Text>{hp?.subheading}</Text>
+      <div
+        className="px-6 py-10"
+        style={{
+          background:
+            "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
+        }}
+      >
+        <h1 className="text-2xl font-bold font-heading text-white mb-1">{hp?.heading}</h1>
+        <p className="text-base text-white/70">{hp?.subheading}</p>
       </div>
 
       {/* Buy / Rent links */}
