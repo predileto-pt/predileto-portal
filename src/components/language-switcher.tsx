@@ -16,7 +16,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
     <select
       value={locale}
       onChange={(e) => switchLocale(e.target.value)}
-      className="border border-gray-200 px-2 py-1 text-[12px] focus:outline-none focus:border-gray-400"
+      className="border border-gray-200 px-2 py-1 text-sm focus:outline-none focus:border-gray-400"
       aria-label="Language"
     >
       {locales.map((l) => (

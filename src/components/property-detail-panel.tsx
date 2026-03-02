@@ -128,7 +128,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
   if (selectedId && loading) {
     content = (
-      <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 animate-pulse">
+      <div className="border border-gray-200 p-4 space-y-4 animate-pulse">
         <div>
           <div className="h-3 w-3/4 bg-gray-200 rounded" />
           <div className="h-2 w-1/2 bg-gray-100 rounded mt-2" />
@@ -157,25 +157,25 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
     );
   } else if (selectedId && error) {
     content = (
-      <div className="lg:sticky lg:top-4 border border-gray-200 p-4">
-        <p className="text-[12px] text-gray-400">{d.loadError}</p>
+      <div className="border border-gray-200 p-4">
+        <p className="text-sm text-gray-400">{d.loadError}</p>
       </div>
     );
   } else if (selectedId && property) {
     content = (
-      <div className="lg:sticky lg:top-4 border border-gray-200 p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+      <div className="border border-gray-200 p-4 space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
         <div className="flex justify-end">
           <button
             type="button"
             onClick={dismiss}
-            className="text-[11px] text-gray-400 hover:text-gray-600"
+            className="text-xs text-gray-400 hover:text-gray-600"
           >
             &#x2715; close
           </button>
         </div>
         <div>
-          <h2 className="text-[13px] font-bold">{property.title}</h2>
-          <p className="text-[11px] text-gray-400">
+          <h2 className="text-sm font-bold">{property.title}</h2>
+          <p className="text-xs text-gray-400">
             {property.address.municipality}
             {property.address.district ? `, ${property.address.district}` : ""}
           </p>
@@ -191,7 +191,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
               href={sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-0.5 text-[12px] text-blue-500 underline underline-offset-2 hover:text-blue-700"
+              className="inline-flex items-center gap-0.5 text-sm text-blue-500 underline underline-offset-2 hover:text-blue-700"
             >
               {d.seePhotos}
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-3">
@@ -201,8 +201,8 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
           )}
         </div>
 
-        <div className="space-y-1 text-[12px]">
-          <h3 className="text-[11px] text-gray-400 uppercase">{d.details}</h3>
+        <div className="space-y-1 text-sm">
+          <h3 className="text-xs text-gray-400 uppercase">{d.details}</h3>
           <div className="flex justify-between">
             <span className="text-gray-400">{d.propertyType}</span>
             <span>{propertyTypesDict[property.propertyType] || property.propertyType}</span>
@@ -229,14 +229,14 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
         {property.fullDescription && (
           <div>
-            <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.description}</h3>
-            <p className={`text-[12px] text-gray-600 whitespace-pre-line leading-relaxed ${descExpanded ? "" : "line-clamp-4"}`}>
+            <h3 className="text-xs text-gray-400 uppercase mb-1">{d.description}</h3>
+            <p className={`text-sm text-gray-600 whitespace-pre-line leading-relaxed ${descExpanded ? "" : "line-clamp-4"}`}>
               {property.fullDescription}
             </p>
             <button
               type="button"
               onClick={() => setDescExpanded((v) => !v)}
-              className="text-[11px] text-blue-400 hover:text-blue-500 mt-1"
+              className="text-xs text-blue-400 hover:text-blue-500 mt-1"
             >
               {descExpanded ? d.showLess || "Show less" : d.showMore || "Show more"}
             </button>
@@ -245,12 +245,12 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
         {sourceUrl && (
           <div>
-            <h3 className="text-[11px] text-gray-400 uppercase mb-1">{d.source}</h3>
+            <h3 className="text-xs text-gray-400 uppercase mb-1">{d.source}</h3>
             <a
               href={sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[12px] underline underline-offset-2 hover:text-gray-600"
+              className="text-sm underline underline-offset-2 hover:text-gray-600"
             >
               {sourceName}
             </a>
@@ -267,7 +267,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
             </div>
           </div>
         ) : nearby.nearbyError ? (
-          <p className="text-[12px] text-gray-400">{d.nearbyError}</p>
+          <p className="text-sm text-gray-400">{d.nearbyError}</p>
         ) : (
           <>
             <NearbyAmenities counts={nearby.nearby.counts} dict={dict} />

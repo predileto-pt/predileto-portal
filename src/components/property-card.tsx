@@ -40,7 +40,7 @@ export function PropertyCard({
         )}
       >
         <div className="flex gap-3">
-          <div className="w-1/3 shrink-0 bg-gray-100 overflow-hidden">
+          <div className="w-1/3 shrink-0 bg-gray-100 overflow-hidden h-36">
             {property.images?.[0]?.url ? (
               <img
                 src={property.images[0].url}
@@ -50,18 +50,18 @@ export function PropertyCard({
             ) : null}
           </div>
           <div className="min-w-0 flex-1 px-3 py-2">
-            <div className="text-[13px] truncate">{property.title}</div>
+            <div className="text-sm font-semibold text-blue-800 truncate">{property.title}</div>
 
-            <div className="text-md font-extrabold">
+            <div className="text-lg font-extrabold">
               {property.price > 0 ? formatPrice(property.price, locale) : "-"}
             </div>
-            <div className="text-[11px] text-gray-400 truncate">
+            <div className="text-xs text-gray-400 truncate">
               {property.address.municipality}
               {property.address.district
                 ? `, ${property.address.district}`
                 : ""}
             </div>
-            <div className="flex gap-3 mt-1 text-[11px] text-gray-400">
+            <div className="flex gap-3 mt-1 text-xs text-gray-400">
               <span>
                 {propertyTypesDict[property.propertyType] ||
                   property.propertyType}
@@ -73,7 +73,7 @@ export function PropertyCard({
                 <span>{formatArea(property.features.areaSqm)}</span>
               )}
             </div>
-            <div className="flex justify-between mt-1.5 text-[11px] text-gray-400">
+            <div className="flex justify-between mt-1.5 text-xs text-gray-400">
               <span>{property.sources?.[0]?.name || ""}</span>
               <span>{formatDate(property.updatedAt, locale)}</span>
             </div>

@@ -20,7 +20,7 @@ export function LocationBrowser({ locale, listingSlug }: LocationBrowserProps) {
   const base = `/${locale}/${listingSlug}`;
 
   return (
-    <div className="py-4 text-[12px]">
+    <div className="py-4 text-sm">
       {regions.map((region) => (
         <div key={region.slug} className="mb-3">
           <a href={`${base}/${region.slug}`} className="font-bold hover:underline">

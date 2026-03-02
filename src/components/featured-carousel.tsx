@@ -45,7 +45,7 @@ export function FeaturedCarousel({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <h2 className="text-[11px] text-gray-400 uppercase px-4 pt-3 pb-2">
+      <h2 className="text-xs text-gray-400 uppercase px-4 pt-3 pb-2">
         {heading}
       </h2>
       <div className="relative h-48 overflow-hidden">
@@ -70,11 +70,11 @@ export function FeaturedCarousel({
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-              <p className="text-[13px] font-bold leading-tight truncate">
+              <p className="text-sm font-bold leading-tight truncate">
                 {property.title}
               </p>
-              <p className="text-[11px] opacity-80">{location}</p>
-              <p className="text-[13px] font-bold mt-1">
+              <p className="text-xs opacity-80">{location}</p>
+              <p className="text-sm font-bold mt-1">
                 {property.price > 0
                   ? formatPrice(property.price, locale)
                   : "-"}

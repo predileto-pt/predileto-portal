@@ -23,13 +23,13 @@ export default async function BlogPage({
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-4">
-        <h1 className="text-[14px] font-bold">{blog.heading}</h1>
-        <p className="text-[12px] text-gray-500">{blog.subheading}</p>
+        <h1 className="text-base font-bold">{blog.heading}</h1>
+        <p className="text-sm text-gray-500">{blog.subheading}</p>
       </div>
 
       <ul className="space-y-1">
         {posts.map((post) => (
-          <li key={post.slug} className="text-[12px]">
+          <li key={post.slug} className="text-sm">
             <Link
               href={`/${locale}/blog/${post.slug}`}
               className="hover:underline underline-offset-2"

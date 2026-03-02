@@ -25,8 +25,8 @@ export default async function HomePage({
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Hero */}
       <div className="border border-gray-200 px-4 py-5">
-        <h1 className="text-[14px] font-bold mb-1">{hp?.heading}</h1>
-        <p className="text-[12px] text-gray-500 leading-relaxed">
+        <h1 className="text-base font-bold mb-1">{hp?.heading}</h1>
+        <p className="text-sm text-gray-500 leading-relaxed">
           {hp?.subheading}
         </p>
       </div>
@@ -53,7 +53,7 @@ export default async function HomePage({
                 "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
             }}
           />
-          <span className="relative z-10 text-[13px] font-bold group-hover:text-white transition-colors duration-300">
+          <span className="relative z-10 text-sm font-bold group-hover:text-white transition-colors duration-300">
             {dict.nav.buy}
           </span>
         </Link>
@@ -77,7 +77,7 @@ export default async function HomePage({
                 "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
             }}
           />
-          <span className="relative z-10 text-[13px] font-bold group-hover:text-white transition-colors duration-300">
+          <span className="relative z-10 text-sm font-bold group-hover:text-white transition-colors duration-300">
             {dict.nav.rent}
           </span>
         </Link>
@@ -85,7 +85,7 @@ export default async function HomePage({
 
       {/* Sources */}
       <div>
-        <h2 className="text-[13px] font-bold mb-2">
+        <h2 className="text-sm font-bold mb-2">
           {hp?.sourcesHeading ?? "We search for you on"}
         </h2>
         <ul className="space-y-1">
@@ -98,7 +98,7 @@ export default async function HomePage({
             { name: "Supercasa", url: "https://supercasa.pt" },
             { name: "CasaYes", url: "https://www.casayes.pt" },
           ].map((source) => (
-            <li key={source.name} className="text-[12px]">
+            <li key={source.name} className="text-sm">
               <a
                 href={source.url}
                 target="_blank"
@@ -116,12 +116,12 @@ export default async function HomePage({
       {/* Latest blog posts */}
       {latestPosts.length > 0 && (
         <div>
-          <h2 className="text-[13px] font-bold mb-2">
+          <h2 className="text-sm font-bold mb-2">
             {hp?.latestPosts ?? "From Our Blog"}
           </h2>
           <ul className="space-y-1">
             {latestPosts.map((post) => (
-              <li key={post.slug} className="text-[12px]">
+              <li key={post.slug} className="text-sm">
                 <Link
                   href={`/${locale}/blog/${post.slug}`}
                   className="hover:underline underline-offset-2"

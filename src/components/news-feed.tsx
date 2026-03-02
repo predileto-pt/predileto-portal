@@ -9,12 +9,12 @@ export function NewsFeed({ heading }: NewsFeedProps) {
 
   return (
     <div className="border border-gray-200 p-4">
-      <h2 className="text-[11px] text-gray-400 uppercase mb-3">{heading}</h2>
+      <h2 className="text-xs text-gray-400 uppercase mb-3">{heading}</h2>
       <ul className="divide-y divide-gray-100">
         {entries.map((entry) => (
           <li key={entry.date} className="py-3 first:pt-0 last:pb-0">
-            <p className="text-[12px] text-gray-600">{entry.description}</p>
-            <time className="text-[10px] text-gray-400">{entry.date}</time>
+            <p className="text-sm text-gray-600">{entry.description}</p>
+            <time className="text-xs text-gray-400">{entry.date}</time>
           </li>
         ))}
       </ul>

@@ -166,7 +166,7 @@ export function SearchBar({
             aria-activedescendant={
               activeIndex >= 0 ? `search-suggestion-${activeIndex}` : undefined
             }
-            className="border border-gray-200 px-3 py-1.5 w-full text-[13px] focus:outline-none focus:border-gray-400"
+            className="border border-gray-200 px-3 py-1.5 w-full text-sm focus:outline-none focus:border-gray-400"
           />
 
           {isOpen && (
@@ -185,14 +185,14 @@ export function SearchBar({
                     selectResult(result);
                   }}
                   onMouseEnter={() => setActiveIndex(index)}
-                  className={`cursor-pointer px-3 py-1.5 text-[13px] ${
+                  className={`cursor-pointer px-3 py-1.5 text-sm ${
                     index === activeIndex
                       ? "bg-gray-100"
                       : "hover:bg-gray-50"
                   }`}
                 >
                   <div className="font-medium">{result.name}</div>
-                  <div className="text-[11px] text-gray-400 truncate">
+                  <div className="text-xs text-gray-400 truncate">
                     {result.context}
                   </div>
                 </li>
@@ -202,14 +202,14 @@ export function SearchBar({
         </div>
         <button
           type="submit"
-          className="border border-gray-200 px-3 py-1.5 text-[13px] hover:bg-gray-50"
+          className="border border-gray-200 px-3 py-1.5 text-sm hover:bg-gray-50"
         >
           {filtersDict.search}
         </button>
       </form>
 
       {hasLocation && locationLabel && (
-        <div className="flex items-center gap-1 mt-2 text-[11px] text-gray-500 bg-gray-50 px-2 py-1 border border-gray-200 max-w-xs">
+        <div className="flex items-center gap-1 mt-2 text-xs text-gray-500 bg-gray-50 px-2 py-1 border border-gray-200 max-w-xs">
           <span className="truncate flex-1">{locationLabel}</span>
           <button
             onClick={clearLocation}

@@ -10,7 +10,7 @@ export function ListingToggle({ locale }: { locale: string }) {
   const isRent = pathname.includes("/arrendar");
 
   return (
-    <div className="flex gap-3 text-[13px]">
+    <div className="flex gap-3 text-sm">
       <Link
         href={`/${locale}/comprar`}
         className={

@@ -19,7 +19,7 @@ export function LocationBreadcrumbs({
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="text-[11px] text-gray-400 mb-3">
+    <nav aria-label="Breadcrumb" className="text-xs text-gray-400 mb-3">
       <ol className="flex items-center gap-1">
         <li>
           <Link href={homeHref} className="hover:text-gray-600">

@@ -48,7 +48,7 @@ export function NearbyAmenities({ counts, dict }: NearbyAmenitiesProps) {
 
   return (
     <div>
-      <h3 className="text-[11px] text-gray-400 uppercase mb-2">{d.nearbyAmenities}</h3>
+      <h3 className="text-xs text-gray-400 uppercase mb-2">{d.nearbyAmenities}</h3>
       <div className="grid grid-cols-2 gap-2">
         {visible.map((key) => (
           <div
@@ -57,8 +57,8 @@ export function NearbyAmenities({ counts, dict }: NearbyAmenitiesProps) {
           >
             <span className="text-gray-400">{AMENITY_ICONS[key]}</span>
             <div className="min-w-0">
-              <p className="text-[12px] font-medium">{counts[key]}</p>
-              <p className="truncate text-[11px] text-gray-400">{d[key]}</p>
+              <p className="text-sm font-medium">{counts[key]}</p>
+              <p className="truncate text-xs text-gray-400">{d[key]}</p>
             </div>
           </div>
         ))}

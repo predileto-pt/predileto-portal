@@ -51,7 +51,7 @@ export function NearestPlaces({ nearest, dict }: NearestPlacesProps) {
 
   return (
     <div>
-      <h3 className="text-[11px] text-gray-400 uppercase mb-2">{d.nearestPlaces}</h3>
+      <h3 className="text-xs text-gray-400 uppercase mb-2">{d.nearestPlaces}</h3>
       <div className="space-y-2">
         {visible.map((item) => {
           const place = nearest[item.key]!;
@@ -61,14 +61,14 @@ export function NearestPlaces({ nearest, dict }: NearestPlacesProps) {
                 {item.icon}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[12px] font-medium">
+                <p className="truncate text-sm font-medium">
                   {place.name}
                 </p>
                 <a href={place.mapUrl} target="_blank" rel="noopener noreferrer"
-                   className="block truncate text-[10px] text-blue-400 hover:text-blue-500">
+                   className="block truncate text-xs text-blue-400 hover:text-blue-500">
                   View on Google Maps
                 </a>
-                <p className="text-[11px] text-gray-400">
+                <p className="text-xs text-gray-400">
                   {d[item.labelKey]} · {formatDistance(place.distance)}
                 </p>
               </div>

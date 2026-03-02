@@ -13,12 +13,12 @@ export function UpdatesSidebar() {
 
   return (
     <div className="lg:sticky lg:top-4 border border-gray-200 p-3 max-w-[200px] lg:ml-auto">
-      <h2 className="text-[9px] text-gray-400 uppercase mb-2">Novidades</h2>
+      <h2 className="text-xs text-gray-400 uppercase mb-2">Novidades</h2>
       <ul className="space-y-2">
         {updates.map((update) => (
           <li key={update.date}>
-            <p className="text-[10px] text-gray-600">{update.description}</p>
-            <time className="text-[9px] text-gray-400">{update.date}</time>
+            <p className="text-xs text-gray-600">{update.description}</p>
+            <time className="text-xs text-gray-400">{update.date}</time>
           </li>
         ))}
       </ul>

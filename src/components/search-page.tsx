@@ -78,7 +78,7 @@ export async function SearchPage({
       {/* Mobile filter toggle */}
       <div className="lg:hidden">
         <details>
-          <summary className="text-[13px] font-medium cursor-pointer border border-gray-200 px-3 py-2 rounded select-none">
+          <summary className="text-sm font-medium cursor-pointer border border-gray-200 px-3 py-2 rounded select-none">
             Filtros
           </summary>
           <div className="mt-2">
@@ -149,7 +149,7 @@ export async function SearchPage({
 
       {/* Right sidebar */}
       <div className="lg:col-span-4">
-        <div className="hidden lg:block">
+        <div className="hidden lg:block lg:sticky lg:top-4">
           <Suspense>
             <PropertyDetailPanel locale={locale} />
           </Suspense>
@@ -214,7 +214,7 @@ async function ResultsSection({
 
   return (
     <>
-      <div className="text-[11px] text-gray-400 mb-2">
+      <div className="text-xs text-gray-400 mb-2">
         {dict.properties.found.replace("{count}", String(result.total))}
       </div>
       <PropertyList

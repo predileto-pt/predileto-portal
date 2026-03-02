@@ -23,7 +23,7 @@ export async function PropertyList({
 
   if (properties.length === 0) {
     return (
-      <div className="text-[13px] text-gray-400 py-8">{dict.properties.noResults}</div>
+      <div className="text-sm text-gray-400 py-8">{dict.properties.noResults}</div>
     );
   }
 
@@ -32,7 +32,7 @@ export async function PropertyList({
 
   return (
     <div>
-      <div className="text-[11px] text-gray-400 mb-2">
+      <div className="text-xs text-gray-400 mb-2">
         {dict.properties.showing
           .replace("{from}", String(from))
           .replace("{to}", String(to))
