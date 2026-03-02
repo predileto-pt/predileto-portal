@@ -91,9 +91,11 @@ export async function SearchPage({
 
       {/* Desktop filters sidebar */}
       <div className="hidden lg:block lg:col-span-2">
-        <Suspense>
-          <SearchFilters />
-        </Suspense>
+        <div className="border border-gray-200 bg-white p-3">
+          <Suspense>
+            <SearchFilters />
+          </Suspense>
+        </div>
       </div>
 
       {/* Main content */}
