@@ -36,7 +36,7 @@ export function PropertyCard({
       <button
         onClick={handleClick}
         className={cn(
-          "w-full text-left border bg-white hover:bg-gray-50 transition-colors",
+          "w-full text-left border bg-white hover:bg-gray-50 transition-colors cursor-pointer",
           selected ? "border-gray-900 bg-gray-50" : "border-gray-200",
         )}
       >
@@ -51,7 +51,7 @@ export function PropertyCard({
             ) : null}
           </div>
           <div className="min-w-0 flex-1 px-3 py-2">
-            <div className="text-sm font-semibold text-blue-500 truncate font-heading">{property.title}</div>
+            <div className="text-sm font-semibold text-blue-600 truncate font-heading">{property.title}</div>
 
             <div className="text-lg font-extrabold">
               {property.price > 0 ? formatPrice(property.price, locale) : "-"}
