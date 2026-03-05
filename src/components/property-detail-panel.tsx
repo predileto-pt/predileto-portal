@@ -193,7 +193,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
               href={sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-0.5 text-sm text-blue-500 underline underline-offset-2 hover:text-blue-700"
+              className="inline-flex items-center gap-0.5 text-sm text-blue-500 underline underline-offset-2 hover:text-blue-600"
             >
               {d.seePhotos}
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-3">
@@ -238,7 +238,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
             <button
               type="button"
               onClick={() => setDescExpanded((v) => !v)}
-              className="text-xs text-blue-400 hover:text-blue-500 mt-1"
+              className="text-xs text-blue-500 hover:text-blue-600 mt-1"
             >
               {descExpanded ? d.showLess || "Show less" : d.showMore || "Show more"}
             </button>
@@ -252,7 +252,7 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
               href={sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm underline underline-offset-2 hover:text-gray-600"
+              className="text-sm text-blue-500 underline underline-offset-2 hover:text-blue-600"
             >
               {sourceName}
             </a>

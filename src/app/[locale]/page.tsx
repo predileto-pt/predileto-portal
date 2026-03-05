@@ -23,73 +23,134 @@ export default async function HomePage({
   const latestPosts = getAllPosts().slice(0, 3);
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="grid grid-cols-12 gap-6">
       {/* Hero */}
-      <div
-        className="px-6 py-10"
-        style={{
-          background:
-            "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
-        }}
-      >
-        <h1 className="text-2xl font-bold font-heading text-white mb-1">{hp?.heading}</h1>
-        <p className="text-base text-white/70">{hp?.subheading}</p>
-      </div>
+      <section className="landing-hero relative overflow-hidden col-span-12 py-20 sm:py-28 lg:py-36">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            {/* Hero content */}
+            <div className="max-w-xl">
+              {/* Eyebrow badge */}
+              <div
+                className="landing-fade-in mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium landing-shimmer"
+                style={{
+                  borderColor: "hsl(172 66% 50% / 0.3)",
+                  backgroundColor: "hsl(172 66% 50% / 0.1)",
+                  animationDelay: "0ms",
+                }}
+              >
+                <svg className="h-3.5 w-3.5" style={{ color: "hsl(38 92% 50%)" }} viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span style={{ color: "hsl(172 66% 50%)" }}>
+                  {hp?.eyebrow ?? "Todos os imóveis de Portugal num só lugar"}
+                </span>
+              </div>
 
-      {/* Buy / Rent links */}
-      <div className="grid grid-cols-2 gap-4">
-        <Link
-          href={`/${locale}/comprar`}
-          className="group relative overflow-hidden border border-gray-200 px-4 py-4"
-        >
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 z-0 transition-opacity duration-300 group-hover:opacity-0"
-            style={{
-              background:
-                "linear-gradient(135deg, #d1d5db 0%, #9ca3af 50%, #d1d5db 100%)",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            style={{
-              background:
-                "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
-            }}
-          />
-          <span className="relative z-10 text-sm font-bold font-heading group-hover:text-white transition-colors duration-300">
-            {dict.nav.buy}
-          </span>
-        </Link>
-        <Link
-          href={`/${locale}/arrendar`}
-          className="group relative overflow-hidden border border-gray-200 px-4 py-4"
-        >
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 z-0 transition-opacity duration-300 group-hover:opacity-0"
-            style={{
-              background:
-                "linear-gradient(135deg, #d1d5db 0%, #9ca3af 50%, #d1d5db 100%)",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            style={{
-              background:
-                "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
-            }}
-          />
-          <span className="relative z-10 text-sm font-bold font-heading group-hover:text-white transition-colors duration-300">
-            {dict.nav.rent}
-          </span>
-        </Link>
-      </div>
+              <h1
+                className="landing-fade-in font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+                style={{ animationDelay: "100ms" }}
+              >
+                {hp?.heading}
+                <span className="landing-gradient-text block">
+                  {hp?.headingAccent ?? "Encontre a sua casa."}
+                </span>
+              </h1>
+
+              <p
+                className="landing-fade-in mt-6 text-lg leading-relaxed text-gray-500 sm:text-xl"
+                style={{ animationDelay: "200ms" }}
+              >
+                {hp?.subheading}
+              </p>
+
+              {/* CTAs */}
+              <div
+                className="landing-fade-in mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4"
+                style={{ animationDelay: "300ms" }}
+              >
+                <Link
+                  href={`/${locale}/comprar`}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold font-heading text-white shadow-lg transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: "hsl(172 66% 50%)" }}
+                >
+                  {dict.nav.buy}
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                  </svg>
+                </Link>
+                <Link
+                  href={`/${locale}/arrendar`}
+                  className="inline-flex items-center justify-center gap-2 border border-gray-300 px-6 py-3 text-sm font-bold font-heading transition-colors hover:bg-gray-50"
+                >
+                  {dict.nav.rent}
+                </Link>
+              </div>
+
+              {/* Social proof */}
+              <div
+                className="landing-fade-in mt-10 flex items-center gap-4"
+                style={{ animationDelay: "400ms" }}
+              >
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <svg key={i} className="h-4 w-4" style={{ color: "hsl(38 92% 50%)" }} viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-500">
+                  {hp?.socialProof ?? "7 fontes agregadas — milhares de imóveis atualizados diariamente"}
+                </p>
+              </div>
+            </div>
+
+            {/* Floating property card */}
+            <div className="landing-fade-in hidden lg:block" style={{ animationDelay: "300ms" }}>
+              <div className="landing-float relative mx-auto w-80">
+                <div
+                  className="bg-white border border-gray-200 p-5 space-y-3"
+                  style={{ boxShadow: "0 25px 50px -12px hsl(172 66% 50% / 0.1)" }}
+                >
+                  <div className="flex items-center gap-2 text-base font-bold font-heading">
+                    <svg className="h-5 w-5" style={{ color: "hsl(172 66% 50%)" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    {hp?.cardTitle ?? "Imóvel em destaque"}
+                  </div>
+                  <div className="bg-gray-50 p-3">
+                    <p className="text-xs font-medium text-gray-400">{hp?.cardLocation ?? "Localização"}</p>
+                    <p className="text-sm font-medium">Lisboa, Estrela</p>
+                  </div>
+                  <div className="bg-gray-50 p-3">
+                    <p className="text-xs font-medium text-gray-400">{hp?.cardPrice ?? "Preço"}</p>
+                    <p className="text-sm font-medium">€ 385.000</p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="border border-gray-200 p-2 text-center text-xs text-gray-500">T2</div>
+                    <div
+                      className="border-2 p-2 text-center text-xs font-medium"
+                      style={{ borderColor: "hsl(172 66% 50%)", color: "hsl(172 66% 50%)" }}
+                    >
+                      85 m²
+                    </div>
+                    <div className="border border-gray-200 p-2 text-center text-xs text-gray-500">2 WC</div>
+                  </div>
+                  <div
+                    className="w-full py-2 text-center text-sm font-medium text-white"
+                    style={{ backgroundColor: "hsl(172 66% 50%)" }}
+                  >
+                    {hp?.cardCta ?? "Ver detalhes"}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Sources */}
-      <div>
+      <div className="col-span-12 sm:col-span-6 px-4 sm:px-6 max-w-6xl mx-auto w-full">
         <h2 className="text-sm font-bold mb-2">
           {hp?.sourcesHeading ?? "We search for you on"}
         </h2>
@@ -120,7 +181,7 @@ export default async function HomePage({
 
       {/* Latest blog posts */}
       {latestPosts.length > 0 && (
-        <div>
+        <div className="col-span-12 sm:col-span-6 px-4 sm:px-6 max-w-6xl mx-auto w-full">
           <h2 className="text-sm font-bold mb-2">
             {hp?.latestPosts ?? "From Our Blog"}
           </h2>
@@ -145,8 +206,10 @@ export default async function HomePage({
       )}
 
       {/* Location browsers */}
-      <LocationBrowser locale={locale} listingSlug="comprar" />
-      <LocationBrowser locale={locale} listingSlug="arrendar" />
+      <div className="col-span-12 px-4 sm:px-6 max-w-6xl mx-auto w-full space-y-6">
+        <LocationBrowser locale={locale} listingSlug="comprar" />
+        <LocationBrowser locale={locale} listingSlug="arrendar" />
+      </div>
     </div>
   );
 }

@@ -10,13 +10,13 @@ export function PrototypeBanner() {
   if (dismissed) return null;
 
   return (
-    <div className="hidden md:block relative h-10 w-full overflow-hidden text-white">
+    <div className="hidden md:block relative h-10 w-full overflow-hidden text-gray-700">
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0"
         style={{
           background:
-            "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #1e3a5f 60%, #0f172a 100%)",
+            "linear-gradient(135deg, hsl(172 66% 95%) 0%, hsl(172 66% 90%) 50%, hsl(38 92% 95%) 100%)",
         }}
       />
       <div className="relative z-10 flex items-center justify-center h-full px-4">
@@ -25,7 +25,7 @@ export function PrototypeBanner() {
         </span>
         <button
           onClick={() => setDismissed(true)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 text-white hover:opacity-70 transition-opacity"
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 text-gray-500 hover:text-gray-700 transition-colors"
           aria-label="Close"
         >
           <svg

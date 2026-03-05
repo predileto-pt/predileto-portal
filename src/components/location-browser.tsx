@@ -46,20 +46,25 @@ export function LocationBrowser({ locale, listingSlug }: LocationBrowserProps) {
               </a>
               <span className="ml-1 text-gray-400">({getMockPropertyCount(district.slug)})</span>
               {district.children.length > 0 && (
-                <span className="ml-1 text-gray-500">
-                  {district.children.map((mun, i) => (
-                    <span key={mun.slug}>
-                      {i > 0 && ", "}
-                      <a
-                        href={`${base}/${region.slug}/${district.slug}/${mun.slug}`}
-                        className="hover:underline"
-                      >
-                        {mun.name}
-                      </a>
-                      <span className="text-gray-400"> ({getMockPropertyCount(mun.slug)})</span>
-                    </span>
-                  ))}
-                </span>
+                <details className="mt-0.5">
+                  <summary className="ml-1 inline cursor-pointer text-xs text-gray-400 hover:text-gray-600 list-none [&::-webkit-details-marker]:hidden">
+                    [{district.children.length} concelhos]
+                  </summary>
+                  <span className="ml-1 text-gray-500">
+                    {district.children.map((mun, i) => (
+                      <span key={mun.slug}>
+                        {i > 0 && ", "}
+                        <a
+                          href={`${base}/${region.slug}/${district.slug}/${mun.slug}`}
+                          className="hover:underline"
+                        >
+                          {mun.name}
+                        </a>
+                        <span className="text-gray-400"> ({getMockPropertyCount(mun.slug)})</span>
+                      </span>
+                    ))}
+                  </span>
+                </details>
               )}
             </div>
             );

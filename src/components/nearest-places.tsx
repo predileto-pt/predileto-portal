@@ -66,7 +66,7 @@ export function NearestPlaces({ nearest, dict }: NearestPlacesProps) {
                   {place.name}
                 </p>
                 <a href={place.mapUrl} target="_blank" rel="noopener noreferrer"
-                   className="block truncate text-xs text-blue-400 hover:text-blue-500">
+                   className="block truncate text-xs text-blue-500 hover:text-blue-600">
                   View on Google Maps
                 </a>
                 <Small>
