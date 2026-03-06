@@ -94,3 +94,13 @@ export interface PaginatedResult<T> {
   pageSize: number;
   totalPages: number;
 }
+
+export function isEasyBook(property: Pick<Property, "sources">): boolean {
+  return (
+    property.sources?.some(
+      (s) =>
+        // TODO: delete this casa-sapo fallback once all sources are normalized
+        s.name === "casa-sapo",
+    ) ?? false
+  );
+}
