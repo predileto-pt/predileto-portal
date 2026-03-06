@@ -1,0 +1,23 @@
+{
+  "id": "test-property-easybook",
+  "title": "Easy Book Apartment in Porto",
+  "price": 180000,
+  "propertyType": "apartment",
+  "address": {
+    "fullAddress": "Rua das Flores 50, Porto",
+    "municipality": "Porto",
+    "district": "Porto",
+    "region": "norte",
+    "postalCode": "4000-001",
+    "country": "Portugal"
+  },
+  "features": {
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "areaSqm": 60
+  },
+  "fullDescription": "A cozy apartment in the heart of Porto, perfect for a single person or couple.",
+  "sources": [
+    { "name": "casa-sapo", "url": "https://casa.sapo.pt/example" }
+  ]
+}

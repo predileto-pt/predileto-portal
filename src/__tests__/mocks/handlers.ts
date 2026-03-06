@@ -75,4 +75,13 @@ export const handlers = [
   http.get("/api/property/:id", () => {
     return HttpResponse.json(mockProperty);
   }),
+
+  http.post("/api/booking", async () => {
+    return HttpResponse.json({
+      success: true,
+      bookingId: "mock-test-123",
+      propertyId: "test-property-1",
+      message: "Booking created successfully",
+    });
+  }),
 ];

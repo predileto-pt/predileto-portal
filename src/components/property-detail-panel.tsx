@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
@@ -88,9 +89,12 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
       .catch((err) => {
         setError(true);
         setLoading(false);
-        posthog.captureException(err instanceof Error ? err : new Error("Unknown error"), {
-          property_id: selectedId,
-        });
+        posthog.captureException(
+          err instanceof Error ? err : new Error("Unknown error"),
+          {
+            property_id: selectedId,
+          },
+        );
       });
 
     // Nearby fetch — slower, renders independently when ready (cached client-side)
@@ -104,7 +108,10 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
           return res.json();
         })
         .then((json) => {
-          const data: NearbyData = { nearby: json.nearby, nearbyError: json.nearbyError };
+          const data: NearbyData = {
+            nearby: json.nearby,
+            nearbyError: json.nearbyError,
+          };
           nearbyCache.set(selectedId, data);
           setNearby(data);
           if (json.nearbyError) {
@@ -115,11 +122,17 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
           }
         })
         .catch((err) => {
-          setNearby({ nearby: { counts: {}, nearest: {} }, nearbyError: "Failed to load" });
-          posthog.captureException(err instanceof Error ? err : new Error("Unknown error"), {
-            property_id: selectedId,
-            context: "nearby",
+          setNearby({
+            nearby: { counts: {}, nearest: {} },
+            nearbyError: "Failed to load",
           });
+          posthog.captureException(
+            err instanceof Error ? err : new Error("Unknown error"),
+            {
+              property_id: selectedId,
+              context: "nearby",
+            },
+          );
         });
     }
   }, [selectedId]);
@@ -188,7 +201,11 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
           <div>
             <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5">
               <svg className="size-3" viewBox="0 0 24 24" fill="currentColor">
-                <path fillRule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                  clipRule="evenodd"
+                />
               </svg>
               Easy Book
             </span>
@@ -208,10 +225,27 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
               className="inline-flex items-center gap-0.5 text-sm text-blue-500 underline underline-offset-2 hover:text-blue-600"
             >
               {d.seePhotos}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-3">
-                <path fillRule="evenodd" d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0Z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="size-3"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0Z"
+                  clipRule="evenodd"
+                />
               </svg>
             </a>
+          )}
+          {isEasyBook(property) && (
+            <Link
+              href={`/${locale}/agendar/${property.id}`}
+              className="inline-flex items-center gap-1 text-sm text-blue-500 underline underline-offset-2 hover:text-blue-600"
+            >
+              {d.scheduleVisit}
+            </Link>
           )}
         </div>
 
@@ -219,7 +253,10 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
           <h3 className="text-xs text-gray-400 uppercase">{d.details}</h3>
           <div className="flex justify-between">
             <span className="text-gray-400">{d.propertyType}</span>
-            <span>{propertyTypesDict[property.propertyType] || property.propertyType}</span>
+            <span>
+              {propertyTypesDict[property.propertyType] ||
+                property.propertyType}
+            </span>
           </div>
           {property.features.bedrooms > 0 && (
             <div className="flex justify-between">
@@ -243,8 +280,12 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
 
         {property.fullDescription && (
           <div>
-            <h3 className="text-xs text-gray-400 uppercase mb-1">{d.description}</h3>
-            <Text className={`whitespace-pre-line ${descExpanded ? "" : "line-clamp-4"}`}>
+            <h3 className="text-xs text-gray-400 uppercase mb-1">
+              {d.description}
+            </h3>
+            <Text
+              className={`whitespace-pre-line ${descExpanded ? "" : "line-clamp-4"}`}
+            >
               {property.fullDescription}
             </Text>
             <button
@@ -252,7 +293,9 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
               onClick={() => setDescExpanded((v) => !v)}
               className="text-xs text-blue-500 hover:text-blue-600 mt-1"
             >
-              {descExpanded ? d.showLess || "Show less" : d.showMore || "Show more"}
+              {descExpanded
+                ? d.showLess || "Show less"
+                : d.showMore || "Show more"}
             </button>
           </div>
         )}

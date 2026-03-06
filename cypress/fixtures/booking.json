@@ -1,0 +1,6 @@
+{
+  "success": true,
+  "bookingId": "mock-1234567890",
+  "propertyId": "test-property-easybook",
+  "message": "Booking created successfully"
+}
