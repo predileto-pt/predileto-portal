@@ -45,7 +45,21 @@ export function TopNav({ locale }: { locale: Locale }) {
           })}
         </div>
       </div>
-      <LanguageSwitcher locale={locale} />
+      <div className="flex items-center gap-4">
+        <a
+          href="https://predileto.pt"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm font-heading text-gray-400 hover:text-gray-600 flex items-center gap-1"
+        >
+          {dict.nav.agencies}
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7" />
+            <polyline points="7 7 17 7 17 17" />
+          </svg>
+        </a>
+        <LanguageSwitcher locale={locale} />
+      </div>
       </div>
     </nav>
   );
