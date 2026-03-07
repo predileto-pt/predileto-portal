@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useDictionary } from "@/components/dictionary-provider";
 import { useBookingForm } from "./booking-form-context";
 
-interface Step5Props {
+interface Step4Props {
   propertyId: string;
   onNext: () => void;
   onBack: () => void;
 }
 
-export function Step5Review({ propertyId, onNext, onBack }: Step5Props) {
+export function Step4Review({ propertyId, onNext, onBack }: Step4Props) {
   const dict = useDictionary();
   const d = dict.booking as Record<string, string>;
   const { data } = useBookingForm();
@@ -18,17 +18,23 @@ export function Step5Review({ propertyId, onNext, onBack }: Step5Props) {
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    console.log("Booking submission:", {
-      propertyId,
-      name: data.name,
-      nif: data.nif,
-      email: data.email,
-      phoneCountryCode: data.phoneCountryCode,
-      phone: data.phone,
-      utilityBillCount: data.utilityBillFiles.length,
-      incomeReceiptCount: data.incomeReceiptFiles.length,
-    });
-    onNext();
+    try {
+      const res = await fetch("/api/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          propertyId,
+          name: data.name,
+          nif: data.nif,
+          utilityBillCount: data.utilityBillFiles.length,
+          incomeReceiptCount: data.incomeReceiptFiles.length,
+        }),
+      });
+      if (!res.ok) throw new Error("Booking failed");
+      onNext();
+    } catch {
+      setSubmitting(false);
+    }
   };
 
   const fileCount = (count: number) =>
@@ -46,14 +52,6 @@ export function Step5Review({ propertyId, onNext, onBack }: Step5Props) {
         <div className="flex justify-between">
           <dt className="text-gray-500">{d.reviewNif}</dt>
           <dd>{data.nif}</dd>
-        </div>
-        <div className="flex justify-between">
-          <dt className="text-gray-500">{d.reviewEmail}</dt>
-          <dd>{data.email}</dd>
-        </div>
-        <div className="flex justify-between">
-          <dt className="text-gray-500">{d.reviewPhone}</dt>
-          <dd>{data.phoneCountryCode} {data.phone}</dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-gray-500">{d.reviewUtilityBill}</dt>

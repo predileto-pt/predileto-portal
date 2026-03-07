@@ -6,9 +6,6 @@ export interface BookingFormData {
   agreed: boolean;
   name: string;
   nif: string;
-  email: string;
-  phoneCountryCode: string;
-  phone: string;
   utilityBillFiles: File[];
   incomeReceiptFiles: File[];
 }
@@ -24,9 +21,6 @@ const initialData: BookingFormData = {
   agreed: false,
   name: "",
   nif: "",
-  email: "",
-  phoneCountryCode: "+351",
-  phone: "",
   utilityBillFiles: [],
   incomeReceiptFiles: [],
 };

@@ -14,11 +14,3 @@ export const personalInfoSchema = z.object({
 });
 
 export type PersonalInfoFormData = z.infer<typeof personalInfoSchema>;
-
-export const contactInfoSchema = z.object({
-  email: z.string().min(1, { message: "emailRequired" }).email({ message: "emailInvalid" }),
-  phoneCountryCode: z.string().min(1),
-  phone: z.string().min(1, { message: "phoneRequired" }),
-});
-
-export type ContactInfoFormData = z.infer<typeof contactInfoSchema>;
