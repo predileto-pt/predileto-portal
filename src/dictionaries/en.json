@@ -139,6 +139,20 @@
     "backToHome": "Back to home",
     "submitting": "Submitting..."
   },
+  "agencies": {
+    "eyebrow": "For Agencies",
+    "heading": "Qualify applicants.",
+    "headingAccent": "Close deals faster.",
+    "subheading": "Predileto lets real estate agencies filter and manage applicants by verifying their income and documentation — all in one platform.",
+    "cta": "Contact Us",
+    "feature1Title": "Income Verification",
+    "feature1Desc": "Automatically validate applicant income receipts before scheduling visits.",
+    "feature2Title": "Document Management",
+    "feature2Desc": "Receive and organize all applicant documentation in one secure place.",
+    "feature3Title": "Smart Filtering",
+    "feature3Desc": "Filter applicants by financial and document criteria to find the most qualified ones.",
+    "screenshotsHeading": "See how it works"
+  },
   "blog": {
     "heading": "Blog",
     "subheading": "Articles and guides about the real estate market in Portugal.",

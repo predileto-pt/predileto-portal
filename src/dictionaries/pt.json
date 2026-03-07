@@ -139,6 +139,20 @@
     "backToHome": "Voltar ao início",
     "submitting": "A submeter..."
   },
+  "agencies": {
+    "eyebrow": "Para Imobiliárias",
+    "heading": "Qualifique candidatos.",
+    "headingAccent": "Feche negócios mais rápido.",
+    "subheading": "O Predileto permite às agências imobiliárias filtrar e gerir candidatos verificando os seus rendimentos e documentação — tudo numa única plataforma.",
+    "cta": "Contacte-nos",
+    "feature1Title": "Verificação de Rendimentos",
+    "feature1Desc": "Valide automaticamente os comprovativos de rendimento dos candidatos antes de agendar visitas.",
+    "feature2Title": "Gestão de Documentos",
+    "feature2Desc": "Receba e organize toda a documentação dos candidatos num único local seguro.",
+    "feature3Title": "Filtragem Inteligente",
+    "feature3Desc": "Filtre candidatos por critérios financeiros e documentais para encontrar os mais qualificados.",
+    "screenshotsHeading": "Veja como funciona"
+  },
   "blog": {
     "heading": "Blog",
     "subheading": "Artigos e guias sobre o mercado imobiliário em Portugal.",
