@@ -63,7 +63,8 @@
     "loadError": "Não foi possível carregar os detalhes deste imóvel. Por favor, tente novamente mais tarde.",
     "nearbyError": "Não foi possível carregar locais próximos.",
     "seePhotos": "Ver fotos",
-    "scheduleVisit": "Agendar Visita"
+    "scheduleVisit": "Agendar Visita",
+    "viewProperty": "Ver imóvel"
   },
   "propertyTypes": {
     "apartment": "Apartamento",

@@ -12,6 +12,7 @@ import { NearestPlaces } from "@/components/nearest-places";
 import type { NearbyPlacesResult } from "@/lib/geoapify";
 import { Text } from "@/components/ui/text";
 import { Small } from "@/components/ui/small";
+import { Button } from "@/components/ui/button";
 import { isEasyBook } from "@/lib/types";
 
 interface PropertyData {
@@ -274,6 +275,15 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
             <div className="flex justify-between">
               <span className="text-gray-400">{d.area}</span>
               <span>{formatArea(property.features.areaSqm)}</span>
+            </div>
+          )}
+          {sourceUrl && (
+            <div className="flex justify-end">
+              <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
+                <Button variant="primary">
+                  {d.viewProperty}
+                </Button>
+              </a>
             </div>
           )}
         </div>

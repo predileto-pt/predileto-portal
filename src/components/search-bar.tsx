@@ -8,6 +8,7 @@ import {
   type LocationSearchResult,
   type ResolvedLocation,
 } from "@/lib/locations";
+import { Button } from "@/components/ui/button";
 
 interface SearchBarProps {
   locale: string;
@@ -200,12 +201,13 @@ export function SearchBar({
             </ul>
           )}
         </div>
-        <button
+        <Button
           type="submit"
-          className="border border-gray-200 bg-white px-3 py-1.5 text-sm hover:bg-gray-50 font-heading"
+          variant="steel"
+          className="font-heading"
         >
           {filtersDict.search}
-        </button>
+        </Button>
       </form>
 
       {hasLocation && locationLabel && (

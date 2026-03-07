@@ -63,7 +63,8 @@
     "loadError": "Could not load details for this property. Please try again later.",
     "nearbyError": "Could not load nearby places.",
     "seePhotos": "See photos",
-    "scheduleVisit": "Schedule Visit"
+    "scheduleVisit": "Schedule Visit",
+    "viewProperty": "View property"
   },
   "propertyTypes": {
     "apartment": "Apartment",
