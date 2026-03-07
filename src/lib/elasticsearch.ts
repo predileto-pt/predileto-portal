@@ -4,6 +4,7 @@ import type { PropertyRow } from "./db-types";
 import type { PropertySearchParams } from "./types";
 import { DEFAULT_PAGE_SIZE } from "./constants";
 import { getDistrictSlugsForRegion } from "./locations";
+import { captureServerException } from "./posthog-server";
 
 // --- Lazy singleton client ---
 
@@ -261,6 +262,7 @@ export async function searchProperties(
     return { rows, total };
   } catch (err) {
     console.error("Elasticsearch query error:", err);
+    captureServerException(err, { context: "elasticsearch_search" });
     return null;
   }
 }
