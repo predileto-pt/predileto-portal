@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useDictionary } from "@/components/dictionary-provider";
 
-interface Step5Props {
+interface Step6Props {
   locale: string;
 }
 
-export function Step5Success({ locale }: Step5Props) {
+export function Step6Success({ locale }: Step6Props) {
   const dict = useDictionary();
   const d = dict.booking as Record<string, string>;
 

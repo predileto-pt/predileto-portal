@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 export function ProgressBar({ currentStep }: { currentStep: number }) {
   const progress = (currentStep / TOTAL_STEPS) * 100;

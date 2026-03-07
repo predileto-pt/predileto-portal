@@ -9,9 +9,10 @@ import { ProgressBar } from "./progress-bar";
 import { BackButton } from "./back-button";
 import { Step1Agreement } from "./step-1-agreement";
 import { Step2PersonalInfo } from "./step-2-personal-info";
+import { Step3ContactInfo } from "./step-3-contact-info";
 import { Step3Documents } from "./step-3-documents";
-import { Step4Review } from "./step-4-review";
-import { Step5Success } from "./step-5-success";
+import { Step5Review } from "./step-5-review";
+import { Step6Success } from "./step-6-success";
 
 const COOKIE_PREFIX = "booking-step-";
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days
@@ -74,7 +75,7 @@ export function BookingClientPage({ locale, propertyId }: BookingClientPageProps
   useEffect(() => {
     const currentStep = step;
     return () => {
-      if (currentStep < 5) {
+      if (currentStep < 6) {
         metrics.trackBookingAbandoned(propertyId, currentStep);
       }
     };
@@ -84,8 +85,8 @@ export function BookingClientPage({ locale, propertyId }: BookingClientPageProps
   const goNext = useCallback(() => {
     setDirection(1);
     setStep((s) => {
-      const next = Math.min(s + 1, 5);
-      if (next === 5) metrics.trackBookingCompleted(propertyId);
+      const next = Math.min(s + 1, 6);
+      if (next === 6) metrics.trackBookingCompleted(propertyId);
       return next;
     });
   }, [propertyId]);
@@ -110,13 +111,16 @@ export function BookingClientPage({ locale, propertyId }: BookingClientPageProps
       stepContent = <Step2PersonalInfo onNext={goNext} onBack={goBack} />;
       break;
     case 3:
-      stepContent = <Step3Documents onNext={goNext} onBack={goBack} />;
+      stepContent = <Step3ContactInfo onNext={goNext} onBack={goBack} />;
       break;
     case 4:
-      stepContent = <Step4Review propertyId={propertyId} onNext={goNext} onBack={goBack} />;
+      stepContent = <Step3Documents onNext={goNext} onBack={goBack} />;
       break;
     case 5:
-      stepContent = <Step5Success locale={locale} />;
+      stepContent = <Step5Review propertyId={propertyId} onNext={goNext} onBack={goBack} />;
+      break;
+    case 6:
+      stepContent = <Step6Success locale={locale} />;
       break;
     default:
       stepContent = <Step1Agreement onNext={goNext} />;
