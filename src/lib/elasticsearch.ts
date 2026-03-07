@@ -27,7 +27,7 @@ function getClient(): Client | null {
 // --- Listing / property type mapping (English → DB Portuguese values) ---
 
 const listingTypeDbValues: Record<string, string[]> = {
-  buy: ["comprar", "venda"],
+  buy: ["venda"],
   rent: ["arrendar", "arrendamento"],
 };
 

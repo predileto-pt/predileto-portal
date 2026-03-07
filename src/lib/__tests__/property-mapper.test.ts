@@ -5,7 +5,7 @@ function makeRow(overrides: Partial<PropertyRow> = {}): PropertyRow {
   return {
     id: "prop-1",
     title: "Test Property",
-    listing_type: "comprar",
+    listing_type: "venda",
     property_type: "apartamento",
     price: 200000,
     bedrooms: "T2",
@@ -32,10 +32,6 @@ function makeRow(overrides: Partial<PropertyRow> = {}): PropertyRow {
 
 describe("mapRowToProperty", () => {
   describe("listing_type mapping", () => {
-    it('maps "comprar" to "buy"', () => {
-      expect(mapRowToProperty(makeRow({ listing_type: "comprar" })).listingType).toBe("buy");
-    });
-
     it('maps "venda" to "buy"', () => {
       expect(mapRowToProperty(makeRow({ listing_type: "venda" })).listingType).toBe("buy");
     });

@@ -4,7 +4,7 @@ import { slugify, truncate } from "./utils";
 import { lookupRegionForDistrictName, lookupDistrictName, lookupMunicipalityName } from "./locations";
 
 function mapListingType(dbValue: string | null): ListingType {
-  if (dbValue === "comprar" || dbValue === "venda") return "buy";
+  if (dbValue === "venda") return "buy";
   if (dbValue === "arrendar" || dbValue === "arrendamento") return "rent";
   return "buy";
 }

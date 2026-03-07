@@ -9,7 +9,7 @@ import { getDistrictSlugsForRegion } from "./locations";
 // --- Property type / listing type mapping for DB queries ---
 
 const listingTypeConditions: Record<string, string> = {
-  buy: "listing_type.eq.comprar,listing_type.eq.venda,listing_type.is.null",
+  buy: "listing_type.eq.venda,listing_type.is.null",
   rent: "listing_type.eq.arrendar,listing_type.eq.arrendamento",
 };
 
