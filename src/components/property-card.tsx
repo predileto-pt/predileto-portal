@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { type Property, isEasyBook } from "@/lib/types";
 import { formatPrice, formatArea, formatDate } from "@/lib/utils";
@@ -98,9 +99,18 @@ export function PropertyCard({
                   property.propertyType}
               </Badge>
             </div>
-            <div className="flex justify-between mt-1.5 text-xs text-gray-400">
+            <div className="flex justify-between items-center mt-1.5 text-xs text-gray-400">
               <span>{property.sources?.[0]?.name || ""}</span>
-              <span>{formatDate(property.updatedAt, locale)}</span>
+              <div className="flex items-center gap-2">
+                <span>{formatDate(property.updatedAt, locale)}</span>
+                <Link
+                  href={`/${locale}/imovel/${property.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-blue-500 hover:text-blue-600 underline underline-offset-2"
+                >
+                  View details
+                </Link>
+              </div>
             </div>
           </div>
         </div>
