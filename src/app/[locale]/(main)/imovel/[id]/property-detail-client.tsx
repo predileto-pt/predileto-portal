@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n";
 import { DictionaryProvider } from "@/components/dictionary-provider";
@@ -19,10 +19,8 @@ import { PropertyChatbot } from "@/components/deal/property-chatbot";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 
-import {
-  MOCK_PROPERTY,
-  MOCK_NEARBY,
-} from "@/lib/mock-deal-data";
+import { MOCK_PROPERTY } from "@/lib/mock-deal-data";
+import type { PropertyAmenityResponse } from "@/lib/types/amenities";
 
 interface Props {
   locale: string;
@@ -32,9 +30,15 @@ interface Props {
 
 export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
   const property = MOCK_PROPERTY;
-  const nearby = MOCK_NEARBY;
-
+  const [amenities, setAmenities] = useState<PropertyAmenityResponse[]>([]);
   const [descExpanded, setDescExpanded] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/property/${propertyId}/nearby`)
+      .then((res) => res.json())
+      .then((data) => setAmenities(data.amenities ?? []))
+      .catch(() => setAmenities([]));
+  }, [propertyId]);
 
   const d = dict.propertyDetail as Record<string, string>;
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
@@ -294,12 +298,12 @@ export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
 
             {/* Nearby Amenities */}
             <div className="border border-gray-200 bg-white p-4">
-              <NearbyAmenities counts={nearby.counts} dict={dict} />
+              <NearbyAmenities amenities={amenities} dict={dict} />
             </div>
 
             {/* Nearest Places */}
             <div className="border border-gray-200 bg-white p-4">
-              <NearestPlaces nearest={nearby.nearest} dict={dict} />
+              <NearestPlaces amenities={amenities} dict={dict} />
             </div>
 
             {/* Chatbot */}

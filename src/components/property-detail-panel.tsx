@@ -9,7 +9,7 @@ import { useDictionary } from "@/components/dictionary-provider";
 import { formatPrice, formatArea } from "@/lib/utils";
 import { NearbyAmenities } from "@/components/nearby-amenities";
 import { NearestPlaces } from "@/components/nearest-places";
-import type { NearbyPlacesResult } from "@/lib/geoapify";
+import type { PropertyAmenityResponse } from "@/lib/types/amenities";
 import { Text } from "@/components/ui/text";
 import { Small } from "@/components/ui/small";
 import { Button } from "@/components/ui/button";
@@ -35,8 +35,8 @@ interface PropertyData {
 }
 
 interface NearbyData {
-  nearby: NearbyPlacesResult;
-  nearbyError?: string | false;
+  amenities: PropertyAmenityResponse[];
+  error?: string | false;
 }
 
 const nearbyCache = new Map<string, NearbyData>();
@@ -110,22 +110,21 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
         })
         .then((json) => {
           const data: NearbyData = {
-            nearby: json.nearby,
-            nearbyError: json.nearbyError,
+            amenities: json.amenities ?? [],
+            error: json.error,
           };
           nearbyCache.set(selectedId, data);
           setNearby(data);
-          if (json.nearbyError) {
-            posthog.captureException(new Error(json.nearbyError), {
+          if (json.error) {
+            posthog.captureException(new Error(json.error), {
               property_id: selectedId,
-              address: json.property?.address,
             });
           }
         })
         .catch((err) => {
           setNearby({
-            nearby: { counts: {}, nearest: {} },
-            nearbyError: "Failed to load",
+            amenities: [],
+            error: "Failed to load",
           });
           posthog.captureException(
             err instanceof Error ? err : new Error("Unknown error"),
@@ -333,12 +332,12 @@ export function PropertyDetailPanel({ locale }: { locale: string }) {
               <div className="h-10 bg-gray-100 rounded" />
             </div>
           </div>
-        ) : nearby.nearbyError ? (
+        ) : nearby.error ? (
           <Text variant="muted">{d.nearbyError}</Text>
         ) : (
           <>
-            <NearbyAmenities counts={nearby.nearby.counts} dict={dict} />
-            <NearestPlaces nearest={nearby.nearby.nearest} dict={dict} />
+            <NearbyAmenities amenities={nearby.amenities} dict={dict} />
+            <NearestPlaces amenities={nearby.amenities} dict={dict} />
           </>
         )}
       </div>

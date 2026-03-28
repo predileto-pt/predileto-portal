@@ -1,55 +1,32 @@
 import { NextRequest } from "next/server";
 
-const mockProperty = {
-  id: "test-1",
-  title: "Test Property",
-  slug: "test-property",
-  shortDescription: "Short desc",
-  fullDescription: "Full description of the property.",
-  propertyType: "apartment",
-  listingType: "buy",
-  price: 200000,
-  featured: false,
-  address: {
-    fullAddress: "Rua Principal 10",
-    municipality: "Lisboa",
-    district: "Lisboa",
-    postalCode: "1000-001",
-    country: "Portugal",
+const mockAmenities = [
+  {
+    id: "amenity-1",
+    property_id: "test-1",
+    category: "restaurant",
+    nearest_name: "Restaurant A",
+    nearest_distance_meters: 100,
+    nearest_latitude: 38.71,
+    nearest_longitude: -9.14,
+    total_count: 10,
+    nearest_place_id: null,
+    nearest_google_maps_url: null,
+    top_places: [],
+    created_at: "2026-01-01T00:00:00Z",
+    updated_at: "2026-01-01T00:00:00Z",
   },
-  features: { bedrooms: 2, bathrooms: 1, areaSqm: 80 },
-  amenities: [],
-  images: [],
-  agent: { name: "", email: "", phone: "", photo: null },
-  available: true,
-  availableFrom: null,
-  sources: [{ name: "Source", url: "https://source.com" }],
-  keywords: [],
-  createdAt: "2024-01-01T00:00:00Z",
-  updatedAt: "2024-06-01T00:00:00Z",
-};
+];
 
-jest.mock("@/lib/api", () => ({
-  getPropertyById: jest.fn(),
+jest.mock("@/lib/estate-os", () => ({
+  fetchPropertyAmenities: jest.fn(),
 }));
 
-jest.mock("@/lib/geoapify", () => ({
-  geocodeAddress: jest.fn(),
-  getNearbyPlaces: jest.fn(),
-}));
-
-import { getPropertyById } from "@/lib/api";
-import { geocodeAddress, getNearbyPlaces } from "@/lib/geoapify";
+import { fetchPropertyAmenities } from "@/lib/estate-os";
 import { GET } from "../nearby/route";
 
-const mockedGetPropertyById = getPropertyById as jest.MockedFunction<
-  typeof getPropertyById
->;
-const mockedGeocodeAddress = geocodeAddress as jest.MockedFunction<
-  typeof geocodeAddress
->;
-const mockedGetNearbyPlaces = getNearbyPlaces as jest.MockedFunction<
-  typeof getNearbyPlaces
+const mockedFetch = fetchPropertyAmenities as jest.MockedFunction<
+  typeof fetchPropertyAmenities
 >;
 
 describe("GET /api/property/[id]/nearby", () => {
@@ -57,19 +34,8 @@ describe("GET /api/property/[id]/nearby", () => {
     jest.clearAllMocks();
   });
 
-  it("returns property + nearby data", async () => {
-    mockedGetPropertyById.mockResolvedValue(mockProperty);
-    mockedGeocodeAddress.mockResolvedValue({ lat: 38.71, lon: -9.14 });
-    mockedGetNearbyPlaces.mockResolvedValue({
-      counts: { restaurants: 10 },
-      nearest: {
-        restaurants: {
-          name: "Restaurant A",
-          distance: 100,
-          mapUrl: "https://maps.google.com",
-        },
-      },
-    });
+  it("returns amenities data", async () => {
+    mockedFetch.mockResolvedValue(mockAmenities);
 
     const request = new NextRequest(
       "http://localhost:3000/api/property/test-1/nearby",
@@ -80,29 +46,29 @@ describe("GET /api/property/[id]/nearby", () => {
 
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body.property.id).toBe("test-1");
-    expect(body.nearby.counts.restaurants).toBe(10);
-    expect(body.nearbyError).toBe(false);
+    expect(body.amenities).toHaveLength(1);
+    expect(body.amenities[0].category).toBe("restaurant");
+    expect(body.amenities[0].total_count).toBe(10);
   });
 
-  it("returns 404 for not-found property", async () => {
-    mockedGetPropertyById.mockResolvedValue(undefined);
+  it("returns 502 when estate-os fails", async () => {
+    mockedFetch.mockRejectedValue(new Error("estate-os error: 500"));
 
     const request = new NextRequest(
-      "http://localhost:3000/api/property/nonexistent/nearby",
+      "http://localhost:3000/api/property/test-1/nearby",
     );
     const response = await GET(request, {
-      params: Promise.resolve({ id: "nonexistent" }),
+      params: Promise.resolve({ id: "test-1" }),
     });
 
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(502);
     const body = await response.json();
-    expect(body.error).toBe("Property not found");
+    expect(body.amenities).toEqual([]);
+    expect(body.error).toBe("estate-os error: 500");
   });
 
-  it("handles geocoding returning null", async () => {
-    mockedGetPropertyById.mockResolvedValue(mockProperty);
-    mockedGeocodeAddress.mockResolvedValue(null);
+  it("returns empty amenities when estate-os returns empty list", async () => {
+    mockedFetch.mockResolvedValue([]);
 
     const request = new NextRequest(
       "http://localhost:3000/api/property/test-1/nearby",
@@ -113,9 +79,6 @@ describe("GET /api/property/[id]/nearby", () => {
 
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body.nearby.counts).toEqual({});
-    expect(body.nearby.nearest).toEqual({});
-    expect(body.nearbyError).toBe(false);
-    expect(mockedGetNearbyPlaces).not.toHaveBeenCalled();
+    expect(body.amenities).toEqual([]);
   });
 });

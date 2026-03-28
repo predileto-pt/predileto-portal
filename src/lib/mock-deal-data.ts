@@ -1,6 +1,5 @@
 import type { Property } from "./types";
 import type { IntentLevel } from "./tracking";
-import type { NearbyPlacesResult } from "./geoapify";
 
 // --- Mock Property for the detail page ---
 
@@ -74,36 +73,6 @@ export const MOCK_PROPERTY: Property = {
 export const MOCK_COORDINATES = {
   lat: 38.6979,
   lng: -9.4215,
-};
-
-// --- Mock Nearby Data ---
-
-export const MOCK_NEARBY: NearbyPlacesResult = {
-  counts: {
-    restaurants: 12,
-    hospitals: 2,
-    schools: 5,
-    banks: 4,
-    pharmacies: 3,
-    supermarkets: 6,
-  },
-  nearest: {
-    schools: {
-      name: "Escola Internacional de Cascais",
-      distance: 350,
-      mapUrl: "https://maps.google.com/?q=38.699,-9.420",
-    },
-    hospitals: {
-      name: "Hospital de Cascais",
-      distance: 1200,
-      mapUrl: "https://maps.google.com/?q=38.694,-9.425",
-    },
-    supermarkets: {
-      name: "Continente Cascais",
-      distance: 200,
-      mapUrl: "https://maps.google.com/?q=38.698,-9.422",
-    },
-  },
 };
 
 // --- Mock Buyer Intelligence ---

@@ -1,13 +1,40 @@
 import { render, screen } from "@testing-library/react";
 import { NearbyAmenities } from "../nearby-amenities";
+import type { PropertyAmenityResponse } from "@/lib/types/amenities";
 import enDict from "@/dictionaries/en.json";
 
 const dict = enDict;
 
+function makeAmenity(
+  category: PropertyAmenityResponse["category"],
+  totalCount: number,
+): PropertyAmenityResponse {
+  return {
+    id: `id-${category}`,
+    property_id: "prop-1",
+    category,
+    nearest_name: `Nearest ${category}`,
+    nearest_distance_meters: 100,
+    nearest_latitude: 38.7,
+    nearest_longitude: -9.1,
+    total_count: totalCount,
+    nearest_place_id: null,
+    nearest_google_maps_url: null,
+    top_places: [],
+    created_at: "2026-01-01T00:00:00Z",
+    updated_at: "2026-01-01T00:00:00Z",
+  };
+}
+
 describe("NearbyAmenities", () => {
   it("renders amenity counts grid", () => {
-    const counts = { restaurants: 10, hospitals: 3, schools: 5, banks: 0, pharmacies: 2, supermarkets: 0 };
-    render(<NearbyAmenities counts={counts} dict={dict} />);
+    const amenities = [
+      makeAmenity("restaurant", 10),
+      makeAmenity("hospital", 3),
+      makeAmenity("school", 5),
+      makeAmenity("pharmacy", 2),
+    ];
+    render(<NearbyAmenities amenities={amenities} dict={dict} />);
 
     expect(screen.getByText("10")).toBeInTheDocument();
     expect(screen.getByText("3")).toBeInTheDocument();
@@ -16,8 +43,11 @@ describe("NearbyAmenities", () => {
   });
 
   it("hides amenities with count 0", () => {
-    const counts = { restaurants: 10, hospitals: 0, schools: 0, banks: 0, pharmacies: 0, supermarkets: 0 };
-    render(<NearbyAmenities counts={counts} dict={dict} />);
+    const amenities = [
+      makeAmenity("restaurant", 10),
+      makeAmenity("hospital", 0),
+    ];
+    render(<NearbyAmenities amenities={amenities} dict={dict} />);
 
     expect(screen.getByText("10")).toBeInTheDocument();
     expect(screen.getByText("Restaurants")).toBeInTheDocument();
@@ -25,8 +55,17 @@ describe("NearbyAmenities", () => {
   });
 
   it("renders nothing when all counts are 0", () => {
-    const counts = { restaurants: 0, hospitals: 0, schools: 0, banks: 0, pharmacies: 0, supermarkets: 0 };
-    const { container } = render(<NearbyAmenities counts={counts} dict={dict} />);
+    const amenities = [
+      makeAmenity("restaurant", 0),
+      makeAmenity("hospital", 0),
+    ];
+    const { container } = render(<NearbyAmenities amenities={amenities} dict={dict} />);
+
+    expect(container.innerHTML).toBe("");
+  });
+
+  it("renders nothing when amenities array is empty", () => {
+    const { container } = render(<NearbyAmenities amenities={[]} dict={dict} />);
 
     expect(container.innerHTML).toBe("");
   });
