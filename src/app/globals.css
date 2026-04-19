@@ -23,15 +23,49 @@
 }
 
 @theme {
+  /* Font families */
   --font-heading: "Bernino", sans-serif;
   --font-body: "Bernino", sans-serif;
+
+  /* Type scale — mobile-first */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.375rem;
+  --text-3xl: 1.625rem;
+  --text-4xl: 1.75rem;
+  --text-5xl: 2rem;
+
+  /* Line heights */
+  --leading-heading: 1.2;
+  --leading-body: 1.5;
+
+  /* Letter spacing */
+  --tracking-heading: -0.02em;
+  --tracking-body: 0em;
+
+  /* Semantic ink (text) */
+  --color-ink: #111111;
+  --color-ink-secondary: #4b5563;
+  --color-ink-subtle: #6b7280;
+  --color-ink-muted: #9ca3af;
+
+  /* Semantic surfaces */
+  --color-paper: #ffffff;
+  --color-paper-muted: #f5f5f4;
+
+  /* Borders */
+  --color-rule: #e5e7eb;
 }
 
 body {
-  font-family: "Bernino", sans-serif;
-  background: #f5f5f4;
-  color: #111;
-  font-size: 14px;
+  font-family: var(--font-body);
+  background: var(--color-paper-muted);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
 }
 
 /* ── Landing hero ────────────────────────────────────────────────── */

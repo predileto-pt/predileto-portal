@@ -2,7 +2,10 @@ import { cn } from "@/lib/utils";
 
 const variants = {
   default: "text-sm text-gray-600 leading-relaxed",
-  muted: "text-sm text-gray-400",
+  muted: "text-sm text-ink-muted",
+  body: "text-base text-ink-secondary leading-body",
+  lead: "text-lg text-ink leading-body",
+  subtle: "text-sm text-ink-subtle leading-body",
 } as const;
 
 interface TextProps {
