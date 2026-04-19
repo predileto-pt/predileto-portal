@@ -16,7 +16,6 @@
     "generate:types:estate-os": "npx openapi-typescript http://localhost:8000/openapi.json -o src/lib/types/estate-os-api.ts"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^9.3.2",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-select": "^2.2.6",
     "@supabase/supabase-js": "^2.97.0",
@@ -52,6 +51,7 @@
     "openapi-typescript": "^7.13.0",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "undici": "^7.25.0"
   }
 }
