@@ -34,6 +34,11 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         areaSqm: 78,
         bedrooms: 2,
         listingType: "buy",
+        aiAttributes: [
+          { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.450€/mês" },
+          { key: "gas", icon: "fuel", label: "Gasolina", value: "~60€/mês" },
+          { key: "commute", icon: "commute", label: "Até o centro", value: "8 min a pé" },
+        ],
       },
       {
         id: "mock-2",
@@ -44,6 +49,11 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         areaSqm: 95,
         bedrooms: 3,
         listingType: "buy",
+        aiAttributes: [
+          { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.200€/mês" },
+          { key: "gas", icon: "fuel", label: "Gasolina", value: "~110€/mês" },
+          { key: "amenity", icon: "amenity", label: "Escolas a 1 km", value: "4" },
+        ],
       },
       {
         id: "mock-3",
@@ -54,6 +64,11 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         areaSqm: 84,
         bedrooms: 2,
         listingType: "buy",
+        aiAttributes: [
+          { key: "cost", icon: "euro", label: "Custo de vida", value: "~950€/mês" },
+          { key: "commute", icon: "commute", label: "Universidade", value: "6 min a pé" },
+          { key: "noise", icon: "noise", label: "Ruído", value: "Moderado" },
+        ],
       },
     ];
   }
@@ -68,6 +83,11 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       areaSqm: 68,
       bedrooms: 2,
       listingType: "rent",
+      aiAttributes: [
+        { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.500€/mês" },
+        { key: "commute", icon: "commute", label: "Metro", value: "3 min a pé" },
+        { key: "noise", icon: "noise", label: "Ruído", value: "Alto" },
+      ],
     },
     {
       id: "mock-2",
@@ -78,6 +98,11 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       areaSqm: 74,
       bedrooms: 2,
       listingType: "rent",
+      aiAttributes: [
+        { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.250€/mês" },
+        { key: "gas", icon: "fuel", label: "Gasolina", value: "~55€/mês" },
+        { key: "amenity", icon: "amenity", label: "Cafés a 500 m", value: "12" },
+      ],
     },
     {
       id: "mock-3",
@@ -88,6 +113,11 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       areaSqm: 60,
       bedrooms: 1,
       listingType: "rent",
+      aiAttributes: [
+        { key: "cost", icon: "euro", label: "Custo de vida", value: "~900€/mês" },
+        { key: "commute", icon: "commute", label: "Universidade", value: "9 min de bike" },
+        { key: "noise", icon: "noise", label: "Ruído", value: "Baixo" },
+      ],
     },
   ];
 }

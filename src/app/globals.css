@@ -74,6 +74,15 @@ body {
   line-height: var(--leading-body);
 }
 
+/* Scrollable regions where we want scroll without a visible scrollbar */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* ── Landing hero ────────────────────────────────────────────────── */
 :root {
   --landing-accent: 172 66% 50%;
