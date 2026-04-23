@@ -56,7 +56,7 @@ export function SearchResults({ items, loading, locale }: SearchResultsProps) {
               key={item.id}
               className="border border-rule bg-paper overflow-hidden flex gap-3"
             >
-              <div className="w-32 h-32 shrink-0 bg-paper-muted">
+              <div className="w-40 h-40 shrink-0 bg-paper-muted">
                 {item.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -97,7 +97,7 @@ export function SearchResults({ items, loading, locale }: SearchResultsProps) {
 function SkeletonCard() {
   return (
     <li className="border border-rule bg-paper overflow-hidden flex gap-3">
-      <div className="w-32 h-32 shrink-0 bg-paper-muted animate-pulse" />
+      <div className="w-40 h-40 shrink-0 bg-paper-muted animate-pulse" />
       <div className="flex-1 py-2 pr-3 space-y-2">
         <div className="h-3 w-3/4 bg-paper-muted animate-pulse rounded-sm" />
         <div className="h-5 w-1/3 bg-paper-muted animate-pulse rounded-sm" />
