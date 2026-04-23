@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { Title } from "@/components/ui/title";
 import {
   Select,
@@ -13,8 +14,18 @@ import {
 
 export type AiSearchListingType = "buy" | "rent";
 
+export interface AiSearchPayload {
+  query: string;
+  adults: number;
+  children: number;
+  listingType: AiSearchListingType;
+}
+
 interface AIPropertiesSearcherProps {
   listingType: AiSearchListingType;
+  onSearch: (payload: AiSearchPayload) => void;
+  compact?: boolean;
+  clearOnSubmit?: boolean;
 }
 
 const placeholderByListingType: Record<AiSearchListingType, string> = {
@@ -22,31 +33,50 @@ const placeholderByListingType: Record<AiSearchListingType, string> = {
   rent: "Ex: casa T3 no Porto até 1.500€/mês com jardim...",
 };
 
-export function AIPropertiesSearcher({ listingType }: AIPropertiesSearcherProps) {
+export function AIPropertiesSearcher({
+  listingType,
+  onSearch,
+  compact = false,
+  clearOnSubmit = true,
+}: AIPropertiesSearcherProps) {
   const [query, setQuery] = useState("");
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
 
   const canSubmit = query.trim().length > 0;
 
+  const submit = () => {
+    if (!canSubmit) return;
+    onSearch({ query: query.trim(), adults, children, listingType });
+    if (clearOnSubmit) setQuery("");
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!canSubmit) return;
-    // eslint-disable-next-line no-console
-    console.log("AI search:", { listingType, query, adults, children });
+    submit();
   };
 
   return (
-    <section className="max-w-2xl mx-auto py-10 space-y-6">
-      <Title variant="page" className="text-center">
-        O que você está buscando?
-      </Title>
+    <section
+      className={cn(
+        "space-y-4",
+        compact ? "w-full" : "max-w-2xl mx-auto py-10 space-y-6",
+      )}
+    >
+      {!compact && (
+        <Title variant="page" className="text-center">
+          O que você está buscando?
+        </Title>
+      )}
 
       <form
         onSubmit={handleSubmit}
         data-type="ai-search-composer"
-        className="group/composer border border-rule bg-paper shadow-sm p-2.5 grid grid-cols-[1fr_auto] items-end gap-2 transition-colors focus-within:border-ink-subtle"
-        style={{ borderRadius: 28 }}
+        className={cn(
+          "group/composer border border-rule bg-paper shadow-sm grid grid-cols-[1fr_auto] items-end gap-2 transition-colors focus-within:border-ink-subtle",
+          compact ? "p-1.5" : "p-2.5",
+        )}
+        style={{ borderRadius: compact ? 18 : 28 }}
       >
         <textarea
           value={query}
@@ -54,15 +84,16 @@ export function AIPropertiesSearcher({ listingType }: AIPropertiesSearcherProps)
           onKeyDown={(event) => {
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
-              if (canSubmit) {
-                handleSubmit(event);
-              }
+              submit();
             }
           }}
           placeholder={placeholderByListingType[listingType]}
           rows={1}
           aria-label="Descreva o que procura"
-          className="w-full resize-none bg-transparent outline-none text-base leading-body placeholder:text-ink-muted max-h-52 overflow-auto py-2 px-2"
+          className={cn(
+            "w-full resize-none bg-transparent outline-none leading-body placeholder:text-ink-muted overflow-auto py-1.5 px-2",
+            compact ? "text-sm max-h-28" : "text-base max-h-52",
+          )}
           style={{ fieldSizing: "content" } as React.CSSProperties}
         />
 
@@ -70,11 +101,14 @@ export function AIPropertiesSearcher({ listingType }: AIPropertiesSearcherProps)
           type="submit"
           disabled={!canSubmit}
           aria-label="Pesquisar"
-          className="h-9 w-9 rounded-full bg-ink text-paper flex items-center justify-center shrink-0 disabled:opacity-30 hover:opacity-80 transition-opacity"
+          className={cn(
+            "rounded-full bg-ink text-paper flex items-center justify-center shrink-0 disabled:opacity-30 hover:opacity-80 transition-opacity",
+            compact ? "h-7 w-7" : "h-9 w-9",
+          )}
         >
           <svg
             viewBox="0 0 24 24"
-            className="w-5 h-5"
+            className={compact ? "w-4 h-4" : "w-5 h-5"}
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
@@ -98,7 +132,10 @@ export function AIPropertiesSearcher({ listingType }: AIPropertiesSearcherProps)
             value={String(adults)}
             onValueChange={(value) => setAdults(Number(value))}
           >
-            <SelectTrigger aria-label="Adultos" className="h-7 w-24 px-2 py-0 text-xs rounded-none">
+            <SelectTrigger
+              aria-label="Adultos"
+              className="h-7 w-24 px-2 py-0 text-xs rounded-none"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -122,7 +159,10 @@ export function AIPropertiesSearcher({ listingType }: AIPropertiesSearcherProps)
             value={String(children)}
             onValueChange={(value) => setChildren(Number(value))}
           >
-            <SelectTrigger aria-label="Crianças" className="h-7 w-24 px-2 py-0 text-xs rounded-none">
+            <SelectTrigger
+              aria-label="Crianças"
+              className="h-7 w-24 px-2 py-0 text-xs rounded-none"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
