@@ -59,24 +59,23 @@ export function AIPropertiesSearcher({
   return (
     <section
       className={cn(
-        "space-y-4",
-        compact ? "w-full" : "max-w-2xl mx-auto py-10 space-y-6",
+        "space-y-3",
+        compact ? "w-full" : "max-w-2xl mx-auto py-8",
       )}
     >
-      {!compact && (
-        <Title variant="page" className="text-center">
-          O que você está buscando?
-        </Title>
-      )}
+      <Title
+        variant="card"
+        level={2}
+        className={compact ? "" : "text-center"}
+      >
+        O que você está buscando?
+      </Title>
 
       <form
         onSubmit={handleSubmit}
         data-type="ai-search-composer"
-        className={cn(
-          "group/composer border border-rule bg-paper shadow-sm grid grid-cols-[1fr_auto] items-end gap-2 transition-colors focus-within:border-ink-subtle",
-          compact ? "p-1.5" : "p-2.5",
-        )}
-        style={{ borderRadius: compact ? 18 : 28 }}
+        className="group/composer border border-rule bg-paper shadow-sm grid grid-cols-[1fr_auto] items-end gap-2 p-2 transition-colors focus-within:border-ink-subtle"
+        style={{ borderRadius: 20 }}
       >
         <textarea
           value={query}
@@ -90,10 +89,7 @@ export function AIPropertiesSearcher({
           placeholder={placeholderByListingType[listingType]}
           rows={1}
           aria-label="Descreva o que procura"
-          className={cn(
-            "w-full resize-none bg-transparent outline-none leading-body placeholder:text-ink-muted overflow-auto py-1.5 px-2",
-            compact ? "text-sm max-h-28" : "text-base max-h-52",
-          )}
+          className="w-full resize-none bg-transparent outline-none leading-body placeholder:text-ink-muted overflow-auto py-1.5 px-2 text-sm max-h-40"
           style={{ fieldSizing: "content" } as React.CSSProperties}
         />
 
@@ -101,14 +97,11 @@ export function AIPropertiesSearcher({
           type="submit"
           disabled={!canSubmit}
           aria-label="Pesquisar"
-          className={cn(
-            "rounded-full bg-ink text-paper flex items-center justify-center shrink-0 disabled:opacity-30 hover:opacity-80 transition-opacity",
-            compact ? "h-7 w-7" : "h-9 w-9",
-          )}
+          className="rounded-full bg-ink text-paper flex items-center justify-center shrink-0 disabled:opacity-30 hover:opacity-80 transition-opacity h-8 w-8"
         >
           <svg
             viewBox="0 0 24 24"
-            className={compact ? "w-4 h-4" : "w-5 h-5"}
+            className="w-4 h-4"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"

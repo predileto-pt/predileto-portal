@@ -1,12 +1,18 @@
-import { AISearchPage } from "@/components/ai-search-page";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { use } from "react";
+import dynamic from "next/dynamic";
 
-export default async function ComprarPage({
+const AISearchPage = dynamic(
+  () => import("@/components/ai-search-page").then((m) => m.AISearchPage),
+  { ssr: false },
+);
+
+export default function ComprarPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const { locale } = use(params);
   return <AISearchPage listingType="buy" locale={locale} />;
 }
