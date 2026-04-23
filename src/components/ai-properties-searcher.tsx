@@ -2,6 +2,14 @@
 
 import { useState } from "react";
 import { Title } from "@/components/ui/title";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export type AiSearchListingType = "buy" | "rent";
 
@@ -80,41 +88,93 @@ export function AIPropertiesSearcher({ listingType }: AIPropertiesSearcherProps)
         </button>
       </form>
 
-      <div className="grid grid-cols-2 gap-3">
-        <label className="flex flex-col gap-1">
-          <span className="text-xs text-ink-muted uppercase tracking-body font-heading">
+      <div className="flex gap-3">
+        <div className="flex flex-col gap-1">
+          <span className="flex items-center gap-1.5 text-xs text-ink-muted uppercase tracking-body font-heading">
+            <AdultIcon />
             Adultos
           </span>
-          <select
-            value={adults}
-            onChange={(event) => setAdults(Number(event.target.value))}
-            className="h-10 px-3 border border-rule bg-paper text-sm rounded-md outline-none focus:border-ink-subtle"
+          <Select
+            value={String(adults)}
+            onValueChange={(value) => setAdults(Number(value))}
           >
-            {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
+            <SelectTrigger aria-label="Adultos" className="h-7 w-24 px-2 py-0 text-xs rounded-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                  <SelectItem key={n} value={String(n)}>
+                    {n}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
 
-        <label className="flex flex-col gap-1">
-          <span className="text-xs text-ink-muted uppercase tracking-body font-heading">
+        <div className="flex flex-col gap-1">
+          <span className="flex items-center gap-1.5 text-xs text-ink-muted uppercase tracking-body font-heading">
+            <ChildIcon />
             Crianças
           </span>
-          <select
-            value={children}
-            onChange={(event) => setChildren(Number(event.target.value))}
-            className="h-10 px-3 border border-rule bg-paper text-sm rounded-md outline-none focus:border-ink-subtle"
+          <Select
+            value={String(children)}
+            onValueChange={(value) => setChildren(Number(value))}
           >
-            {Array.from({ length: 11 }, (_, i) => i).map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
+            <SelectTrigger aria-label="Crianças" className="h-7 w-24 px-2 py-0 text-xs rounded-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {Array.from({ length: 11 }, (_, i) => i).map((n) => (
+                  <SelectItem key={n} value={String(n)}>
+                    {n}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </section>
+  );
+}
+
+function AdultIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-3.5 h-3.5 shrink-0"
+      aria-hidden
+    >
+      <circle cx="12" cy="7" r="4" />
+      <path d="M4 21v-1a8 8 0 0 1 16 0v1" />
+    </svg>
+  );
+}
+
+function ChildIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-3.5 h-3.5 shrink-0"
+      aria-hidden
+    >
+      <circle cx="12" cy="8" r="3" />
+      <path d="M7 21v-3a5 5 0 0 1 10 0v3" />
+      <path d="M9.5 14l-1 2" />
+      <path d="M14.5 14l1 2" />
+    </svg>
   );
 }

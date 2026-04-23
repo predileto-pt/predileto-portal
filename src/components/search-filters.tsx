@@ -4,8 +4,18 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback } from "react";
 import { PROPERTY_TYPES, SORT_OPTIONS } from "@/lib/constants";
 import { useDictionary } from "@/components/dictionary-provider";
-import { Select } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Small } from "@/components/ui/small";
+
+const ANY = "__any__";
+const toInternal = (v: string) => (v === "" ? ANY : v);
+const toExternal = (v: string) => (v === ANY ? "" : v);
 
 export function SearchFilters() {
   const searchParams = useSearchParams();
@@ -31,26 +41,9 @@ export function SearchFilters() {
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
   const filtersDict = dict.filters as Record<string, string>;
 
-  const sortOptions = SORT_OPTIONS.map((opt) => ({
-    value: opt.value,
-    label: sortDict[opt.key] || opt.key,
-  }));
-
-  const propertyTypeOptions = [
-    { value: "", label: filtersDict.allTypes },
-    ...PROPERTY_TYPES.map((type) => ({
-      value: type,
-      label: propertyTypesDict[type] || type,
-    })),
-  ];
-
-  const bedroomOptions = [
-    { value: "", label: filtersDict.anyBedrooms },
-    { value: "1", label: "1+" },
-    { value: "2", label: "2+" },
-    { value: "3", label: "3+" },
-    { value: "4", label: "4+" },
-  ];
+  const sortValue = searchParams.get("sort") || "newest";
+  const propertyTypeValue = toInternal(searchParams.get("propertyType") || "");
+  const bedroomsValue = toInternal(searchParams.get("bedrooms") || "");
 
   return (
     <div className="flex flex-col gap-3 text-sm">
@@ -59,11 +52,20 @@ export function SearchFilters() {
           {filtersDict.sortBy}
         </Small>
         <Select
-          value={searchParams.get("sort") || "newest"}
+          value={sortValue}
           onValueChange={(value) => updateParam("sort", value)}
-          options={sortOptions}
-          className="w-full"
-        />
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {sortDict[opt.key] || opt.key}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
@@ -71,11 +73,21 @@ export function SearchFilters() {
           {filtersDict.propertyType}
         </Small>
         <Select
-          value={searchParams.get("propertyType") || ""}
-          onValueChange={(value) => updateParam("propertyType", value)}
-          options={propertyTypeOptions}
-          className="w-full"
-        />
+          value={propertyTypeValue}
+          onValueChange={(value) => updateParam("propertyType", toExternal(value))}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ANY}>{filtersDict.allTypes}</SelectItem>
+            {PROPERTY_TYPES.map((type) => (
+              <SelectItem key={type} value={type}>
+                {propertyTypesDict[type] || type}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
@@ -83,11 +95,20 @@ export function SearchFilters() {
           {filtersDict.bedrooms}
         </Small>
         <Select
-          value={searchParams.get("bedrooms") || ""}
-          onValueChange={(value) => updateParam("bedrooms", value)}
-          options={bedroomOptions}
-          className="w-full"
-        />
+          value={bedroomsValue}
+          onValueChange={(value) => updateParam("bedrooms", toExternal(value))}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ANY}>{filtersDict.anyBedrooms}</SelectItem>
+            <SelectItem value="1">1+</SelectItem>
+            <SelectItem value="2">2+</SelectItem>
+            <SelectItem value="3">3+</SelectItem>
+            <SelectItem value="4">4+</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
