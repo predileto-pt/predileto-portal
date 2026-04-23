@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AIPropertiesSearcher,
   type AiSearchListingType,
@@ -18,6 +18,7 @@ import {
 interface AISearchPageProps {
   listingType: AiSearchListingType;
   locale: string;
+  initialQuery?: string;
 }
 
 const MOCK_LATENCY_MS = 2000;
@@ -183,10 +184,15 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
   ];
 }
 
-export function AISearchPage({ listingType, locale }: AISearchPageProps) {
+export function AISearchPage({
+  listingType,
+  locale,
+  initialQuery,
+}: AISearchPageProps) {
   const [messages, setMessages] = useState<SearchMessage[]>([]);
   const [results, setResults] = useState<SearchResultItem[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const bootstrappedRef = useRef(false);
 
   const hasSearched = messages.length > 0;
 
@@ -208,9 +214,28 @@ export function AISearchPage({ listingType, locale }: AISearchPageProps) {
     setLoading(false);
   }
 
+  useEffect(() => {
+    if (bootstrappedRef.current) return;
+    const seed = initialQuery?.trim();
+    if (!seed) return;
+    bootstrappedRef.current = true;
+    void handleSearch({
+      query: seed,
+      adults: 1,
+      children: 0,
+      typologies: [],
+      listingType,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuery, listingType]);
+
   if (!hasSearched) {
     return (
-      <AIPropertiesSearcher listingType={listingType} onSearch={handleSearch} />
+      <AIPropertiesSearcher
+        listingType={listingType}
+        onSearch={handleSearch}
+        initialQuery={initialQuery}
+      />
     );
   }
 

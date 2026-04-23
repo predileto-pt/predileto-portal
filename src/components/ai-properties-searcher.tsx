@@ -34,6 +34,7 @@ interface AIPropertiesSearcherProps {
   onSearch: (payload: AiSearchPayload) => void;
   compact?: boolean;
   clearOnSubmit?: boolean;
+  initialQuery?: string;
 }
 
 const placeholderByListingType: Record<AiSearchListingType, string> = {
@@ -46,8 +47,9 @@ export function AIPropertiesSearcher({
   onSearch,
   compact = false,
   clearOnSubmit = true,
+  initialQuery = "",
 }: AIPropertiesSearcherProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [minPrice, setMinPrice] = useState("");

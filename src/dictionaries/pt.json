@@ -223,5 +223,53 @@
     "backToList": "Voltar ao blog",
     "by": "Por",
     "publishedOn": "Publicado em"
+  },
+  "homeHero": {
+    "eyebrow": "Novo — procura com IA",
+    "heading": "A procura de casa,",
+    "headingAccent": "finalmente inteligente.",
+    "subheading": "Descreve em linguagem natural o que queres. A nossa IA encontra os imóveis certos e mostra o custo real de viver em cada um — sem filtros rígidos, sem rastrear dezenas de sites.",
+    "placeholderBuy": "Ex: apartamento T2 em Lisboa até 300.000€ com varanda...",
+    "placeholderRent": "Ex: casa T3 no Porto até 1.500€/mês com jardim...",
+    "modeBuy": "Comprar",
+    "modeRent": "Arrendar",
+    "submit": "Pesquisar",
+    "free": "Grátis, sempre."
+  },
+  "homeProblem": {
+    "heading": "Procurar casa em Portugal é cansativo.",
+    "subheading": "A maioria dos sites trata-te como um formulário. Nós não.",
+    "pain1Title": "Dezenas de sites, os mesmos imóveis.",
+    "pain1Body": "Abrir o Idealista, depois o Imovirtual, depois o Casa Sapo. Comparar preços. Rezar que não seja um duplicado.",
+    "pain2Title": "Filtros rígidos que nunca entendem o que procuras.",
+    "pain2Body": "'Até 300 mil, T2, com varanda, perto de uma escola boa' não cabe em nenhum dropdown.",
+    "pain3Title": "O preço anunciado não é o custo real.",
+    "pain3Body": "IMI, condomínio, deslocação, energia. Ninguém te conta — descobres demasiado tarde."
+  },
+  "homeHow": {
+    "heading": "Como funciona",
+    "subheading": "Três passos. Sem formulários.",
+    "step1Title": "Descreve em linguagem natural.",
+    "step1Body": "Diz o que procuras como se falasses com um agente. A IA entende contexto e preferências.",
+    "step2Title": "Vês imóveis enriquecidos pela IA.",
+    "step2Body": "Cada resultado vem com custo de vida, gasolina, tempo de deslocação e nível de ruído.",
+    "step3Title": "Lês a comunidade.",
+    "step3Body": "Comentários anónimos de quem já visitou ou morou na zona. Sem promoções, sem corretores."
+  },
+  "homeFeatures": {
+    "heading": "Tudo num só sítio.",
+    "subheading": "Sem anúncios pagos, sem registo obrigatório, sem emails.",
+    "feat1Title": "Análise de custo de vida",
+    "feat1Body": "IMI, energia, transportes — estimados por localidade.",
+    "feat2Title": "Comentários anónimos",
+    "feat2Body": "Quem morou ali, o que achou. Sem identidade, sem viés.",
+    "feat3Title": "Procura semântica",
+    "feat3Body": "Descreve em palavras, não em dropdowns.",
+    "feat4Title": "Sem registo, sem emails",
+    "feat4Body": "Pesquisa, guarda e compara. Não te pedimos nada.",
+    "feat5Title": "Histórico persistente",
+    "feat5Body": "Cada pesquisa fica guardada na tua sessão.",
+    "feat6Title": "Grátis para sempre",
+    "feat6Body": "Financiamos o produto via agências, nunca via utilizadores."
   }
 }

@@ -10,9 +10,20 @@ const AISearchPage = dynamic(
 
 export default function ComprarPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale } = use(params);
-  return <AISearchPage listingType="buy" locale={locale} />;
+  const sp = use(searchParams);
+  const initialQuery = typeof sp.q === "string" ? sp.q : undefined;
+
+  return (
+    <AISearchPage
+      listingType="buy"
+      locale={locale}
+      initialQuery={initialQuery}
+    />
+  );
 }

@@ -223,5 +223,53 @@
     "backToList": "Back to blog",
     "by": "By",
     "publishedOn": "Published on"
+  },
+  "homeHero": {
+    "eyebrow": "New — AI-powered search",
+    "heading": "House hunting,",
+    "headingAccent": "finally intelligent.",
+    "subheading": "Describe what you want in plain language. Our AI finds the right properties and shows the real cost of living in each — no rigid filters, no bouncing between dozens of sites.",
+    "placeholderBuy": "e.g. 2-bed apartment in Lisbon under €300,000 with a balcony...",
+    "placeholderRent": "e.g. 3-bed house in Porto under €1,500/month with a garden...",
+    "modeBuy": "Buy",
+    "modeRent": "Rent",
+    "submit": "Search",
+    "free": "Free, always."
+  },
+  "homeProblem": {
+    "heading": "House hunting in Portugal is exhausting.",
+    "subheading": "Most sites treat you like a form. We don't.",
+    "pain1Title": "Dozens of sites, the same listings.",
+    "pain1Body": "Open Idealista, then Imovirtual, then Casa Sapo. Compare prices. Hope it's not a duplicate.",
+    "pain2Title": "Rigid filters that never grasp what you want.",
+    "pain2Body": "'Under €300k, 2-bed, with a balcony, near a good school' doesn't fit in any dropdown.",
+    "pain3Title": "The listing price isn't the real cost.",
+    "pain3Body": "Property tax, condo fees, commute, energy. Nobody tells you — you find out too late."
+  },
+  "homeHow": {
+    "heading": "How it works",
+    "subheading": "Three steps. No forms.",
+    "step1Title": "Describe it in plain language.",
+    "step1Body": "Say what you're looking for like you would to an agent. The AI understands context and preferences.",
+    "step2Title": "See AI-enriched listings.",
+    "step2Body": "Each result comes with cost of living, fuel, commute time, and noise level.",
+    "step3Title": "Read the community.",
+    "step3Body": "Anonymous comments from people who visited or lived in the area. No spin, no agents."
+  },
+  "homeFeatures": {
+    "heading": "Everything in one place.",
+    "subheading": "No paid ads, no forced signup, no emails.",
+    "feat1Title": "Cost-of-living analysis",
+    "feat1Body": "Property tax, energy, transport — estimated per area.",
+    "feat2Title": "Anonymous comments",
+    "feat2Body": "Lived there, loved or hated it. No identity, no bias.",
+    "feat3Title": "Semantic search",
+    "feat3Body": "Describe in words, not in dropdowns.",
+    "feat4Title": "No signup, no emails",
+    "feat4Body": "Search, save and compare. We ask nothing from you.",
+    "feat5Title": "Persistent history",
+    "feat5Body": "Every search stays in your session.",
+    "feat6Title": "Free forever",
+    "feat6Body": "We monetize via agencies, never via users."
   }
 }
