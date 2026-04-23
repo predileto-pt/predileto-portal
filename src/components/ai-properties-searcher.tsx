@@ -11,6 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  availableTypologies,
+  typologyLabels,
+  type Typology,
+} from "@/lib/search-rules";
 
 export type AiSearchListingType = "buy" | "rent";
 
@@ -18,6 +23,9 @@ export interface AiSearchPayload {
   query: string;
   adults: number;
   children: number;
+  minPrice?: number;
+  maxPrice?: number;
+  typologies: Typology[];
   listingType: AiSearchListingType;
 }
 
@@ -42,12 +50,31 @@ export function AIPropertiesSearcher({
   const [query, setQuery] = useState("");
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [typologies, setTypologies] = useState<Typology[]>([]);
+
+  const typologyOptions = availableTypologies({ listingType });
 
   const canSubmit = query.trim().length > 0;
 
+  const toggleTypology = (t: Typology) => {
+    setTypologies((prev) =>
+      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t],
+    );
+  };
+
   const submit = () => {
     if (!canSubmit) return;
-    onSearch({ query: query.trim(), adults, children, listingType });
+    onSearch({
+      query: query.trim(),
+      adults,
+      children,
+      minPrice: minPrice ? Number(minPrice) : undefined,
+      maxPrice: maxPrice ? Number(maxPrice) : undefined,
+      typologies: typologies.filter((t) => typologyOptions.includes(t)),
+      listingType,
+    });
     if (clearOnSubmit) setQuery("");
   };
 
@@ -170,7 +197,100 @@ export function AIPropertiesSearcher({
           </Select>
         </div>
       </div>
+
+      <div className="flex flex-col gap-1">
+        <span className="flex items-center gap-1.5 text-xs text-ink-muted uppercase tracking-body font-heading">
+          <EuroIcon />
+          Preço
+        </span>
+        <div className="flex gap-2">
+          <PriceInput
+            aria-label="Preço mínimo"
+            placeholder="Mín"
+            value={minPrice}
+            onChange={setMinPrice}
+          />
+          <PriceInput
+            aria-label="Preço máximo"
+            placeholder="Máx"
+            value={maxPrice}
+            onChange={setMaxPrice}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-ink-muted uppercase tracking-body font-heading">
+          Tipologia
+        </span>
+        <div className="flex flex-wrap gap-1.5">
+          {typologyOptions.map((t) => {
+            const active = typologies.includes(t);
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => toggleTypology(t)}
+                aria-pressed={active}
+                className={cn(
+                  "px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors",
+                  active
+                    ? "bg-primary text-paper border-primary"
+                    : "bg-paper text-ink-secondary border-rule hover:border-primary hover:text-primary",
+                )}
+              >
+                {typologyLabels[t]}
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </section>
+  );
+}
+
+function PriceInput({
+  value,
+  onChange,
+  placeholder,
+  "aria-label": ariaLabel,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  "aria-label": string;
+}) {
+  return (
+    <input
+      type="number"
+      inputMode="numeric"
+      min={0}
+      step={1000}
+      placeholder={placeholder}
+      aria-label={ariaLabel}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="h-7 w-full px-2 text-xs border border-rule bg-paper outline-none focus:border-ink-subtle"
+    />
+  );
+}
+
+function EuroIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-3.5 h-3.5 shrink-0"
+      aria-hidden
+    >
+      <path d="M4 10h12" />
+      <path d="M4 14h9" />
+      <path d="M19 6a7.5 7.5 0 1 0 0 12" />
+    </svg>
   );
 }
 
