@@ -4,6 +4,7 @@ import { useState } from "react";
 import { cn, formatPrice, formatArea } from "@/lib/utils";
 import { Small } from "@/components/ui/small";
 import { Title } from "@/components/ui/title";
+import { CommentsList, type CommentData } from "@/components/comments-list";
 
 export interface AiAttribute {
   key: string;
@@ -22,6 +23,7 @@ export interface SearchResultItem {
   imageUrl?: string;
   listingType: "buy" | "rent";
   aiAttributes?: AiAttribute[];
+  comments?: CommentData[];
 }
 
 interface SearchResultsProps {
@@ -77,59 +79,70 @@ function ResultCard({
   locale: string;
 }) {
   const [interested, setInterested] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
+
+  const commentCount = item.comments?.length ?? 0;
 
   return (
-    <li className="border border-rule bg-paper overflow-hidden flex gap-3 h-[216px]">
-      <div className="w-72 shrink-0 bg-paper-muted">
-        {item.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={item.imageUrl}
-            alt={item.title}
-            className="w-full h-full object-cover"
-          />
-        ) : null}
-      </div>
-      <div className="flex-1 min-w-0 py-2 pr-3 flex flex-col overflow-hidden">
-        <div className="space-y-1 flex-1 min-h-0 overflow-hidden">
-          <p className="text-sm font-heading font-bold truncate landing-gradient-text">
-            {item.title}
-          </p>
-          <p className="text-lg font-bold text-ink">
-            {formatPrice(item.price, locale)}
-            {item.listingType === "rent" && (
-              <span className="text-xs font-normal text-ink-muted">/mês</span>
-            )}
-          </p>
-          <p className="text-sm text-ink-subtle leading-body line-clamp-2 overflow-hidden">
-            {item.description}
-          </p>
-          <div className="flex gap-3 text-xs text-ink-subtle">
-            {item.bedrooms > 0 && <span>T{item.bedrooms}</span>}
-            {item.areaSqm > 0 && <span>{formatArea(item.areaSqm)}</span>}
+    <li className="border border-rule bg-paper">
+      <div className="flex gap-3 h-[216px] overflow-hidden">
+        <div className="w-72 shrink-0 bg-paper-muted">
+          {item.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={item.imageUrl}
+              alt={item.title}
+              className="w-full h-full object-cover"
+            />
+          ) : null}
+        </div>
+        <div className="flex-1 min-w-0 py-2 pr-3 flex flex-col overflow-hidden">
+          <div className="space-y-1 flex-1 min-h-0 overflow-hidden">
+            <p className="text-sm font-heading font-bold truncate landing-gradient-text">
+              {item.title}
+            </p>
+            <p className="text-lg font-bold text-ink">
+              {formatPrice(item.price, locale)}
+              {item.listingType === "rent" && (
+                <span className="text-xs font-normal text-ink-muted">/mês</span>
+              )}
+            </p>
+            <p className="text-sm text-ink-subtle leading-body line-clamp-2 overflow-hidden">
+              {item.description}
+            </p>
+            <div className="flex gap-3 text-xs text-ink-subtle">
+              {item.bedrooms > 0 && <span>T{item.bedrooms}</span>}
+              {item.areaSqm > 0 && <span>{formatArea(item.areaSqm)}</span>}
+            </div>
+          </div>
+
+          {item.aiAttributes && item.aiAttributes.length > 0 && (
+            <AiAttributesSection attributes={item.aiAttributes} />
+          )}
+
+          <div className="flex gap-1 pt-2 mt-2 border-t border-rule -mr-3 shrink-0">
+            <CardActionButton
+              active={interested}
+              onClick={() => setInterested((v) => !v)}
+              icon={<HeartIcon filled={interested} />}
+              label="Interesse"
+            />
+            <CardActionButton
+              active={commentsOpen}
+              onClick={() => setCommentsOpen((v) => !v)}
+              icon={<ChatIcon />}
+              label={`Comentários (${commentCount})`}
+              ariaExpanded={commentsOpen}
+            />
           </div>
         </div>
-
-        {item.aiAttributes && item.aiAttributes.length > 0 && (
-          <AiAttributesSection attributes={item.aiAttributes} />
-        )}
-
-        <div className="flex gap-1 pt-2 mt-2 border-t border-rule -mr-3 shrink-0">
-          <CardActionButton
-            active={interested}
-            onClick={() => setInterested((v) => !v)}
-            icon={<HeartIcon filled={interested} />}
-            label="Interesse"
-          />
-          <CardActionButton
-            onClick={() => {
-              // TODO: open a comment composer
-            }}
-            icon={<ChatIcon />}
-            label="Comentar"
-          />
-        </div>
       </div>
+
+      {commentsOpen && (
+        <div className="border-t border-rule bg-paper">
+          <CommentsList comments={item.comments ?? []} />
+        </div>
+      )}
     </li>
   );
 }
@@ -214,17 +227,20 @@ function CardActionButton({
   onClick,
   icon,
   label,
+  ariaExpanded,
 }: {
   active?: boolean;
   onClick: () => void;
   icon: React.ReactNode;
   label: string;
+  ariaExpanded?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-pressed={active}
+      aria-pressed={ariaExpanded === undefined ? active : undefined}
+      aria-expanded={ariaExpanded}
       className={cn(
         "flex items-center gap-1.5 px-2 py-1 text-xs font-heading cursor-pointer",
         "text-ink-subtle hover:text-primary",

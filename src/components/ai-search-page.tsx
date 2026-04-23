@@ -22,7 +22,12 @@ interface AISearchPageProps {
 
 const MOCK_LATENCY_MS = 2000;
 
+const MINUTE = 60 * 1000;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+
 function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
+  const now = Date.now();
   if (listingType === "buy") {
     return [
       {
@@ -39,6 +44,18 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
           { key: "gas", icon: "fuel", label: "Gasolina", value: "~60€/mês" },
           { key: "commute", icon: "commute", label: "Até o centro", value: "8 min a pé" },
         ],
+        comments: [
+          {
+            id: "c1",
+            content: "Zona espetacular, muito bem servida de transportes.",
+            at: now - 2 * DAY,
+          },
+          {
+            id: "c2",
+            content: "Preço justo para o Chiado. A varanda faz a diferença.",
+            at: now - 6 * HOUR,
+          },
+        ],
       },
       {
         id: "mock-2",
@@ -53,6 +70,13 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
           { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.200€/mês" },
           { key: "gas", icon: "fuel", label: "Gasolina", value: "~110€/mês" },
           { key: "amenity", icon: "amenity", label: "Escolas a 1 km", value: "4" },
+        ],
+        comments: [
+          {
+            id: "c1",
+            content: "Condomínio bem cuidado, a piscina é um luxo no verão.",
+            at: now - 5 * DAY,
+          },
         ],
       },
       {
@@ -69,6 +93,7 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
           { key: "commute", icon: "commute", label: "Universidade", value: "6 min a pé" },
           { key: "noise", icon: "noise", label: "Ruído", value: "Moderado" },
         ],
+        comments: [],
       },
     ];
   }
@@ -88,6 +113,18 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         { key: "commute", icon: "commute", label: "Metro", value: "3 min a pé" },
         { key: "noise", icon: "noise", label: "Ruído", value: "Alto" },
       ],
+      comments: [
+        {
+          id: "c1",
+          content: "Bem no centro, adorei. Só o ruído à noite que chateia.",
+          at: now - 3 * HOUR,
+        },
+        {
+          id: "c2",
+          content: "O senhorio respondeu no mesmo dia.",
+          at: now - 9 * DAY,
+        },
+      ],
     },
     {
       id: "mock-2",
@@ -103,6 +140,23 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         { key: "gas", icon: "fuel", label: "Gasolina", value: "~55€/mês" },
         { key: "amenity", icon: "amenity", label: "Cafés a 500 m", value: "12" },
       ],
+      comments: [
+        {
+          id: "c1",
+          content: "Zona ótima para viver, muitos cafés e lojas perto.",
+          at: now - 12 * HOUR,
+        },
+        {
+          id: "c2",
+          content: "Pavimento em madeira é lindo, mas range um pouco.",
+          at: now - 2 * DAY,
+        },
+        {
+          id: "c3",
+          content: "Visitei ontem, gostei muito. Vou fazer proposta.",
+          at: now - 45 * MINUTE,
+        },
+      ],
     },
     {
       id: "mock-3",
@@ -117,6 +171,13 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~900€/mês" },
         { key: "commute", icon: "commute", label: "Universidade", value: "9 min de bike" },
         { key: "noise", icon: "noise", label: "Ruído", value: "Baixo" },
+      ],
+      comments: [
+        {
+          id: "c1",
+          content: "Perfeito para estudantes. Calmo e perto de tudo.",
+          at: now - 4 * DAY,
+        },
       ],
     },
   ];
