@@ -59,6 +59,11 @@
 
   /* Borders */
   --color-rule: #e5e7eb;
+
+  /* Brand */
+  --color-primary: hsl(172 66% 42%);
+  --color-primary-hover: hsl(172 66% 32%);
+  --color-accent-warm: hsl(38 92% 50%);
 }
 
 body {
