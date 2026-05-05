@@ -2,6 +2,17 @@ import { notFound } from "next/navigation";
 import { isValidLocale, getDictionary, type Locale } from "@/lib/i18n";
 import { ScreenshotCarousel } from "@/components/screenshot-carousel";
 import { HeroAuroraBackground } from "@/components/landing/hero-aurora-background";
+import {
+  TrustStrip,
+  PainSection,
+  DeepFeatures,
+  AIShowcase,
+  WorkflowSection,
+  TestimonialsSection,
+  PricingSection,
+  FAQSection,
+  FinalCTA,
+} from "@/components/landing/agencies-sections";
 import fs from "fs";
 import path from "path";
 
@@ -30,7 +41,7 @@ export default async function AgenciesPage({
   return (
     <div className="grid grid-cols-12 gap-6">
       {/* Hero */}
-      <section className="landing-hero landing-full-bleed relative overflow-hidden col-span-12 -mt-3 lg:-mt-4 py-20 sm:py-28 lg:py-36">
+      <section className="landing-hero relative overflow-hidden col-span-12 py-20 sm:py-28 lg:py-36">
         <HeroAuroraBackground />
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
           <div className="max-w-2xl mx-auto text-center">
@@ -108,63 +119,33 @@ export default async function AgenciesPage({
         </div>
       </section>
 
-      {/* Features */}
-      <section className="col-span-12 px-4 sm:px-6 max-w-6xl mx-auto w-full">
-        <div className="grid gap-8 sm:grid-cols-3">
-          {[
-            {
-              title: ag.feature1Title,
-              desc: ag.feature1Desc,
-              icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" style={{ color: "hsl(172 66% 50%)" }}>
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              ),
-            },
-            {
-              title: ag.feature2Title,
-              desc: ag.feature2Desc,
-              icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" style={{ color: "hsl(172 66% 50%)" }}>
-                  <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                  <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-                  <path d="M10 18v-1" />
-                  <path d="M14 18v-3" />
-                </svg>
-              ),
-            },
-            {
-              title: ag.feature3Title,
-              desc: ag.feature3Desc,
-              icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" style={{ color: "hsl(172 66% 50%)" }}>
-                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-                </svg>
-              ),
-            },
-          ].map((feature) => (
-            <div key={feature.title} className="border border-gray-200 p-6">
-              <div className="mb-3">{feature.icon}</div>
-              <h3 className="font-heading text-base font-bold mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                {feature.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <TrustStrip copy={ag} />
+
+      <PainSection copy={ag} />
+
+      <DeepFeatures copy={ag} />
+
+      <AIShowcase copy={ag} />
+
+      <WorkflowSection copy={ag} />
 
       {/* Screenshots carousel */}
       {screenshots.length > 0 && (
-        <section className="col-span-12 px-4 sm:px-6 max-w-6xl mx-auto w-full">
+        <section className="col-span-12 px-4 sm:px-6 max-w-6xl mx-auto w-full py-14 sm:py-20">
           <h2 className="font-heading text-2xl font-bold mb-6 text-center">
             {ag.screenshotsHeading}
           </h2>
           <ScreenshotCarousel images={screenshots} />
         </section>
       )}
+
+      <TestimonialsSection copy={ag} />
+
+      <PricingSection copy={ag} />
+
+      <FAQSection copy={ag} />
+
+      <FinalCTA copy={ag} />
     </div>
   );
 }

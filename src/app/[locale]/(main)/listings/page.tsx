@@ -12,7 +12,7 @@ export default async function ListingsPage({
   const result = await fetchPublicProperties({ limit: 20, offset: 0 });
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4 space-y-4">
       <header className="flex items-end justify-between">
         <h1 className="text-lg font-bold">Listings</h1>
         <span className="text-xs text-gray-400">

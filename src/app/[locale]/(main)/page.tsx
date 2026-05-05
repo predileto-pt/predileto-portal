@@ -1,17 +1,22 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   isValidLocale,
   getDictionary,
-  localeToDateLocale,
   type Locale,
 } from "@/lib/i18n";
-import { getAllPosts } from "@/lib/blog";
-import { LocationBrowser } from "@/components/location-browser";
 import { HomeHero } from "@/components/landing/home-hero";
 import { ProblemSection } from "@/components/landing/problem-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
 import { FeaturesSection } from "@/components/landing/features-section";
+import {
+  HomeTrustStrip,
+  HomePromptExamples,
+  HomeContextShowcase,
+  HomeCompareSection,
+  HomeTestimonials,
+  HomeFaq,
+  HomeFinalCta,
+} from "@/components/landing/home-sections";
 
 export default async function HomePage({
   params,
@@ -27,7 +32,13 @@ export default async function HomePage({
   const problem = sections.homeProblem;
   const how = sections.homeHow;
   const features = sections.homeFeatures;
-  const latestPosts = getAllPosts().slice(0, 3);
+  const trust = sections.homeTrust;
+  const prompts = sections.homePrompts;
+  const context = sections.homeContext;
+  const compare = sections.homeCompare;
+  const testimonials = sections.homeTestimonials;
+  const faq = sections.homeFaq;
+  const finalCta = sections.homeFinalCta;
 
   return (
     <div className="grid grid-cols-12 gap-6">
@@ -47,6 +58,8 @@ export default async function HomePage({
         }}
       />
 
+      <HomeTrustStrip copy={trust} />
+
       <ProblemSection
         copy={{
           heading: problem?.heading ?? "",
@@ -60,18 +73,24 @@ export default async function HomePage({
         }}
       />
 
-      <HowItWorksSection
-        copy={{
-          heading: how?.heading ?? "",
-          subheading: how?.subheading ?? "",
-          step1Title: how?.step1Title ?? "",
-          step1Body: how?.step1Body ?? "",
-          step2Title: how?.step2Title ?? "",
-          step2Body: how?.step2Body ?? "",
-          step3Title: how?.step3Title ?? "",
-          step3Body: how?.step3Body ?? "",
-        }}
-      />
+      <HomePromptExamples copy={prompts} locale={locale} />
+
+      <div id="how-it-works" className="col-span-12 contents">
+        <HowItWorksSection
+          copy={{
+            heading: how?.heading ?? "",
+            subheading: how?.subheading ?? "",
+            step1Title: how?.step1Title ?? "",
+            step1Body: how?.step1Body ?? "",
+            step2Title: how?.step2Title ?? "",
+            step2Body: how?.step2Body ?? "",
+            step3Title: how?.step3Title ?? "",
+            step3Body: how?.step3Body ?? "",
+          }}
+        />
+      </div>
+
+      <HomeContextShowcase copy={context} />
 
       <FeaturesSection
         copy={{
@@ -92,36 +111,13 @@ export default async function HomePage({
         }}
       />
 
-      {latestPosts.length > 0 && (
-        <div className="col-span-12 px-4 sm:px-6 max-w-6xl mx-auto w-full">
-          <h2 className="text-sm font-bold mb-2">
-            {(dict as Record<string, Record<string, string>>).homepage
-              ?.latestPosts ?? "From Our Blog"}
-          </h2>
-          <ul className="space-y-1">
-            {latestPosts.map((post) => (
-              <li key={post.slug} className="text-sm">
-                <Link
-                  href={`/${locale}/blog/${post.slug}`}
-                  className="hover:underline underline-offset-2"
-                >
-                  <span className="text-gray-400">
-                    {new Date(post.date).toLocaleDateString(
-                      localeToDateLocale[locale as Locale],
-                    )}
-                  </span>{" "}
-                  <span>{post.title}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <HomeCompareSection copy={compare} />
 
-      <div className="col-span-12 px-4 sm:px-6 max-w-6xl mx-auto w-full space-y-6">
-        <LocationBrowser locale={locale} listingSlug="comprar" />
-        <LocationBrowser locale={locale} listingSlug="arrendar" />
-      </div>
+      <HomeTestimonials copy={testimonials} />
+
+      <HomeFaq copy={faq} />
+
+      <HomeFinalCta copy={finalCta} locale={locale} />
     </div>
   );
 }

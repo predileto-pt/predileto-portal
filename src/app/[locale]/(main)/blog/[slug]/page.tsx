@@ -28,7 +28,7 @@ export default async function BlogPostPage({
   const blog = (dict as Record<string, Record<string, string>>).blog;
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
       <Link
         href={`/${locale}/blog`}
         className="text-sm text-gray-400 hover:text-gray-600 inline-block mb-4"

@@ -13,12 +13,14 @@ export default async function AlugarLocationPage({
   const sp = await searchParams;
 
   return (
-    <SearchPage
-      locationSlugs={location}
-      listingType="rent"
-      listingSlug="arrendar"
-      locale={locale}
-      searchParams={sp}
-    />
+    <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
+      <SearchPage
+        locationSlugs={location}
+        listingType="rent"
+        listingSlug="arrendar"
+        locale={locale}
+        searchParams={sp}
+      />
+    </div>
   );
 }

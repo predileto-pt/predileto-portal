@@ -20,10 +20,12 @@ export default function ComprarPage({
   const initialQuery = typeof sp.q === "string" ? sp.q : undefined;
 
   return (
-    <AISearchPage
-      listingType="buy"
-      locale={locale}
-      initialQuery={initialQuery}
-    />
+    <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
+      <AISearchPage
+        listingType="buy"
+        locale={locale}
+        initialQuery={initialQuery}
+      />
+    </div>
   );
 }
