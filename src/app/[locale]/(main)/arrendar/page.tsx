@@ -1,24 +1,29 @@
-import { SearchPage } from "@/components/search-page";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { use } from "react";
+import dynamic from "next/dynamic";
 
-export default async function AlugarPage({
+const AISearchPage = dynamic(
+  () => import("@/components/ai-search-page").then((m) => m.AISearchPage),
+  { ssr: false },
+);
+
+export default function ArrendarPage({
   params,
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { locale } = await params;
-  const sp = await searchParams;
+  const { locale } = use(params);
+  const sp = use(searchParams);
+  const initialQuery = typeof sp.q === "string" ? sp.q : undefined;
 
   return (
-    <SearchPage
-      locationSlugs={[]}
+    <AISearchPage
       listingType="rent"
-      listingSlug="arrendar"
       locale={locale}
-      searchParams={sp}
+      initialQuery={initialQuery}
     />
   );
 }

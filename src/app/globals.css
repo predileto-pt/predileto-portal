@@ -53,19 +53,34 @@
   --color-ink-muted: #9ca3af;
 
   /* Semantic surfaces */
+  --color-canvas: #fafaf9;
   --color-paper: #ffffff;
   --color-paper-muted: #f5f5f4;
 
   /* Borders */
   --color-rule: #e5e7eb;
+
+  /* Brand */
+  --color-primary: hsl(172 66% 42%);
+  --color-primary-hover: hsl(172 66% 32%);
+  --color-accent-warm: hsl(38 92% 50%);
 }
 
 body {
   font-family: var(--font-body);
-  background: var(--color-paper-muted);
+  background: var(--color-canvas);
   color: var(--color-ink);
   font-size: var(--text-sm);
   line-height: var(--leading-body);
+}
+
+/* Scrollable regions where we want scroll without a visible scrollbar */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* ── Landing hero ────────────────────────────────────────────────── */
@@ -122,6 +137,13 @@ body {
 
 .landing-shimmer {
   animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Break out of constrained parent (e.g. max-w-7xl <main>) to full viewport width */
+.landing-full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
 }
 
 /* ── Blog content ────────────────────────────────────────────────── */
