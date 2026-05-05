@@ -15,7 +15,7 @@ export default async function MainLayout({
     <>
       <PrototypeBanner />
       <TopNav locale={locale as Locale} />
-      <main className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">{children}</main>
+      <main>{children}</main>
     </>
   );
 }

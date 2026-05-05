@@ -10,7 +10,6 @@ import type { Locale } from "@/lib/i18n";
 const navItems = [
   { key: "buy" as const, href: "comprar" },
   { key: "rent" as const, href: "arrendar" },
-  { key: "blog" as const, href: "blog" },
 ];
 
 export function TopNav({ locale }: { locale: Locale }) {

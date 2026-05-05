@@ -22,7 +22,7 @@ export default async function BlogPage({
   const posts = getAllPosts();
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
       <div className="mb-4">
         <h1 className="text-base font-bold">{blog.heading}</h1>
         <Text>{blog.subheading}</Text>

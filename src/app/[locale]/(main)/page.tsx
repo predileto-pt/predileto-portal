@@ -1,13 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   isValidLocale,
   getDictionary,
-  localeToDateLocale,
   type Locale,
 } from "@/lib/i18n";
-import { getAllPosts } from "@/lib/blog";
-import { LocationBrowser } from "@/components/location-browser";
 import { HomeHero } from "@/components/landing/home-hero";
 import { ProblemSection } from "@/components/landing/problem-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
@@ -27,7 +23,6 @@ export default async function HomePage({
   const problem = sections.homeProblem;
   const how = sections.homeHow;
   const features = sections.homeFeatures;
-  const latestPosts = getAllPosts().slice(0, 3);
 
   return (
     <div className="grid grid-cols-12 gap-6">
@@ -91,37 +86,6 @@ export default async function HomePage({
           feat6Body: features?.feat6Body ?? "",
         }}
       />
-
-      {latestPosts.length > 0 && (
-        <div className="col-span-12 px-4 sm:px-6 max-w-6xl mx-auto w-full">
-          <h2 className="text-sm font-bold mb-2">
-            {(dict as Record<string, Record<string, string>>).homepage
-              ?.latestPosts ?? "From Our Blog"}
-          </h2>
-          <ul className="space-y-1">
-            {latestPosts.map((post) => (
-              <li key={post.slug} className="text-sm">
-                <Link
-                  href={`/${locale}/blog/${post.slug}`}
-                  className="hover:underline underline-offset-2"
-                >
-                  <span className="text-gray-400">
-                    {new Date(post.date).toLocaleDateString(
-                      localeToDateLocale[locale as Locale],
-                    )}
-                  </span>{" "}
-                  <span>{post.title}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <div className="col-span-12 px-4 sm:px-6 max-w-6xl mx-auto w-full space-y-6">
-        <LocationBrowser locale={locale} listingSlug="comprar" />
-        <LocationBrowser locale={locale} listingSlug="arrendar" />
-      </div>
     </div>
   );
 }
