@@ -39,6 +39,8 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         price: 285000,
         areaSqm: 78,
         bedrooms: 2,
+        imageUrl:
+          "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=600&q=80",
         listingType: "buy",
         aiAttributes: [
           { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.450€/mês" },
@@ -66,6 +68,8 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         price: 340000,
         areaSqm: 95,
         bedrooms: 3,
+        imageUrl:
+          "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
         listingType: "buy",
         aiAttributes: [
           { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.200€/mês" },
@@ -88,6 +92,8 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         price: 220000,
         areaSqm: 84,
         bedrooms: 2,
+        imageUrl:
+          "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
         listingType: "buy",
         aiAttributes: [
           { key: "cost", icon: "euro", label: "Custo de vida", value: "~950€/mês" },
@@ -108,6 +114,8 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       price: 1350,
       areaSqm: 68,
       bedrooms: 2,
+      imageUrl:
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
       listingType: "rent",
       aiAttributes: [
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.500€/mês" },
@@ -135,6 +143,8 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       price: 1100,
       areaSqm: 74,
       bedrooms: 2,
+      imageUrl:
+        "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=600&q=80",
       listingType: "rent",
       aiAttributes: [
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.250€/mês" },
@@ -167,6 +177,8 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       price: 850,
       areaSqm: 60,
       bedrooms: 1,
+      imageUrl:
+        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
       listingType: "rent",
       aiAttributes: [
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~900€/mês" },

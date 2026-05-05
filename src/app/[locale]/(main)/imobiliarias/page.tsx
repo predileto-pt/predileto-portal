@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { isValidLocale, getDictionary, type Locale } from "@/lib/i18n";
 import { ScreenshotCarousel } from "@/components/screenshot-carousel";
+import { HeroAuroraBackground } from "@/components/landing/hero-aurora-background";
 import fs from "fs";
 import path from "path";
 
@@ -29,8 +30,9 @@ export default async function AgenciesPage({
   return (
     <div className="grid grid-cols-12 gap-6">
       {/* Hero */}
-      <section className="landing-hero relative overflow-hidden col-span-12 py-20 sm:py-28 lg:py-36">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <section className="landing-hero landing-full-bleed relative overflow-hidden col-span-12 -mt-3 lg:-mt-4 py-20 sm:py-28 lg:py-36">
+        <HeroAuroraBackground />
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
           <div className="max-w-2xl mx-auto text-center">
             {/* Eyebrow */}
             <div

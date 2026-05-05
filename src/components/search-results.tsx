@@ -85,7 +85,7 @@ function ResultCard({
 
   return (
     <li className="border border-rule bg-paper">
-      <div className="flex gap-3 h-[216px] overflow-hidden">
+      <div className="flex gap-3 h-[230px] overflow-hidden">
         <div className="w-72 shrink-0 bg-paper-muted">
           {item.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -244,7 +244,7 @@ function CardActionButton({
       className={cn(
         "flex items-center gap-1.5 px-2 py-1 text-xs font-heading cursor-pointer",
         "text-ink-subtle hover:text-primary",
-        active && "text-primary",
+        active && "text-primary"
       )}
     >
       <span className="w-4 h-4 shrink-0">{icon}</span>

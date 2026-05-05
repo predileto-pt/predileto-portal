@@ -139,6 +139,13 @@ body {
   animation: shimmer 3s ease-in-out infinite;
 }
 
+/* Break out of constrained parent (e.g. max-w-7xl <main>) to full viewport width */
+.landing-full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
 /* ── Blog content ────────────────────────────────────────────────── */
 .blog-content h2 {
   font-size: 14px;
