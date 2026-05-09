@@ -5,7 +5,13 @@ import { cn } from "@/lib/utils";
 
 export type ResultMediaItem =
   | { type: "image"; url: string; alt?: string }
-  | { type: "video"; url: string; thumbnail?: string; alt?: string };
+  | {
+      type: "video";
+      url: string;
+      thumbnail?: string;
+      alt?: string;
+      aiGenerated?: boolean;
+    };
 
 const FALLBACK_MEDIA: ResultMediaItem[] = [
   { type: "image", url: "/mock-listings/placeholder-1.svg", alt: "" },
@@ -30,8 +36,11 @@ export function ResultMediaCarousel({
   const showControls = slides.length >= 2;
 
   const counts = useMemo(() => {
-    const c = { image: 0, video: 0 };
-    for (const m of slides) c[m.type] += 1;
+    const c = { image: 0, video: 0, ai: 0 };
+    for (const m of slides) {
+      c[m.type] += 1;
+      if (m.type === "video" && m.aiGenerated) c.ai += 1;
+    }
     return c;
   }, [slides]);
 
@@ -102,6 +111,13 @@ export function ResultMediaCarousel({
         )}
         {counts.video > 0 && (
           <MediaTypeBadge icon={<VideoIcon />} count={counts.video} />
+        )}
+        {counts.ai > 0 && (
+          <MediaTypeBadge
+            icon={<SparkleIcon />}
+            count={counts.ai}
+            tone="ai"
+          />
         )}
       </div>
 
@@ -235,16 +251,27 @@ function Slide({
 function MediaTypeBadge({
   icon,
   count,
+  tone = "default",
 }: {
   icon: React.ReactNode;
   count: number;
+  tone?: "default" | "ai";
 }) {
+  const toneClass =
+    tone === "ai"
+      ? "bg-gradient-to-r from-[hsl(172_66%_42%)] to-[hsl(38_92%_50%)] text-white"
+      : "bg-black/55 text-white";
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 bg-black/55 text-white rounded">
-      <span className="w-3 h-3 flex items-center justify-center" aria-hidden>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded",
+        toneClass,
+      )}
+    >
+      <span className="w-4 h-4 flex items-center justify-center" aria-hidden>
         {icon}
       </span>
-      {count > 1 ? count : null}
+      <span className="leading-none">{count}</span>
     </span>
   );
 }
@@ -258,7 +285,7 @@ function ImageIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="w-3 h-3"
+      className="w-4 h-4"
       aria-hidden
     >
       <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -277,11 +304,35 @@ function VideoIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="w-3 h-3"
+      className="w-4 h-4"
       aria-hidden
     >
       <polygon points="23 7 16 12 23 17 23 7" />
       <rect x="1" y="5" width="15" height="14" rx="2" />
+    </svg>
+  );
+}
+
+function SparkleIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-4 h-4"
+      aria-hidden
+    >
+      <path d="M12 3v3" />
+      <path d="M12 18v3" />
+      <path d="M3 12h3" />
+      <path d="M18 12h3" />
+      <path d="m5.6 5.6 2.1 2.1" />
+      <path d="m16.3 16.3 2.1 2.1" />
+      <path d="m5.6 18.4 2.1-2.1" />
+      <path d="m16.3 7.7 2.1-2.1" />
     </svg>
   );
 }

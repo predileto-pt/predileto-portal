@@ -152,14 +152,14 @@ function ResultCard({
       </div>
 
       {/* Hero carousel */}
-      <Link href={detailHref} className="block mt-4" aria-label="Ver detalhe">
+      <div className="mt-4">
         <ResultMediaCarousel
           media={media}
           altFallback={item.title}
           prevLabel="Anterior"
           nextLabel="Seguinte"
         />
-      </Link>
+      </div>
 
       {/* AI attributes */}
       {item.aiAttributes && item.aiAttributes.length > 0 && (
@@ -210,7 +210,7 @@ function ResultCard({
         </div>
         <Link
           href={detailHref}
-          className="inline-flex items-center gap-1 text-sm font-bold font-heading text-primary hover:opacity-80 transition-opacity"
+          className="inline-flex items-center gap-1.5 text-xs font-bold font-heading uppercase tracking-tight px-3.5 py-2 bg-primary text-paper rounded-md shadow-sm hover:opacity-90 transition-opacity"
         >
           Ver detalhe
           <svg
@@ -220,7 +220,7 @@ function ResultCard({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="w-4 h-4"
+            className="w-3.5 h-3.5"
             aria-hidden
           >
             <path d="M5 12h14" />
