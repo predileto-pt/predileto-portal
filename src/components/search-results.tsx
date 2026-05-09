@@ -6,13 +6,41 @@ import { cn, formatPrice, formatArea } from "@/lib/utils";
 import { Small } from "@/components/ui/small";
 import { Title } from "@/components/ui/title";
 import { CommentsList, type CommentData } from "@/components/comments-list";
-import { PropertyFeedCardCarousel } from "@/components/property-feed-card-carousel";
+import {
+  ResultMediaCarousel,
+  type ResultMediaItem,
+} from "@/components/result-media-carousel";
 
 export interface AiAttribute {
   key: string;
   label: string;
   value: string;
   icon?: "euro" | "fuel" | "commute" | "noise" | "amenity";
+}
+
+export type CharacteristicIcon =
+  | "bath"
+  | "garage"
+  | "energy"
+  | "elevator"
+  | "balcony"
+  | "view"
+  | "year"
+  | "floor"
+  | "area"
+  | "heating"
+  | "ac"
+  | "pool"
+  | "garden"
+  | "pet"
+  | "furnished"
+  | "default";
+
+export interface ResultCharacteristic {
+  key: string;
+  label: string;
+  value?: string;
+  icon?: CharacteristicIcon;
 }
 
 export interface SearchResultItem {
@@ -22,9 +50,14 @@ export interface SearchResultItem {
   price: number;
   areaSqm: number;
   bedrooms: number;
+  /** @deprecated prefer `media`. Kept as a fallback for single-image entries. */
   imageUrl?: string;
+  /** Mixed image / video carousel items. Wins over `imageUrl` when present. */
+  media?: ResultMediaItem[];
   listingType: "buy" | "rent";
   aiAttributes?: AiAttribute[];
+  /** Property facts and features (bathrooms, garage, energy rating, view, etc). */
+  characteristics?: ResultCharacteristic[];
   comments?: CommentData[];
 }
 
@@ -86,9 +119,12 @@ function ResultCard({
 
   const commentCount = item.comments?.length ?? 0;
   const detailHref = `/${locale}/imovel/${item.id}`;
-  const carouselImages = item.imageUrl
-    ? [{ url: item.imageUrl, alt: item.title }]
-    : [];
+  const media: ResultMediaItem[] =
+    item.media && item.media.length > 0
+      ? item.media
+      : item.imageUrl
+        ? [{ type: "image", url: item.imageUrl, alt: item.title }]
+        : [];
 
   return (
     <li className="group border border-rule bg-paper transition-shadow hover:shadow-md">
@@ -114,6 +150,16 @@ function ResultCard({
           {item.listingType === "buy" ? "Comprar" : "Arrendar"}
         </span>
       </header>
+
+      {/* Hero carousel */}
+      <div>
+        <ResultMediaCarousel
+          media={media}
+          altFallback={item.title}
+          prevLabel="Anterior"
+          nextLabel="Seguinte"
+        />
+      </div>
 
       {/* Title + price */}
       <div className="px-4 pt-4">
@@ -141,16 +187,6 @@ function ResultCard({
           {item.areaSqm > 0 && <span>{formatArea(item.areaSqm)}</span>}
         </div>
       </div>
-
-      {/* Hero carousel */}
-      <Link href={detailHref} className="block mt-4" aria-label="Ver detalhe">
-        <PropertyFeedCardCarousel
-          images={carouselImages}
-          altFallback={item.title}
-          prevLabel="Anterior"
-          nextLabel="Seguinte"
-        />
-      </Link>
 
       {/* AI attributes */}
       {item.aiAttributes && item.aiAttributes.length > 0 && (
@@ -182,6 +218,13 @@ function ResultCard({
         </div>
       )}
 
+      {/* Characteristics */}
+      {item.characteristics && item.characteristics.length > 0 && (
+        <div className="px-4 pt-3">
+          <CharacteristicsList items={item.characteristics} />
+        </div>
+      )}
+
       {/* Action row */}
       <footer className="flex items-center justify-between gap-2 px-4 py-3 mt-3 border-t border-rule">
         <div className="flex gap-1">
@@ -201,7 +244,7 @@ function ResultCard({
         </div>
         <Link
           href={detailHref}
-          className="inline-flex items-center gap-1 text-sm font-bold font-heading text-primary hover:opacity-80 transition-opacity"
+          className="inline-flex items-center gap-1.5 text-xs font-bold font-heading uppercase tracking-tight px-3.5 py-2 bg-primary text-paper rounded-md shadow-sm hover:opacity-90 transition-opacity"
         >
           Ver detalhe
           <svg
@@ -211,7 +254,7 @@ function ResultCard({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="w-4 h-4"
+            className="w-3.5 h-3.5"
             aria-hidden
           >
             <path d="M5 12h14" />
@@ -414,4 +457,173 @@ function SparkleIcon() {
       <path d="M15.5 8.5 18 6" />
     </svg>
   );
+}
+
+function CharacteristicsList({ items }: { items: ResultCharacteristic[] }) {
+  return (
+    <ul className="mt-3 flex flex-wrap gap-1.5">
+      {items.map((c) => (
+        <li
+          key={c.key}
+          className="inline-flex items-center gap-1.5 px-2 py-1 text-xs bg-paper-muted text-ink-secondary border border-rule rounded-full whitespace-nowrap"
+        >
+          <CharacteristicIconSvg name={c.icon ?? "default"} />
+          <span>
+            <span className="font-medium text-ink">{c.label}</span>
+            {c.value ? (
+              <span className="text-ink-muted">: {c.value}</span>
+            ) : null}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function CharacteristicIconSvg({ name }: { name: CharacteristicIcon }) {
+  const props = {
+    viewBox: "0 0 24 24",
+    fill: "none" as const,
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    className: "w-3.5 h-3.5 shrink-0 text-ink-secondary",
+    "aria-hidden": true,
+  };
+  switch (name) {
+    case "bath":
+      return (
+        <svg {...props}>
+          <path d="M2 12h20" />
+          <path d="M5 12V6a3 3 0 0 1 6 0" />
+          <path d="M4 12v3a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-3" />
+        </svg>
+      );
+    case "garage":
+      return (
+        <svg {...props}>
+          <path d="M3 21V8l9-5 9 5v13" />
+          <path d="M3 13h18" />
+          <path d="M7 21v-4h10v4" />
+        </svg>
+      );
+    case "energy":
+      return (
+        <svg {...props}>
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+      );
+    case "elevator":
+      return (
+        <svg {...props}>
+          <rect x="6" y="3" width="12" height="18" rx="1" />
+          <polyline points="9 8 12 5 15 8" />
+          <polyline points="9 16 12 19 15 16" />
+        </svg>
+      );
+    case "balcony":
+      return (
+        <svg {...props}>
+          <rect x="3" y="3" width="18" height="9" rx="1" />
+          <path d="M3 21h18" />
+          <path d="M7 12v9" />
+          <path d="M17 12v9" />
+          <path d="M12 12v9" />
+        </svg>
+      );
+    case "view":
+      return (
+        <svg {...props}>
+          <path d="M3 18h18" />
+          <path d="M3 14l4-4 3 3 5-6 6 7" />
+          <circle cx="17" cy="6" r="2" />
+        </svg>
+      );
+    case "year":
+      return (
+        <svg {...props}>
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M3 9h18" />
+          <path d="M8 3v4" />
+          <path d="M16 3v4" />
+        </svg>
+      );
+    case "floor":
+      return (
+        <svg {...props}>
+          <rect x="4" y="3" width="16" height="18" rx="1" />
+          <path d="M4 9h16" />
+          <path d="M4 15h16" />
+          <path d="M9 21V3" />
+        </svg>
+      );
+    case "area":
+      return (
+        <svg {...props}>
+          <rect x="3" y="3" width="18" height="18" rx="1" />
+          <path d="M3 8h6" />
+          <path d="M16 21v-6" />
+        </svg>
+      );
+    case "heating":
+      return (
+        <svg {...props}>
+          <path d="M12 2s4 4 4 8a4 4 0 0 1-8 0c0-4 4-8 4-8z" />
+          <path d="M12 22a4 4 0 0 1-4-4" />
+        </svg>
+      );
+    case "ac":
+      return (
+        <svg {...props}>
+          <path d="M12 3v18" />
+          <path d="M3 12h18" />
+          <path d="m6 6 12 12" />
+          <path d="m18 6-12 12" />
+        </svg>
+      );
+    case "pool":
+      return (
+        <svg {...props}>
+          <path d="M2 12c2 2 4 2 6 0s4-2 6 0 4 2 6 0" />
+          <path d="M2 17c2 2 4 2 6 0s4-2 6 0 4 2 6 0" />
+        </svg>
+      );
+    case "garden":
+      return (
+        <svg {...props}>
+          <path d="M12 22V12" />
+          <path d="M12 12c0-3 2-6 6-6 0 4-2 7-6 7" />
+          <path d="M12 12c0-3-2-6-6-6 0 4 2 7 6 7" />
+        </svg>
+      );
+    case "pet":
+      return (
+        <svg {...props}>
+          <circle cx="11" cy="4" r="2" />
+          <circle cx="18" cy="8" r="2" />
+          <circle cx="20" cy="16" r="2" />
+          <circle cx="9" cy="10" r="2" />
+          <path d="M11 14c-2 0-4 1-4 4 0 1 1 2 2 2 1 0 2-1 3-1s2 1 3 1c1 0 2-1 2-2 0-3-2-4-6-4z" />
+        </svg>
+      );
+    case "furnished":
+      return (
+        <svg {...props}>
+          <path d="M3 18v-5a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v5" />
+          <path d="M3 18h18" />
+          <path d="M5 21v-3" />
+          <path d="M19 21v-3" />
+        </svg>
+      );
+    case "default":
+    default:
+      return (
+        <svg {...props}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v4" />
+          <path d="M12 16h.01" />
+        </svg>
+      );
+  }
 }

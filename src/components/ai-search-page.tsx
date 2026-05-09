@@ -47,13 +47,30 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         price: 285000,
         areaSqm: 78,
         bedrooms: 2,
-        imageUrl:
-          "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=600&q=80",
+        media: [
+          { type: "image", url: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=80" },
+          { type: "image", url: "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=800&q=80" },
+          {
+            type: "video",
+            url: "https://example.com/tour-1.mp4",
+            thumbnail: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
+            aiGenerated: true,
+          },
+          { type: "image", url: "https://images.unsplash.com/photo-1556228724-4c47ec71d33d?auto=format&fit=crop&w=800&q=80" },
+        ],
         listingType: "buy",
         aiAttributes: [
           { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.450€/mês" },
           { key: "gas", icon: "fuel", label: "Gasolina", value: "~60€/mês" },
           { key: "commute", icon: "commute", label: "Até o centro", value: "8 min a pé" },
+        ],
+        characteristics: [
+          { key: "bath", icon: "bath", label: "WC", value: "2" },
+          { key: "balcony", icon: "balcony", label: "Varanda", value: "8m²" },
+          { key: "energy", icon: "energy", label: "Energia", value: "B" },
+          { key: "year", icon: "year", label: "Construção", value: "2018" },
+          { key: "elevator", icon: "elevator", label: "Elevador" },
+          { key: "view", icon: "view", label: "Vista cidade" },
         ],
         comments: [
           {
@@ -76,13 +93,25 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         price: 340000,
         areaSqm: 95,
         bedrooms: 3,
-        imageUrl:
-          "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
+        media: [
+          { type: "image", url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" },
+          { type: "image", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
+          { type: "image", url: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80" },
+        ],
         listingType: "buy",
         aiAttributes: [
           { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.200€/mês" },
           { key: "gas", icon: "fuel", label: "Gasolina", value: "~110€/mês" },
           { key: "amenity", icon: "amenity", label: "Escolas a 1 km", value: "4" },
+        ],
+        characteristics: [
+          { key: "bath", icon: "bath", label: "WC", value: "3" },
+          { key: "garage", icon: "garage", label: "Garagem", value: "2 lugares" },
+          { key: "pool", icon: "pool", label: "Piscina" },
+          { key: "energy", icon: "energy", label: "Energia", value: "A+" },
+          { key: "ac", icon: "ac", label: "Ar condicionado" },
+          { key: "year", icon: "year", label: "Construção", value: "2021" },
+          { key: "garden", icon: "garden", label: "Jardim", value: "120m²" },
         ],
         comments: [
           {
@@ -100,13 +129,26 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         price: 220000,
         areaSqm: 84,
         bedrooms: 2,
-        imageUrl:
-          "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
+        media: [
+          { type: "image", url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80" },
+          {
+            type: "video",
+            url: "https://example.com/tour-3.mp4",
+            thumbnail: "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=800&q=80",
+          },
+        ],
         listingType: "buy",
         aiAttributes: [
           { key: "cost", icon: "euro", label: "Custo de vida", value: "~950€/mês" },
           { key: "commute", icon: "commute", label: "Universidade", value: "6 min a pé" },
           { key: "noise", icon: "noise", label: "Ruído", value: "Moderado" },
+        ],
+        characteristics: [
+          { key: "bath", icon: "bath", label: "WC", value: "1" },
+          { key: "furnished", icon: "furnished", label: "Mobilado" },
+          { key: "energy", icon: "energy", label: "Energia", value: "C" },
+          { key: "floor", icon: "floor", label: "3º andar" },
+          { key: "year", icon: "year", label: "Construção", value: "1956" },
         ],
         comments: [],
       },
@@ -122,13 +164,31 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       price: 1350,
       areaSqm: 68,
       bedrooms: 2,
-      imageUrl:
-        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
+      media: [
+        { type: "image", url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" },
+        { type: "image", url: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80" },
+        {
+          type: "video",
+          url: "https://example.com/tour-rent-1.mp4",
+          thumbnail: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=80",
+          aiGenerated: true,
+        },
+        { type: "image", url: "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=800&q=80" },
+        { type: "image", url: "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=800&q=80" },
+      ],
       listingType: "rent",
       aiAttributes: [
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.500€/mês" },
         { key: "commute", icon: "commute", label: "Metro", value: "3 min a pé" },
         { key: "noise", icon: "noise", label: "Ruído", value: "Alto" },
+      ],
+      characteristics: [
+        { key: "bath", icon: "bath", label: "WC", value: "1" },
+        { key: "furnished", icon: "furnished", label: "Mobilado" },
+        { key: "energy", icon: "energy", label: "Energia", value: "B-" },
+        { key: "floor", icon: "floor", label: "4º andar" },
+        { key: "elevator", icon: "elevator", label: "Elevador" },
+        { key: "pet", icon: "pet", label: "Aceita animais" },
       ],
       comments: [
         {
@@ -151,13 +211,23 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       price: 1100,
       areaSqm: 74,
       bedrooms: 2,
-      imageUrl:
-        "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=600&q=80",
+      media: [
+        { type: "image", url: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80" },
+        { type: "image", url: "https://images.unsplash.com/photo-1556228724-4c47ec71d33d?auto=format&fit=crop&w=800&q=80" },
+        { type: "image", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
+      ],
       listingType: "rent",
       aiAttributes: [
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.250€/mês" },
         { key: "gas", icon: "fuel", label: "Gasolina", value: "~55€/mês" },
         { key: "amenity", icon: "amenity", label: "Cafés a 500 m", value: "12" },
+      ],
+      characteristics: [
+        { key: "bath", icon: "bath", label: "WC", value: "2" },
+        { key: "balcony", icon: "balcony", label: "Terraço", value: "20m²" },
+        { key: "energy", icon: "energy", label: "Energia", value: "B" },
+        { key: "year", icon: "year", label: "Recuperado", value: "2022" },
+        { key: "heating", icon: "heating", label: "Aquecimento central" },
       ],
       comments: [
         {
@@ -185,13 +255,22 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
       price: 850,
       areaSqm: 60,
       bedrooms: 1,
-      imageUrl:
-        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
+      media: [
+        { type: "image", url: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" },
+        { type: "image", url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" },
+      ],
       listingType: "rent",
       aiAttributes: [
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~900€/mês" },
         { key: "commute", icon: "commute", label: "Universidade", value: "9 min de bike" },
         { key: "noise", icon: "noise", label: "Ruído", value: "Baixo" },
+      ],
+      characteristics: [
+        { key: "bath", icon: "bath", label: "WC", value: "1" },
+        { key: "furnished", icon: "furnished", label: "Mobilado" },
+        { key: "ac", icon: "ac", label: "Ar condicionado" },
+        { key: "energy", icon: "energy", label: "Energia", value: "B" },
+        { key: "floor", icon: "floor", label: "1º andar" },
       ],
       comments: [
         {
