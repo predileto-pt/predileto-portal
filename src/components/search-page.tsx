@@ -13,10 +13,9 @@ import { SearchBar } from "@/components/search-bar";
 import { PropertyList } from "@/components/property-list";
 import { PropertyListSkeleton } from "@/components/property-list-skeleton";
 import { Pagination } from "@/components/pagination";
-import { PropertyDetailPanel } from "@/components/property-detail-panel";
 import { LocationBreadcrumbs } from "@/components/location-breadcrumbs";
-// import { FeaturedCarousel } from "@/components/featured-carousel";
-
+import { SearchHistorySidebar } from "@/components/search-history-sidebar";
+import { SearchHistoryRecorder } from "@/components/search-history-recorder";
 
 const FILTER_KEYS = [
   "q",
@@ -62,23 +61,29 @@ export async function SearchPage({
     if (typeof value === "string") rawParams[key] = value;
   }
 
-  const selectedId =
-    typeof sp.selected === "string" ? sp.selected : undefined;
-
   const breadcrumbs = buildBreadcrumbs(resolved, locale, listingSlug);
   const basePath =
     `/${locale}/${listingSlug}` +
     (locationSlugs.length > 0 ? `/${locationSlugs.join("/")}` : "");
+  const currentUrl = (() => {
+    const qs = new URLSearchParams();
+    for (const key of FILTER_KEYS) {
+      const value = rawParams[key];
+      if (value) qs.set(key, value);
+    }
+    const s = qs.toString();
+    return s ? `${basePath}?${s}` : basePath;
+  })();
 
   const title = getTitle(resolved, dict, listingType);
   const listingLabel = listingType === "buy" ? dict.nav.buy : dict.nav.rent;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       {/* Mobile filter toggle */}
       <div className="lg:hidden">
         <details>
-          <summary className="text-sm font-medium cursor-pointer border border-gray-200 bg-white px-3 py-2 rounded select-none">
+          <summary className="text-sm font-medium cursor-pointer border border-rule bg-paper px-3 py-2 rounded select-none">
             Filtros
           </summary>
           <div className="mt-2">
@@ -89,16 +94,21 @@ export async function SearchPage({
         </details>
       </div>
 
-      {/* Desktop filters sidebar */}
-      <div className="hidden lg:block lg:col-span-2">
-        <div className="border border-gray-200 bg-white p-3">
+      {/* Mobile history toggle */}
+      <div className="lg:hidden">
+        <SearchHistorySidebar collapsible />
+      </div>
+
+      {/* Desktop filters sidebar (left, 3 cols) */}
+      <div className="hidden lg:block lg:col-span-3">
+        <div className="lg:sticky lg:top-4 border border-rule bg-paper p-3">
           <Suspense>
             <SearchFilters />
           </Suspense>
         </div>
       </div>
 
-      {/* Main content */}
+      {/* Main feed (middle, 6 cols) */}
       <div className="lg:col-span-6">
         <div className="mb-4">
           <Suspense>
@@ -110,12 +120,6 @@ export async function SearchPage({
             />
           </Suspense>
         </div>
-
-        {/* <FeaturedCarousel
-            properties={latestProperties}
-            locale={locale}
-            heading={(dict as Record<string, Record<string, string>>).carousel?.heading ?? "Latest Properties"}
-          /> */}
 
         <LocationBreadcrumbs
           items={breadcrumbs}
@@ -131,11 +135,11 @@ export async function SearchPage({
               locale={locale}
               sp={sp}
               rawParams={rawParams}
-              selectedId={selectedId}
               dict={dict}
               resolved={resolved}
               listingType={listingType}
               basePath={basePath}
+              currentUrl={currentUrl}
             />
           </Suspense>
         ) : latestProperties.length > 0 ? (
@@ -149,12 +153,10 @@ export async function SearchPage({
         ) : null}
       </div>
 
-      {/* Right sidebar */}
-      <div className="lg:col-span-4">
-        <div className="hidden lg:block lg:sticky lg:top-4">
-          <Suspense>
-            <PropertyDetailPanel locale={locale} />
-          </Suspense>
+      {/* Desktop history sidebar (right, 3 cols) */}
+      <div className="hidden lg:block lg:col-span-3">
+        <div className="lg:sticky lg:top-4">
+          <SearchHistorySidebar />
         </div>
       </div>
     </div>
@@ -180,20 +182,20 @@ async function ResultsSection({
   locale,
   sp,
   rawParams,
-  selectedId,
   dict,
   resolved,
   listingType,
   basePath,
+  currentUrl,
 }: {
   locale: string;
   sp: Record<string, string | string[] | undefined>;
   rawParams: Record<string, string | undefined>;
-  selectedId?: string;
   dict: Awaited<ReturnType<typeof getDictionary>>;
   resolved: ResolvedLocation;
   listingType: "buy" | "rent";
   basePath: string;
+  currentUrl: string;
 }) {
   const search: PropertySearchParams = {
     q: typeof sp.q === "string" ? sp.q : undefined,
@@ -205,7 +207,6 @@ async function ResultsSection({
     bedrooms: typeof sp.bedrooms === "string" ? sp.bedrooms : undefined,
     sort: typeof sp.sort === "string" ? sp.sort : undefined,
     page: typeof sp.page === "string" ? sp.page : undefined,
-    // Hierarchical location from URL path
     region: resolved.region?.slug,
     district: resolved.district?.slug,
     municipality: resolved.municipality?.slug,
@@ -214,8 +215,25 @@ async function ResultsSection({
 
   const result = await getProperties(search);
 
+  const filters = {
+    q: typeof sp.q === "string" ? sp.q : undefined,
+    propertyType:
+      typeof sp.propertyType === "string" ? sp.propertyType : undefined,
+    minPrice: typeof sp.minPrice === "string" ? sp.minPrice : undefined,
+    maxPrice: typeof sp.maxPrice === "string" ? sp.maxPrice : undefined,
+    bedrooms: typeof sp.bedrooms === "string" ? sp.bedrooms : undefined,
+  };
+
   return (
     <>
+      <SearchHistoryRecorder
+        url={currentUrl}
+        listingType={listingType}
+        count={result.total}
+        resolved={resolved}
+        filters={filters}
+        hasFilters
+      />
       <div className="text-xs text-gray-400 mb-2">
         {dict.properties.found.replace("{count}", String(result.total))}
       </div>
@@ -225,7 +243,6 @@ async function ResultsSection({
         page={result.page}
         pageSize={result.pageSize}
         locale={locale}
-        selectedId={selectedId}
       />
       <Pagination
         page={result.page}

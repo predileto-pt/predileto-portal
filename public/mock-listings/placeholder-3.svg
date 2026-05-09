@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Imagem indisponível">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0e1c1b"/>
+      <stop offset="100%" stop-color="#1f8f81"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g3)"/>
+  <g fill="rgba(255,255,255,0.18)">
+    <rect x="60" y="240" width="180" height="140"/>
+    <rect x="260" y="190" width="220" height="190"/>
+    <polygon points="260,190 370,110 480,190"/>
+    <rect x="500" y="220" width="160" height="160"/>
+    <rect x="540" y="280" width="40" height="100" fill="rgba(0,0,0,0.25)"/>
+    <rect x="320" y="260" width="50" height="80" fill="rgba(0,0,0,0.25)"/>
+    <rect x="390" y="260" width="50" height="80" fill="rgba(0,0,0,0.25)"/>
+  </g>
+  <g fill="rgba(255,255,255,0.92)" font-family="system-ui, -apple-system, sans-serif">
+    <text x="400" y="420" text-anchor="middle" font-size="14" opacity="0.85">Predileto · Imagem indisponível</text>
+  </g>
+</svg>

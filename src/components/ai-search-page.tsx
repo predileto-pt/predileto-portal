@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   AIPropertiesSearcher,
   type AiSearchListingType,
@@ -14,6 +15,13 @@ import {
   SearchResults,
   type SearchResultItem,
 } from "@/components/search-results";
+import { SearchSubheader } from "@/components/search-subheader";
+import {
+  ResultsFilterSidebar,
+  applyResultsFilter,
+  initialFilterState,
+  type ResultsFilterState,
+} from "@/components/results-filter-sidebar";
 
 interface AISearchPageProps {
   listingType: AiSearchListingType;
@@ -201,12 +209,28 @@ export function AISearchPage({
   locale,
   initialQuery,
 }: AISearchPageProps) {
+  const router = useRouter();
   const [messages, setMessages] = useState<SearchMessage[]>([]);
   const [results, setResults] = useState<SearchResultItem[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [lastPayload, setLastPayload] = useState<AiSearchPayload | null>(null);
+  const [filterState, setFilterState] =
+    useState<ResultsFilterState>(initialFilterState);
   const bootstrappedRef = useRef(false);
 
   const hasSearched = messages.length > 0;
+
+  function handleSubheaderSearch(payload: AiSearchPayload) {
+    if (payload.listingType !== listingType) {
+      const target = payload.listingType === "buy" ? "comprar" : "arrendar";
+      const qs = payload.query
+        ? `?q=${encodeURIComponent(payload.query)}`
+        : "";
+      router.push(`/${locale}/${target}${qs}`);
+      return;
+    }
+    void handleSearch(payload);
+  }
 
   async function handleSearch(payload: AiSearchPayload) {
     const message: SearchMessage = {
@@ -217,6 +241,8 @@ export function AISearchPage({
       at: Date.now(),
     };
     setMessages((prev) => [...prev, message]);
+    setLastPayload(payload);
+    setFilterState(initialFilterState);
     setLoading(true);
     setResults(null);
 
@@ -238,33 +264,84 @@ export function AISearchPage({
       typologies: [],
       listingType,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuery, listingType]);
+
+  const availableBedrooms = useMemo(() => {
+    if (!results || results.length === 0) return [];
+    const set = new Set<number>();
+    for (const item of results) {
+      if (item.bedrooms >= 4) set.add(4);
+      else if (item.bedrooms >= 0) set.add(item.bedrooms);
+    }
+    return Array.from(set).sort((a, b) => a - b);
+  }, [results]);
 
   if (!hasSearched) {
     return (
-      <AIPropertiesSearcher
-        listingType={listingType}
-        onSearch={handleSearch}
-        initialQuery={initialQuery}
-      />
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] py-4 items-start">
-      <aside className="space-y-6 lg:pr-6 lg:border-r lg:border-rule">
+      <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
         <AIPropertiesSearcher
           listingType={listingType}
           onSearch={handleSearch}
-          compact
+          initialQuery={initialQuery}
         />
-        <SearchThread messages={messages} />
-      </aside>
+      </div>
+    );
+  }
 
-      <section className="lg:pl-6 pt-6 lg:pt-0">
-        <SearchResults items={results} loading={loading} locale={locale} />
-      </section>
-    </div>
+  const subheaderPayload: AiSearchPayload = lastPayload ?? {
+    query: "",
+    adults: 1,
+    children: 0,
+    typologies: [],
+    listingType,
+  };
+
+  const filteredResults =
+    results === null ? null : applyResultsFilter(results, filterState);
+
+  return (
+    <>
+      <SearchSubheader
+        current={subheaderPayload}
+        loading={loading}
+        onSearch={handleSubheaderSearch}
+      />
+
+      <div className="max-w-7xl mx-auto px-4 py-4 lg:px-6 lg:py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Mobile: collapsible filters above the feed */}
+        <div className="lg:hidden">
+          <ResultsFilterSidebar
+            state={filterState}
+            onChange={setFilterState}
+            total={results?.length ?? 0}
+            matched={filteredResults?.length ?? 0}
+            availableBedrooms={availableBedrooms}
+            collapsible
+          />
+        </div>
+
+        <aside className="hidden lg:block lg:col-span-3 lg:sticky lg:top-28">
+          <ResultsFilterSidebar
+            state={filterState}
+            onChange={setFilterState}
+            total={results?.length ?? 0}
+            matched={filteredResults?.length ?? 0}
+            availableBedrooms={availableBedrooms}
+          />
+        </aside>
+
+        <section className="lg:col-span-6">
+          <SearchResults
+            items={filteredResults}
+            loading={loading}
+            locale={locale}
+          />
+        </section>
+
+        <aside className="lg:col-span-3 lg:sticky lg:top-28">
+          <SearchThread messages={messages} />
+        </aside>
+      </div>
+    </>
   );
 }

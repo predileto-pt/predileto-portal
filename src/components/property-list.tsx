@@ -1,5 +1,5 @@
 import type { Property } from "@/lib/types";
-import { PropertyCard } from "./property-card";
+import { PropertyFeedCard } from "./property-feed-card";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import { Text } from "@/components/ui/text";
 
@@ -9,7 +9,6 @@ interface PropertyListProps {
   page: number;
   pageSize: number;
   locale: string;
-  selectedId?: string;
 }
 
 export async function PropertyList({
@@ -18,7 +17,6 @@ export async function PropertyList({
   page,
   pageSize,
   locale,
-  selectedId,
 }: PropertyListProps) {
   const dict = await getDictionary(locale as Locale);
 
@@ -33,18 +31,17 @@ export async function PropertyList({
 
   return (
     <div>
-      <div className="text-xs text-gray-400 mb-2">
+      <div className="text-xs text-gray-400 mb-3">
         {dict.properties.showing
           .replace("{from}", String(from))
           .replace("{to}", String(to))
           .replace("{total}", String(total))}
       </div>
-      <div className="space-y-2">
+      <div className="space-y-5">
         {properties.map((property) => (
-          <PropertyCard
+          <PropertyFeedCard
             key={property.id}
             property={property}
-            selected={property.id === selectedId}
             locale={locale}
           />
         ))}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Imagem indisponível">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f8f81"/>
+      <stop offset="100%" stop-color="#0e1c1b"/>
+    </linearGradient>
+    <pattern id="p1" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="rgba(255,255,255,0.08)"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#g1)"/>
+  <rect width="800" height="450" fill="url(#p1)"/>
+  <g fill="rgba(255,255,255,0.85)" font-family="system-ui, -apple-system, sans-serif">
+    <text x="400" y="220" text-anchor="middle" font-size="48" font-weight="700">Predileto</text>
+    <text x="400" y="260" text-anchor="middle" font-size="18" opacity="0.7">Imagem indisponível</text>
+  </g>
+</svg>
