@@ -64,6 +64,14 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
           { key: "gas", icon: "fuel", label: "Gasolina", value: "~60€/mês" },
           { key: "commute", icon: "commute", label: "Até o centro", value: "8 min a pé" },
         ],
+        characteristics: [
+          { key: "bath", icon: "bath", label: "WC", value: "2" },
+          { key: "balcony", icon: "balcony", label: "Varanda", value: "8m²" },
+          { key: "energy", icon: "energy", label: "Energia", value: "B" },
+          { key: "year", icon: "year", label: "Construção", value: "2018" },
+          { key: "elevator", icon: "elevator", label: "Elevador" },
+          { key: "view", icon: "view", label: "Vista cidade" },
+        ],
         comments: [
           {
             id: "c1",
@@ -96,6 +104,15 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
           { key: "gas", icon: "fuel", label: "Gasolina", value: "~110€/mês" },
           { key: "amenity", icon: "amenity", label: "Escolas a 1 km", value: "4" },
         ],
+        characteristics: [
+          { key: "bath", icon: "bath", label: "WC", value: "3" },
+          { key: "garage", icon: "garage", label: "Garagem", value: "2 lugares" },
+          { key: "pool", icon: "pool", label: "Piscina" },
+          { key: "energy", icon: "energy", label: "Energia", value: "A+" },
+          { key: "ac", icon: "ac", label: "Ar condicionado" },
+          { key: "year", icon: "year", label: "Construção", value: "2021" },
+          { key: "garden", icon: "garden", label: "Jardim", value: "120m²" },
+        ],
         comments: [
           {
             id: "c1",
@@ -125,6 +142,13 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
           { key: "cost", icon: "euro", label: "Custo de vida", value: "~950€/mês" },
           { key: "commute", icon: "commute", label: "Universidade", value: "6 min a pé" },
           { key: "noise", icon: "noise", label: "Ruído", value: "Moderado" },
+        ],
+        characteristics: [
+          { key: "bath", icon: "bath", label: "WC", value: "1" },
+          { key: "furnished", icon: "furnished", label: "Mobilado" },
+          { key: "energy", icon: "energy", label: "Energia", value: "C" },
+          { key: "floor", icon: "floor", label: "3º andar" },
+          { key: "year", icon: "year", label: "Construção", value: "1956" },
         ],
         comments: [],
       },
@@ -158,6 +182,14 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         { key: "commute", icon: "commute", label: "Metro", value: "3 min a pé" },
         { key: "noise", icon: "noise", label: "Ruído", value: "Alto" },
       ],
+      characteristics: [
+        { key: "bath", icon: "bath", label: "WC", value: "1" },
+        { key: "furnished", icon: "furnished", label: "Mobilado" },
+        { key: "energy", icon: "energy", label: "Energia", value: "B-" },
+        { key: "floor", icon: "floor", label: "4º andar" },
+        { key: "elevator", icon: "elevator", label: "Elevador" },
+        { key: "pet", icon: "pet", label: "Aceita animais" },
+      ],
       comments: [
         {
           id: "c1",
@@ -189,6 +221,13 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~1.250€/mês" },
         { key: "gas", icon: "fuel", label: "Gasolina", value: "~55€/mês" },
         { key: "amenity", icon: "amenity", label: "Cafés a 500 m", value: "12" },
+      ],
+      characteristics: [
+        { key: "bath", icon: "bath", label: "WC", value: "2" },
+        { key: "balcony", icon: "balcony", label: "Terraço", value: "20m²" },
+        { key: "energy", icon: "energy", label: "Energia", value: "B" },
+        { key: "year", icon: "year", label: "Recuperado", value: "2022" },
+        { key: "heating", icon: "heating", label: "Aquecimento central" },
       ],
       comments: [
         {
@@ -225,6 +264,13 @@ function getMockResults(listingType: AiSearchListingType): SearchResultItem[] {
         { key: "cost", icon: "euro", label: "Custo de vida", value: "~900€/mês" },
         { key: "commute", icon: "commute", label: "Universidade", value: "9 min de bike" },
         { key: "noise", icon: "noise", label: "Ruído", value: "Baixo" },
+      ],
+      characteristics: [
+        { key: "bath", icon: "bath", label: "WC", value: "1" },
+        { key: "furnished", icon: "furnished", label: "Mobilado" },
+        { key: "ac", icon: "ac", label: "Ar condicionado" },
+        { key: "energy", icon: "energy", label: "Energia", value: "B" },
+        { key: "floor", icon: "floor", label: "1º andar" },
       ],
       comments: [
         {
