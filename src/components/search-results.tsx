@@ -6,7 +6,10 @@ import { cn, formatPrice, formatArea } from "@/lib/utils";
 import { Small } from "@/components/ui/small";
 import { Title } from "@/components/ui/title";
 import { CommentsList, type CommentData } from "@/components/comments-list";
-import { PropertyFeedCardCarousel } from "@/components/property-feed-card-carousel";
+import {
+  ResultMediaCarousel,
+  type ResultMediaItem,
+} from "@/components/result-media-carousel";
 
 export interface AiAttribute {
   key: string;
@@ -22,7 +25,10 @@ export interface SearchResultItem {
   price: number;
   areaSqm: number;
   bedrooms: number;
+  /** @deprecated prefer `media`. Kept as a fallback for single-image entries. */
   imageUrl?: string;
+  /** Mixed image / video carousel items. Wins over `imageUrl` when present. */
+  media?: ResultMediaItem[];
   listingType: "buy" | "rent";
   aiAttributes?: AiAttribute[];
   comments?: CommentData[];
@@ -86,9 +92,12 @@ function ResultCard({
 
   const commentCount = item.comments?.length ?? 0;
   const detailHref = `/${locale}/imovel/${item.id}`;
-  const carouselImages = item.imageUrl
-    ? [{ url: item.imageUrl, alt: item.title }]
-    : [];
+  const media: ResultMediaItem[] =
+    item.media && item.media.length > 0
+      ? item.media
+      : item.imageUrl
+        ? [{ type: "image", url: item.imageUrl, alt: item.title }]
+        : [];
 
   return (
     <li className="group border border-rule bg-paper transition-shadow hover:shadow-md">
@@ -144,8 +153,8 @@ function ResultCard({
 
       {/* Hero carousel */}
       <Link href={detailHref} className="block mt-4" aria-label="Ver detalhe">
-        <PropertyFeedCardCarousel
-          images={carouselImages}
+        <ResultMediaCarousel
+          media={media}
           altFallback={item.title}
           prevLabel="Anterior"
           nextLabel="Seguinte"
