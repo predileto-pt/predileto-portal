@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { cn, formatPrice, formatArea } from "@/lib/utils";
 import { Small } from "@/components/ui/small";
 import { Title } from "@/components/ui/title";
 import { CommentsList, type CommentData } from "@/components/comments-list";
+import { PropertyFeedCardCarousel } from "@/components/property-feed-card-carousel";
 
 export interface AiAttribute {
   key: string;
@@ -80,66 +82,146 @@ function ResultCard({
 }) {
   const [interested, setInterested] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const [descExpanded, setDescExpanded] = useState(false);
 
   const commentCount = item.comments?.length ?? 0;
+  const detailHref = `/${locale}/imovel/${item.id}`;
+  const carouselImages = item.imageUrl
+    ? [{ url: item.imageUrl, alt: item.title }]
+    : [];
 
   return (
-    <li className="border border-rule bg-paper">
-      <div className="flex gap-3 h-[230px] overflow-hidden">
-        <div className="w-72 shrink-0 bg-paper-muted">
-          {item.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={item.imageUrl}
-              alt={item.title}
-              className="w-full h-full object-cover"
-            />
-          ) : null}
+    <li className="group border border-rule bg-paper transition-shadow hover:shadow-md">
+      {/* Header strip */}
+      <header className="flex items-center gap-3 px-4 py-3 border-b border-rule">
+        <div
+          className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-white"
+          style={{
+            background:
+              "linear-gradient(135deg, hsl(172 66% 50%), hsl(38 92% 50%))",
+          }}
+          aria-hidden
+        >
+          <SparkleIcon />
         </div>
-        <div className="flex-1 min-w-0 py-2 pr-3 flex flex-col overflow-hidden">
-          <div className="space-y-1 flex-1 min-h-0 overflow-hidden">
-            <p className="text-sm font-heading font-bold truncate landing-gradient-text">
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-bold truncate">Sugestão IA</p>
+          <p className="text-xs text-ink-muted truncate">
+            Predileto · {item.title}
+          </p>
+        </div>
+        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-primary/10 text-primary rounded">
+          {item.listingType === "buy" ? "Comprar" : "Arrendar"}
+        </span>
+      </header>
+
+      {/* Title + price */}
+      <div className="px-4 pt-4">
+        <div className="flex items-start justify-between gap-4">
+          <h3 className="font-heading text-base font-bold leading-snug">
+            <Link
+              href={detailHref}
+              className="hover:underline underline-offset-2 decoration-1"
+            >
               {item.title}
-            </p>
-            <p className="text-lg font-bold text-ink">
-              {formatPrice(item.price, locale)}
-              {item.listingType === "rent" && (
-                <span className="text-xs font-normal text-ink-muted">/mês</span>
-              )}
-            </p>
-            <p className="text-sm text-ink-subtle leading-body line-clamp-2 overflow-hidden">
-              {item.description}
-            </p>
-            <div className="flex gap-3 text-xs text-ink-subtle">
-              {item.bedrooms > 0 && <span>T{item.bedrooms}</span>}
-              {item.areaSqm > 0 && <span>{formatArea(item.areaSqm)}</span>}
-            </div>
-          </div>
+            </Link>
+          </h3>
+          <p className="shrink-0 font-heading text-lg font-extrabold tracking-heading text-primary">
+            {formatPrice(item.price, locale)}
+            {item.listingType === "rent" && (
+              <span className="text-xs font-normal text-ink-muted">/mês</span>
+            )}
+          </p>
+        </div>
 
-          {item.aiAttributes && item.aiAttributes.length > 0 && (
-            <AiAttributesSection attributes={item.aiAttributes} />
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-secondary">
+          {item.bedrooms > 0 && (
+            <span className="font-medium">T{item.bedrooms}</span>
           )}
-
-          <div className="flex gap-1 pt-2 mt-2 border-t border-rule -mr-3 shrink-0">
-            <CardActionButton
-              active={interested}
-              onClick={() => setInterested((v) => !v)}
-              icon={<HeartIcon filled={interested} />}
-              label="Interesse"
-            />
-            <CardActionButton
-              active={commentsOpen}
-              onClick={() => setCommentsOpen((v) => !v)}
-              icon={<ChatIcon />}
-              label={`Comentários (${commentCount})`}
-              ariaExpanded={commentsOpen}
-            />
-          </div>
+          {item.areaSqm > 0 && <span>{formatArea(item.areaSqm)}</span>}
         </div>
       </div>
 
+      {/* Hero carousel */}
+      <Link href={detailHref} className="block mt-4" aria-label="Ver detalhe">
+        <PropertyFeedCardCarousel
+          images={carouselImages}
+          altFallback={item.title}
+          prevLabel="Anterior"
+          nextLabel="Seguinte"
+        />
+      </Link>
+
+      {/* AI attributes */}
+      {item.aiAttributes && item.aiAttributes.length > 0 && (
+        <div className="px-4 pt-3">
+          <AiAttributesSection attributes={item.aiAttributes} />
+        </div>
+      )}
+
+      {/* Description */}
+      {item.description && (
+        <div className="px-4 pt-3">
+          <p
+            className={cn(
+              "text-sm text-ink leading-relaxed",
+              !descExpanded && "line-clamp-3",
+            )}
+          >
+            {item.description}
+          </p>
+          {item.description.length > 120 && (
+            <button
+              type="button"
+              onClick={() => setDescExpanded((v) => !v)}
+              className="mt-1 text-xs text-ink-muted hover:text-ink underline-offset-2 hover:underline cursor-pointer"
+            >
+              {descExpanded ? "Ler menos" : "Ler mais"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Action row */}
+      <footer className="flex items-center justify-between gap-2 px-4 py-3 mt-3 border-t border-rule">
+        <div className="flex gap-1">
+          <CardActionButton
+            active={interested}
+            onClick={() => setInterested((v) => !v)}
+            icon={<HeartIcon filled={interested} />}
+            label="Interesse"
+          />
+          <CardActionButton
+            active={commentsOpen}
+            onClick={() => setCommentsOpen((v) => !v)}
+            icon={<ChatIcon />}
+            label={`Comentários (${commentCount})`}
+            ariaExpanded={commentsOpen}
+          />
+        </div>
+        <Link
+          href={detailHref}
+          className="inline-flex items-center gap-1 text-sm font-bold font-heading text-primary hover:opacity-80 transition-opacity"
+        >
+          Ver detalhe
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-4 h-4"
+            aria-hidden
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </Link>
+      </footer>
+
       {commentsOpen && (
-        <div className="border-t border-rule bg-paper">
+        <div className="border-t border-rule bg-paper-muted">
           <CommentsList comments={item.comments ?? []} />
         </div>
       )}
@@ -289,16 +371,47 @@ function ChatIcon() {
 
 function SkeletonCard() {
   return (
-    <li className="border border-rule bg-paper overflow-hidden flex gap-3 h-[216px]">
-      <div className="w-72 shrink-0 bg-paper-muted animate-pulse" />
-      <div className="flex-1 py-2 pr-3 space-y-2">
-        <div className="h-3 w-3/4 bg-paper-muted animate-pulse rounded-sm" />
-        <div className="h-5 w-1/3 bg-paper-muted animate-pulse rounded-sm" />
-        <div className="flex gap-3 pt-1">
-          <div className="h-2.5 w-8 bg-paper-muted animate-pulse rounded-sm" />
-          <div className="h-2.5 w-12 bg-paper-muted animate-pulse rounded-sm" />
+    <li className="border border-rule bg-paper overflow-hidden">
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-rule">
+        <div className="w-9 h-9 rounded-full bg-paper-muted animate-pulse" />
+        <div className="flex-1 space-y-1.5">
+          <div className="h-3 w-1/3 bg-paper-muted animate-pulse rounded-sm" />
+          <div className="h-2.5 w-1/2 bg-paper-muted animate-pulse rounded-sm" />
         </div>
       </div>
+      <div className="px-4 pt-4 space-y-2">
+        <div className="h-4 w-3/4 bg-paper-muted animate-pulse rounded-sm" />
+        <div className="h-3 w-1/4 bg-paper-muted animate-pulse rounded-sm" />
+      </div>
+      <div className="mt-4 aspect-[4/3] sm:aspect-video bg-paper-muted animate-pulse" />
+      <div className="px-4 py-3 mt-3 border-t border-rule flex justify-between">
+        <div className="h-3 w-24 bg-paper-muted animate-pulse rounded-sm" />
+        <div className="h-3 w-16 bg-paper-muted animate-pulse rounded-sm" />
+      </div>
     </li>
+  );
+}
+
+function SparkleIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-4 h-4"
+      aria-hidden
+    >
+      <path d="M12 3v4" />
+      <path d="M12 17v4" />
+      <path d="M3 12h4" />
+      <path d="M17 12h4" />
+      <path d="M6 6l2.5 2.5" />
+      <path d="M15.5 15.5 18 18" />
+      <path d="M6 18l2.5-2.5" />
+      <path d="M15.5 8.5 18 6" />
+    </svg>
   );
 }

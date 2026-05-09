@@ -517,5 +517,29 @@
     "subheading": "Sem registo. Sem cartão. Sem promessas vazias.",
     "primary": "Começar a procurar",
     "secondary": "Como funciona"
+  },
+  "feedCard": {
+    "chipBuy": "Comprar",
+    "chipRent": "Arrendar",
+    "openDetail": "Ver detalhe",
+    "prev": "Anterior",
+    "next": "Seguinte",
+    "readMore": "Ler mais",
+    "readLess": "Ler menos",
+    "bathShort": "WC",
+    "unknownSource": "Imobiliária"
+  },
+  "searchHistory": {
+    "title": "Pesquisas recentes",
+    "headingBuy": "Comprar",
+    "headingRent": "Arrendar",
+    "clear": "Limpar",
+    "empty": "Ainda não tens pesquisas guardadas.",
+    "emptyList": "Sem pesquisas.",
+    "countOne": "1 resultado",
+    "countMany": "{count} resultados",
+    "in": "em",
+    "upTo": "até",
+    "entryFallback": "Pesquisa"
   }
 }
