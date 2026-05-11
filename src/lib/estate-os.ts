@@ -277,6 +277,7 @@ export function mapListedToSearchResult(
     bedrooms: listed.characteristics?.num_of_bedrooms ?? 0,
     media,
     listingType: listed.listing_type === "sale" ? "buy" : "rent",
+    propertyType: listed.typology,
   };
 }
 

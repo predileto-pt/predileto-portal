@@ -9,6 +9,7 @@ import {
   ResultMediaCarousel,
   type ResultMediaItem,
 } from "@/components/result-media-carousel";
+import { useRegisterActiveProperty } from "@/components/active-property-provider";
 
 export interface AiAttribute {
   key: string;
@@ -54,6 +55,8 @@ export interface SearchResultItem {
   /** Mixed image / video carousel items. Wins over `imageUrl` when present. */
   media?: ResultMediaItem[];
   listingType: "buy" | "rent";
+  /** Drives differentiated agent-chat greetings (land vs built, etc.). */
+  propertyType?: "house" | "apartment" | "land" | "ruin";
   aiAttributes?: AiAttribute[];
   /** Property facts and features (bathrooms, garage, energy rating, view, etc). */
   characteristics?: ResultCharacteristic[];
@@ -64,9 +67,15 @@ interface SearchResultsProps {
   items: SearchResultItem[] | null;
   loading?: boolean;
   locale: string;
+  onOpenAgent?: (item: SearchResultItem) => void;
 }
 
-export function SearchResults({ items, loading, locale }: SearchResultsProps) {
+export function SearchResults({
+  items,
+  loading,
+  locale,
+  onOpenAgent,
+}: SearchResultsProps) {
   return (
     <div className="space-y-3">
       {loading ? (
@@ -86,7 +95,12 @@ export function SearchResults({ items, loading, locale }: SearchResultsProps) {
       ) : (
         <ul className="space-y-3">
           {items.map((item) => (
-            <ResultCard key={item.id} item={item} locale={locale} />
+            <ResultCard
+              key={item.id}
+              item={item}
+              locale={locale}
+              onOpenAgent={onOpenAgent}
+            />
           ))}
         </ul>
       )}
@@ -97,13 +111,16 @@ export function SearchResults({ items, loading, locale }: SearchResultsProps) {
 function ResultCard({
   item,
   locale,
+  onOpenAgent,
 }: {
   item: SearchResultItem;
   locale: string;
+  onOpenAgent?: (item: SearchResultItem) => void;
 }) {
   const [interested, setInterested] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
+  const registerRef = useRegisterActiveProperty(item.id);
 
   const commentCount = item.comments?.length ?? 0;
   const detailHref = `/${locale}/imovel/${item.id}`;
@@ -115,7 +132,11 @@ function ResultCard({
         : [];
 
   return (
-    <li className="group border border-rule bg-paper transition-shadow hover:shadow-md">
+    <li
+      ref={registerRef}
+      data-property-id={item.id}
+      className="group border border-rule bg-paper transition-shadow hover:shadow-md"
+    >
       {/* Header strip */}
       <header className="flex items-center gap-3 px-4 py-3 border-b border-rule">
         <div
@@ -215,7 +236,7 @@ function ResultCard({
 
       {/* Action row */}
       <footer className="flex items-center justify-between gap-2 px-4 py-3 mt-3 border-t border-rule">
-        <div className="flex gap-1">
+        <div className="flex flex-wrap gap-1">
           <CardActionButton
             active={interested}
             onClick={() => setInterested((v) => !v)}
@@ -229,6 +250,13 @@ function ResultCard({
             label={`Comentários (${commentCount})`}
             ariaExpanded={commentsOpen}
           />
+          {onOpenAgent && (
+            <CardActionButton
+              onClick={() => onOpenAgent(item)}
+              icon={<AgentIcon />}
+              label="Falar com agente"
+            />
+          )}
         </div>
         <Link
           href={detailHref}
@@ -396,6 +424,25 @@ function ChatIcon() {
       aria-hidden
     >
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function AgentIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-4 h-4"
+      aria-hidden
+    >
+      <circle cx="12" cy="7" r="4" />
+      <path d="M5 21a7 7 0 0 1 14 0" />
+      <path d="M19 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" />
     </svg>
   );
 }
