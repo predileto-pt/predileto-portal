@@ -30,6 +30,11 @@ import type {
 } from "@/lib/estate-os";
 import { mapListedToSearchResult } from "@/lib/estate-os";
 import type { Typology } from "@/lib/search-rules";
+import {
+  ActivePropertyProvider,
+  useActivePropertyId,
+} from "@/components/active-property-provider";
+import { PropertyChat } from "@/components/property-chat";
 
 interface AISearchPageProps {
   listingType: AiSearchListingType;
@@ -92,7 +97,16 @@ export function AISearchPage({
   const [lastPayload, setLastPayload] = useState<AiSearchPayload | null>(null);
   const [filterState, setFilterState] =
     useState<ResultsFilterState>(initialFilterState);
+  const [chatOpen, setChatOpen] = useState(true);
   const bootstrappedRef = useRef(false);
+
+  function openAgentForCard(item: SearchResultItem) {
+    const node = document.querySelector(
+      `[data-property-id="${CSS.escape(item.id)}"]`,
+    );
+    node?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setChatOpen(true);
+  }
 
   const hasSearched = messages.length > 0;
 
@@ -109,6 +123,7 @@ export function AISearchPage({
     setLoading(true);
     setResults(null);
     setError(null);
+    setChatOpen(true);
 
     try {
       const res = await fetch(buildSearchUrl(payload), { method: "GET" });
@@ -210,14 +225,14 @@ export function AISearchPage({
     results === null ? null : applyResultsFilter(results, filterState);
 
   return (
-    <>
+    <ActivePropertyProvider>
       <SearchSubheader
         current={subheaderPayload}
         loading={loading}
         onSearch={handleSubheaderSearch}
       />
 
-      <div className="max-w-7xl mx-auto px-4 py-4 lg:px-6 lg:py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="mx-auto px-2 lg:px-3 py-4 lg:py-6 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Mobile: collapsible filters above the feed */}
         <div className="lg:hidden">
           <ResultsFilterSidebar
@@ -230,7 +245,7 @@ export function AISearchPage({
           />
         </div>
 
-        <aside className="hidden lg:block lg:col-span-3 lg:sticky lg:top-28">
+        <aside className="hidden lg:block lg:col-span-2 lg:sticky lg:top-28">
           <ResultsFilterSidebar
             state={filterState}
             onChange={setFilterState}
@@ -255,14 +270,54 @@ export function AISearchPage({
             items={filteredResults}
             loading={loading}
             locale={locale}
+            onOpenAgent={openAgentForCard}
           />
         </section>
 
-        <aside className="lg:col-span-3 lg:sticky lg:top-28">
+        <aside className="lg:col-span-4 lg:sticky lg:top-28 space-y-4">
+          <ChatRail
+            results={results ?? []}
+            locale={locale}
+            open={chatOpen}
+            onClose={() => setChatOpen(false)}
+          />
           <SearchThread messages={messages} />
         </aside>
       </div>
-    </>
+    </ActivePropertyProvider>
+  );
+}
+
+/**
+ * Renders the property chat panel for the currently-active result card.
+ * Sits inside the right rail above the search history. `forcedId` lets the
+ * caller pin the chat to a specific property (used by the "Falar com agente"
+ * card action) until the user scrolls to a different active id.
+ */
+function ChatRail({
+  results,
+  locale,
+  open,
+  onClose,
+}: {
+  results: SearchResultItem[];
+  locale: string;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const activeId = useActivePropertyId();
+  const property = useMemo(
+    () => results.find((r) => r.id === activeId) ?? null,
+    [results, activeId],
+  );
+  if (!property) return null;
+  return (
+    <PropertyChat
+      property={property}
+      locale={locale}
+      open={open}
+      onClose={onClose}
+    />
   );
 }
 
