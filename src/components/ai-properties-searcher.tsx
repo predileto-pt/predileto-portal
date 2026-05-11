@@ -48,8 +48,6 @@ export function AIPropertiesSearcher({
   const [location, setLocation] = useState<LocationSelection | null>(
     initialLocation,
   );
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
   const [typology, setTypology] = useState<Typology | undefined>(undefined);
 
   const typologyOptions = availableTypologies({ listingType });
@@ -69,8 +67,6 @@ export function AIPropertiesSearcher({
       query: trimmedQuery,
       listingType,
       location,
-      minPrice: minPrice ? Number(minPrice) : undefined,
-      maxPrice: maxPrice ? Number(maxPrice) : undefined,
       typology:
         typology && typologyOptions.includes(typology) ? typology : undefined,
     });
@@ -128,7 +124,7 @@ export function AIPropertiesSearcher({
           placeholder={placeholderByListingType[listingType]}
           rows={1}
           aria-label="Descreva o que procura"
-          className="w-full resize-none bg-transparent outline-none leading-body placeholder:text-ink-muted overflow-auto py-1.5 px-2 text-sm max-h-40"
+          className="w-full resize-none bg-transparent outline-none leading-body placeholder:text-ink-muted overflow-auto py-1.5 px-2 max-h-40"
           style={{ fieldSizing: "content" } as React.CSSProperties}
         />
 
@@ -168,27 +164,6 @@ export function AIPropertiesSearcher({
               onChange={setLocation}
               variant="inline"
             />
-          </FilterGroup>
-
-          <Divider />
-
-          {/* Preço */}
-          <FilterGroup label="Preço" icon={<EuroIcon />} className="sm:px-5">
-            <div className="flex h-8 items-center rounded-md border border-rule bg-paper overflow-hidden focus-within:border-ink-subtle transition-colors">
-              <PriceInput
-                aria-label="Preço mínimo"
-                placeholder="Mín"
-                value={minPrice}
-                onChange={setMinPrice}
-              />
-              <span aria-hidden className="self-center w-px h-4 bg-rule" />
-              <PriceInput
-                aria-label="Preço máximo"
-                placeholder="Máx"
-                value={maxPrice}
-                onChange={setMaxPrice}
-              />
-            </div>
           </FilterGroup>
 
           <Divider />
@@ -260,51 +235,6 @@ function Divider() {
       aria-hidden
       className="hidden sm:block self-stretch w-px bg-rule"
     />
-  );
-}
-
-function PriceInput({
-  value,
-  onChange,
-  placeholder,
-  "aria-label": ariaLabel,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  "aria-label": string;
-}) {
-  return (
-    <input
-      type="number"
-      inputMode="numeric"
-      min={0}
-      step={1000}
-      placeholder={placeholder}
-      aria-label={ariaLabel}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="h-full w-20 px-2 text-xs bg-transparent outline-none placeholder:text-ink-muted [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-    />
-  );
-}
-
-function EuroIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-3.5 h-3.5 shrink-0"
-      aria-hidden
-    >
-      <path d="M4 10h12" />
-      <path d="M4 14h9" />
-      <path d="M19 6a7.5 7.5 0 1 0 0 12" />
-    </svg>
   );
 }
 

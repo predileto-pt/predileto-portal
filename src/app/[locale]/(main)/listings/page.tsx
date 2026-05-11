@@ -9,14 +9,14 @@ export default async function ListingsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const result = await fetchPublicProperties({ limit: 20, offset: 0 });
+  const result = await fetchPublicProperties({ limit: 20 });
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4 space-y-4">
       <header className="flex items-end justify-between">
         <h1 className="text-lg font-bold">Listings</h1>
         <span className="text-xs text-gray-400">
-          {result.items.length} of {result.total}
+          {result.items.length} listing{result.items.length === 1 ? "" : "s"}
         </span>
       </header>
 
@@ -49,6 +49,10 @@ function ListingCard({
   const priceAmount = price ? Number(price.amount) : 0;
   const bedrooms = property.characteristics?.num_of_bedrooms ?? null;
   const area = property.characteristics?.area_in_m2 ?? null;
+  const locationParts = [property.parish, property.municipality, property.district]
+    .filter((v): v is string => Boolean(v))
+    .join(", ");
+  const title = property.address || locationParts || "Imóvel";
 
   return (
     <li className="border border-gray-200 bg-white overflow-hidden">
@@ -57,14 +61,14 @@ function ListingCard({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={cover.download_url}
-            alt={cover.filename}
+            alt={cover.filename ?? title}
             className="w-full h-full object-cover"
           />
         ) : null}
       </div>
       <div className="p-3 space-y-1">
         <div className="text-sm font-semibold text-blue-600 truncate font-heading">
-          {property.address}
+          {title}
         </div>
         <div className="text-lg font-extrabold">
           {priceAmount > 0 ? formatPrice(priceAmount, locale) : "-"}

@@ -31,17 +31,19 @@ export type ListedTypology = "house" | "apartment" | "land" | "ruin";
 
 export interface ListedPropertyImage {
   id: string;
-  filename: string;
-  content_type: string;
-  size_bytes: number;
   display_order: number;
   download_url: string;
+  /** Trimmed by backend (ADR-016 / projection collapse) — kept optional so legacy mocks still typecheck. */
+  filename?: string;
+  content_type?: string;
+  size_bytes?: number;
 }
 
 export interface ListedPropertyPrice {
-  id: string;
   amount: string;
   listing_type: ListedListingType;
+  /** Trimmed by backend projection collapse — kept optional for legacy mocks. */
+  id?: string;
 }
 
 export interface ListedPropertyCharacteristics {
@@ -60,29 +62,39 @@ export interface ListedPropertyCharacteristics {
 export interface ListedProperty {
   id: string;
   organization_id: string;
-  address: string;
+  title: string;
   listing_type: ListedListingType;
   typology: ListedTypology;
   description: string | null;
   characteristics: ListedPropertyCharacteristics | null;
+  parish?: string | null;
+  municipality?: string | null;
+  district?: string | null;
+  country?: string;
   latitude: number | null;
   longitude: number | null;
   created_at: string;
   updated_at: string;
   prices: ListedPropertyPrice[];
   images: ListedPropertyImage[];
+  /** Removed from backend response (privacy fix). Legacy mocks still set it. */
+  address?: string;
 }
 
+/**
+ * Cursor-paginated envelope returned by `GET /api/v1/listings/properties`
+ * (ADR-016). `next_cursor` is opaque; pass it back as `?cursor=` for the
+ * next page. `null` means there are no more pages.
+ */
 export interface PaginatedListings {
   items: ListedProperty[];
-  total: number;
+  next_cursor: string | null;
   limit: number;
-  offset: number;
 }
 
 export interface FetchPublicPropertiesOptions {
   limit?: number;
-  offset?: number;
+  cursor?: string;
   listingType?: ListedListingType;
   typology?: ListedTypology;
   minPrice?: number;
@@ -144,6 +156,33 @@ export class EstateOsValidationError extends Error {
   }
 }
 
+/**
+ * Thrown when estate-os returns 400 with a cursor-related `detail`
+ * (ADR-016 §9). All cursor errors share one recovery action on the FE:
+ * drop the cursor and refetch from the head page.
+ */
+export type CursorErrorCode =
+  | "cursor_unsupported_version"
+  | "cursor_invalid"
+  | "cursor_kind_mismatch"
+  | "cursor_filter_mismatch";
+
+export class EstateOsCursorError extends Error {
+  public readonly code: CursorErrorCode;
+  constructor(code: CursorErrorCode) {
+    super(code);
+    this.name = "EstateOsCursorError";
+    this.code = code;
+  }
+}
+
+const CURSOR_ERROR_CODES = new Set<string>([
+  "cursor_unsupported_version",
+  "cursor_invalid",
+  "cursor_kind_mismatch",
+  "cursor_filter_mismatch",
+]);
+
 export async function fetchListedPropertyById(
   id: string,
 ): Promise<ListedProperty | null> {
@@ -160,12 +199,25 @@ export async function fetchListedPropertyById(
   return res.json();
 }
 
+async function parseCursorError(res: Response): Promise<EstateOsCursorError | null> {
+  if (res.status !== 400) return null;
+  try {
+    const body = (await res.json()) as { detail?: unknown };
+    if (typeof body.detail === "string" && CURSOR_ERROR_CODES.has(body.detail)) {
+      return new EstateOsCursorError(body.detail as CursorErrorCode);
+    }
+  } catch {
+    // not JSON; fall through
+  }
+  return null;
+}
+
 export async function fetchPublicProperties(
   options: FetchPublicPropertiesOptions = {},
 ): Promise<PaginatedListings> {
   const params = new URLSearchParams();
   if (options.limit !== undefined) params.set("limit", String(options.limit));
-  if (options.offset !== undefined) params.set("offset", String(options.offset));
+  if (options.cursor) params.set("cursor", options.cursor);
   if (options.listingType) params.set("listing_type", options.listingType);
   if (options.typology) params.set("typology", options.typology);
   if (options.minPrice !== undefined)
@@ -178,6 +230,9 @@ export async function fetchPublicProperties(
   const url = `${ESTATE_OS_BASE_URL}/api/v1/listings/properties${qs ? `?${qs}` : ""}`;
 
   const res = await fetch(url, { next: { revalidate: 60 } });
+
+  const cursorErr = await parseCursorError(res.clone());
+  if (cursorErr) throw cursorErr;
 
   if (!res.ok) {
     throw new Error(`estate-os error: ${res.status}`);
@@ -207,12 +262,15 @@ export async function fetchSearchProperties(
   if (options.maxPrice !== undefined)
     params.set("max_price", String(options.maxPrice));
   if (options.limit !== undefined) params.set("limit", String(options.limit));
-  if (options.offset !== undefined) params.set("offset", String(options.offset));
+  if (options.cursor) params.set("cursor", options.cursor);
 
   const qs = params.toString();
   const url = `${ESTATE_OS_BASE_URL}/api/v1/listings/properties${qs ? `?${qs}` : ""}`;
 
   const res = await fetch(url, { next: { revalidate: 0 } });
+
+  const cursorErr = await parseCursorError(res.clone());
+  if (cursorErr) throw cursorErr;
 
   if (res.status === 422) {
     let code = "validation_error";
@@ -255,6 +313,15 @@ export async function fetchLocationTree(): Promise<LocationTree> {
  * Source fields are mostly nullable; defaults preserve the strict shape the
  * card consumer expects.
  */
+function deriveTitle(listed: ListedProperty): string {
+  if (listed.title) return listed.title;
+  if (listed.address) return listed.address;
+  const parts = [listed.parish, listed.municipality, listed.district].filter(
+    (v): v is string => Boolean(v),
+  );
+  return parts.length > 0 ? parts.join(", ") : "Imóvel";
+}
+
 export function mapListedToSearchResult(
   listed: ListedProperty,
 ): SearchResultItem {
@@ -262,17 +329,20 @@ export function mapListedToSearchResult(
     ? Number(listed.prices[0].amount)
     : 0;
 
+  const title = deriveTitle(listed);
+
   const media: ResultMediaItem[] = listed.images.map((img) => ({
     type: "image",
     url: img.download_url,
-    alt: img.filename,
+    alt: img.filename ?? title,
   }));
 
   return {
     id: listed.id,
-    title: listed.address,
+    title,
     description: listed.description ?? "",
     price: priceAmount,
+    country: listed.country,
     areaSqm: listed.characteristics?.area_in_m2 ?? 0,
     bedrooms: listed.characteristics?.num_of_bedrooms ?? 0,
     media,
@@ -304,9 +374,11 @@ export function mapListedToProperty(listed: ListedProperty): Property {
       ? listed.typology
       : "house";
 
+  const title = deriveTitle(listed);
+
   return {
     id: listed.id,
-    title: listed.address,
+    title,
     slug: listed.id,
     shortDescription: "",
     fullDescription: listed.description ?? "",
@@ -315,11 +387,11 @@ export function mapListedToProperty(listed: ListedProperty): Property {
     price: priceAmount,
     featured: false,
     address: {
-      fullAddress: listed.address,
-      municipality: "",
-      district: "",
+      fullAddress: title,
+      municipality: listed.municipality ?? "",
+      district: listed.district ?? "",
       postalCode: "",
-      country: "PT",
+      country: listed.country ?? "PT",
       coordinates:
         listed.latitude !== null && listed.longitude !== null
           ? { lat: listed.latitude, lng: listed.longitude }
@@ -337,7 +409,7 @@ export function mapListedToProperty(listed: ListedProperty): Property {
     amenities: [],
     images: listed.images.map((img) => ({
       url: img.download_url,
-      alt: img.filename,
+      alt: img.filename ?? title,
     })),
     agent: { name: "", email: "", phone: "", photo: null },
     available: true,

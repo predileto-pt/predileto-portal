@@ -9,7 +9,11 @@ jest.mock("@/lib/estate-os", () => {
   };
 });
 
-import { fetchSearchProperties, EstateOsValidationError } from "@/lib/estate-os";
+import {
+  EstateOsCursorError,
+  EstateOsValidationError,
+  fetchSearchProperties,
+} from "@/lib/estate-os";
 import { GET } from "../route";
 
 const mockedFetch = fetchSearchProperties as jest.MockedFunction<
@@ -18,9 +22,8 @@ const mockedFetch = fetchSearchProperties as jest.MockedFunction<
 
 const emptyPayload: PaginatedListings = {
   items: [],
-  total: 0,
-  limit: 50,
-  offset: 0,
+  next_cursor: null,
+  limit: 20,
 };
 
 describe("GET /api/listings/search", () => {
@@ -28,11 +31,11 @@ describe("GET /api/listings/search", () => {
     jest.clearAllMocks();
   });
 
-  it("forwards q, location, and filter params to the upstream helper", async () => {
+  it("forwards q, location, filter, and cursor params to the upstream helper", async () => {
     mockedFetch.mockResolvedValue(emptyPayload);
 
     const url =
-      "http://localhost:3000/api/listings/search?q=apartamento%20com%20vista&district=Lisboa&listing_type=sale&typology=apartment&min_price=200000&max_price=400000&limit=20&offset=0";
+      "http://localhost:3000/api/listings/search?q=apartamento%20com%20vista&district=Lisboa&listing_type=sale&typology=apartment&min_price=200000&max_price=400000&limit=20&cursor=eyJ2IjoxfQ";
     const res = await GET(new NextRequest(url));
 
     expect(res.status).toBe(200);
@@ -44,7 +47,7 @@ describe("GET /api/listings/search", () => {
       minPrice: 200000,
       maxPrice: 400000,
       limit: 20,
-      offset: 0,
+      cursor: "eyJ2IjoxfQ",
     });
   });
 
@@ -72,6 +75,20 @@ describe("GET /api/listings/search", () => {
     expect(res.status).toBe(422);
     const body = await res.json();
     expect(body.error.code).toBe("location_required_for_search");
+  });
+
+  it("maps upstream 400 cursor errors to a 400 with the code", async () => {
+    mockedFetch.mockRejectedValue(
+      new EstateOsCursorError("cursor_filter_mismatch"),
+    );
+
+    const url =
+      "http://localhost:3000/api/listings/search?district=Lisboa&cursor=stale";
+    const res = await GET(new NextRequest(url));
+
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error.code).toBe("cursor_filter_mismatch");
   });
 
   it("maps upstream 5xx / network errors to 502", async () => {

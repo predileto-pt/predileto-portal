@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { cn, formatPrice, formatArea } from "@/lib/utils";
+import { cn, formatArea, formatPriceParts } from "@/lib/utils";
 import { Small } from "@/components/ui/small";
 import { CommentsList, type CommentData } from "@/components/comments-list";
 import {
@@ -48,6 +48,8 @@ export interface SearchResultItem {
   title: string;
   description: string;
   price: number;
+  /** ISO country name (e.g. "Portugal") — drives currency formatting. */
+  country?: string;
   areaSqm: number;
   bedrooms: number;
   /** @deprecated prefer `media`. Kept as a fallback for single-image entries. */
@@ -172,22 +174,34 @@ function ResultCard({
 
       {/* Title + price */}
       <div className="px-4 pt-4">
-        <div className="flex items-start justify-between gap-4">
-          <h3 className="font-heading text-base font-bold leading-snug">
-            <Link
-              href={detailHref}
-              className="hover:underline underline-offset-2 decoration-1"
-            >
-              {item.title}
-            </Link>
-          </h3>
-          <p className="shrink-0 font-heading text-lg font-extrabold tracking-heading text-primary">
-            {formatPrice(item.price, locale)}
-            {item.listingType === "rent" && (
-              <span className="text-xs font-normal text-ink-muted">/mês</span>
-            )}
-          </p>
-        </div>
+        <h3 className="font-heading text-base font-medium leading-snug">
+          <Link
+            href={detailHref}
+            className="text-blue-600 hover:underline underline-offset-2 decoration-1"
+          >
+            {item.title}
+          </Link>
+        </h3>
+        <p className="mt-1.5 font-heading text-3xl font-extrabold tracking-heading text-ink">
+          {(() => {
+            const { value, currency } = formatPriceParts(
+              item.price,
+              locale,
+              item.country,
+            );
+            return (
+              <>
+                {value}
+                <span className="ml-1 text-xl font-normal text-ink">
+                  {currency}
+                </span>
+              </>
+            );
+          })()}
+          {item.listingType === "rent" && (
+            <span className="text-sm font-normal text-ink-muted">/mês</span>
+          )}
+        </p>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-secondary">
           {item.bedrooms > 0 && (
@@ -209,7 +223,7 @@ function ResultCard({
         <div className="px-4 pt-3">
           <p
             className={cn(
-              "text-sm text-ink leading-relaxed",
+              "text-base text-ink leading-relaxed",
               !descExpanded && "line-clamp-3",
             )}
           >

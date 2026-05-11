@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   fetchSearchProperties,
+  EstateOsCursorError,
   EstateOsValidationError,
   type FetchSearchPropertiesOptions,
   type ListedListingType,
@@ -55,13 +56,19 @@ export async function GET(request: NextRequest) {
   if (maxPrice !== undefined) options.maxPrice = maxPrice;
   const limit = numericParam(searchParams.get("limit"));
   if (limit !== undefined) options.limit = limit;
-  const offset = numericParam(searchParams.get("offset"));
-  if (offset !== undefined) options.offset = offset;
+  const cursor = searchParams.get("cursor");
+  if (cursor) options.cursor = cursor;
 
   try {
     const payload = await fetchSearchProperties(options);
     return NextResponse.json(payload);
   } catch (err) {
+    if (err instanceof EstateOsCursorError) {
+      return NextResponse.json(
+        { error: { code: err.code } },
+        { status: 400 },
+      );
+    }
     if (err instanceof EstateOsValidationError) {
       return NextResponse.json(
         { error: { code: err.code, message: err.message } },

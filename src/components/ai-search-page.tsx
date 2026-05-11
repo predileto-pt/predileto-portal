@@ -66,7 +66,7 @@ function locationParam(
   return { key: location.level, value: location.name };
 }
 
-function buildSearchUrl(payload: AiSearchPayload): string {
+function buildSearchUrl(payload: AiSearchPayload, cursor?: string): string {
   const params = new URLSearchParams();
   const trimmed = payload.query.trim();
   if (trimmed) params.set("q", trimmed);
@@ -80,6 +80,7 @@ function buildSearchUrl(payload: AiSearchPayload): string {
     params.set("min_price", String(payload.minPrice));
   if (payload.maxPrice !== undefined)
     params.set("max_price", String(payload.maxPrice));
+  if (cursor) params.set("cursor", cursor);
   return `/api/listings/search?${params.toString()}`;
 }
 
@@ -93,12 +94,15 @@ export function AISearchPage({
   const [messages, setMessages] = useState<SearchMessage[]>([]);
   const [results, setResults] = useState<SearchResultItem[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [error, setError] = useState<SearchError | null>(null);
   const [lastPayload, setLastPayload] = useState<AiSearchPayload | null>(null);
   const [filterState, setFilterState] =
     useState<ResultsFilterState>(initialFilterState);
   const [chatOpen, setChatOpen] = useState(true);
   const bootstrappedRef = useRef(false);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   function openAgentForCard(item: SearchResultItem) {
     const node = document.querySelector(
@@ -122,6 +126,7 @@ export function AISearchPage({
     setFilterState(initialFilterState);
     setLoading(true);
     setResults(null);
+    setNextCursor(null);
     setError(null);
     setChatOpen(true);
 
@@ -151,6 +156,7 @@ export function AISearchPage({
       }
       const payload2 = (await res.json()) as PaginatedListings;
       setResults(payload2.items.map(mapListedToSearchResult));
+      setNextCursor(payload2.next_cursor);
     } catch (err) {
       setError({
         kind: "server",
@@ -164,6 +170,51 @@ export function AISearchPage({
       setLoading(false);
     }
   }, []);
+
+  const loadMore = useCallback(async () => {
+    if (!lastPayload || !nextCursor || loadingMore || loading) return;
+    setLoadingMore(true);
+    try {
+      const res = await fetch(buildSearchUrl(lastPayload, nextCursor), {
+        method: "GET",
+      });
+      // ADR-016 §9: any 400 from a cursor request means the cursor went
+      // stale (schema bump / filter drift). Recovery is to drop the
+      // cursor and stop appending — the user keeps the items they have.
+      if (res.status === 400) {
+        setNextCursor(null);
+        return;
+      }
+      if (!res.ok) return;
+      const page = (await res.json()) as PaginatedListings;
+      setResults((prev) => [
+        ...(prev ?? []),
+        ...page.items.map(mapListedToSearchResult),
+      ]);
+      setNextCursor(page.next_cursor);
+    } catch {
+      // Swallow — user scrolls again, we retry.
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [lastPayload, nextCursor, loadingMore, loading]);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || !nextCursor) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            void loadMore();
+          }
+        }
+      },
+      { rootMargin: "400px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [nextCursor, loadMore]);
 
   function handleSubheaderSearch(payload: AiSearchPayload) {
     if (payload.listingType !== listingType) {
@@ -272,6 +323,21 @@ export function AISearchPage({
             locale={locale}
             onOpenAgent={openAgentForCard}
           />
+          {nextCursor && (
+            <div
+              ref={sentinelRef}
+              aria-hidden
+              className="h-10"
+            />
+          )}
+          {loadingMore && (
+            <p
+              role="status"
+              className="text-center text-xs text-ink-muted py-3"
+            >
+              A carregar mais resultados…
+            </p>
+          )}
         </section>
 
         <aside className="lg:col-span-4 lg:sticky lg:top-28 space-y-4">

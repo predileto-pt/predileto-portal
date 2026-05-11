@@ -11,13 +11,57 @@ const LOCALE_MAP: Record<string, string> = {
   en: "en-GB",
 };
 
-export function formatPrice(amount: number, locale: string = "pt"): string {
-  return new Intl.NumberFormat(LOCALE_MAP[locale] || "pt-PT", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+const COUNTRY_FORMAT: Record<string, { locale: string; currency: string }> = {
+  Portugal: { locale: "pt-PT", currency: "EUR" },
+  PT: { locale: "pt-PT", currency: "EUR" },
+};
+
+function priceFormatter(
+  locale: string,
+  country?: string | null,
+): { formatter: Intl.NumberFormat; currency: string } {
+  const config =
+    (country && COUNTRY_FORMAT[country]) || {
+      locale: LOCALE_MAP[locale] || "pt-PT",
+      currency: "EUR",
+    };
+  return {
+    formatter: new Intl.NumberFormat(config.locale, {
+      style: "currency",
+      currency: config.currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }),
+    currency: config.currency,
+  };
+}
+
+export function formatPrice(
+  amount: number,
+  locale: string = "pt",
+  country?: string | null,
+): string {
+  return priceFormatter(locale, country).formatter.format(amount);
+}
+
+/**
+ * Same locale/country logic as `formatPrice`, but splits the currency
+ * symbol out from the numeric value so the caller can style them
+ * separately (e.g. a smaller, lighter € next to a bold number).
+ */
+export function formatPriceParts(
+  amount: number,
+  locale: string = "pt",
+  country?: string | null,
+): { value: string; currency: string } {
+  const parts = priceFormatter(locale, country).formatter.formatToParts(amount);
+  let currency = "";
+  let value = "";
+  for (const p of parts) {
+    if (p.type === "currency") currency = p.value;
+    else value += p.value;
+  }
+  return { value: value.trim(), currency };
 }
 
 export function formatDate(dateString: string, locale: string = "pt"): string {

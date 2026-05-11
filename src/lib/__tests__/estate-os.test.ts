@@ -1,5 +1,6 @@
 import type { ListedProperty } from "@/lib/estate-os";
 import {
+  EstateOsCursorError,
   EstateOsValidationError,
   fetchSearchProperties,
   mapListedToSearchResult,
@@ -19,10 +20,10 @@ describe("fetchSearchProperties URL building", () => {
     global.fetch = originalFetch;
   });
 
+  const cursorPage = { items: [], next_cursor: null, limit: 20 };
+
   it("omits q and unset filters", async () => {
-    const fetchMock = jest.fn().mockResolvedValue(
-      jsonResponse({ items: [], total: 0, limit: 50, offset: 0 }),
-    );
+    const fetchMock = jest.fn().mockResolvedValue(jsonResponse(cursorPage));
     global.fetch = fetchMock as unknown as typeof global.fetch;
 
     await fetchSearchProperties({});
@@ -32,10 +33,8 @@ describe("fetchSearchProperties URL building", () => {
     expect(url).toMatch(/\/api\/v1\/listings\/properties$/);
   });
 
-  it("encodes q + parish + price + listing_type", async () => {
-    const fetchMock = jest.fn().mockResolvedValue(
-      jsonResponse({ items: [], total: 0, limit: 50, offset: 0 }),
-    );
+  it("encodes q + parish + price + listing_type + cursor", async () => {
+    const fetchMock = jest.fn().mockResolvedValue(jsonResponse(cursorPage));
     global.fetch = fetchMock as unknown as typeof global.fetch;
 
     await fetchSearchProperties({
@@ -46,7 +45,7 @@ describe("fetchSearchProperties URL building", () => {
       minPrice: 300000,
       maxPrice: 600000,
       limit: 20,
-      offset: 0,
+      cursor: "eyJ2IjoxfQ",
     });
 
     const [url] = fetchMock.mock.calls[0];
@@ -57,7 +56,21 @@ describe("fetchSearchProperties URL building", () => {
     expect(url).toContain("min_price=300000");
     expect(url).toContain("max_price=600000");
     expect(url).toContain("limit=20");
-    expect(url).toContain("offset=0");
+    expect(url).toContain("cursor=eyJ2IjoxfQ");
+    expect(url).not.toContain("offset=");
+  });
+
+  it("throws EstateOsCursorError on 400 with a cursor detail code", async () => {
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue(
+        jsonResponse({ detail: "cursor_filter_mismatch" }, 400),
+      );
+    global.fetch = fetchMock as unknown as typeof global.fetch;
+
+    await expect(
+      fetchSearchProperties({ q: "x", district: "Lisboa", cursor: "stale" }),
+    ).rejects.toBeInstanceOf(EstateOsCursorError);
   });
 
   it("throws EstateOsValidationError on 422 with code", async () => {
@@ -95,6 +108,7 @@ describe("mapListedToSearchResult", () => {
   const base: ListedProperty = {
     id: "p-1",
     organization_id: "org-1",
+    title: "Apartamento T2 em Lisboa",
     address: "Rua A, Lisboa",
     listing_type: "sale",
     typology: "apartment",
@@ -131,7 +145,7 @@ describe("mapListedToSearchResult", () => {
   it("maps the happy-path fields", () => {
     const result = mapListedToSearchResult(base);
     expect(result.id).toBe("p-1");
-    expect(result.title).toBe("Rua A, Lisboa");
+    expect(result.title).toBe("Apartamento T2 em Lisboa");
     expect(result.description).toBe("Lovely.");
     expect(result.price).toBe(300000);
     expect(result.areaSqm).toBe(80);
@@ -175,5 +189,26 @@ describe("mapListedToSearchResult", () => {
       listing_type: "purchase",
     });
     expect(result.listingType).toBe("rent");
+  });
+
+  it("derives title from structured location fields when title and address are absent", () => {
+    const result = mapListedToSearchResult({
+      ...base,
+      title: "",
+      address: undefined,
+      parish: "Cascais",
+      municipality: "Cascais",
+      district: "Lisboa",
+    });
+    expect(result.title).toBe("Cascais, Cascais, Lisboa");
+  });
+
+  it("falls back to a generic title when nothing identifying is known", () => {
+    const result = mapListedToSearchResult({
+      ...base,
+      title: "",
+      address: undefined,
+    });
+    expect(result.title).toBe("Imóvel");
   });
 });
