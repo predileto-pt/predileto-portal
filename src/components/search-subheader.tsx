@@ -3,14 +3,6 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   availableTypologies,
   typologyLabels,
   type Typology,
@@ -20,6 +12,7 @@ import {
   type AiSearchPayload,
 } from "@/components/ai-properties-searcher";
 import { SearchQueryModal } from "@/components/search-query-modal";
+import { LocationCombobox } from "@/components/location-combobox";
 
 interface SearchSubheaderProps {
   current: AiSearchPayload;
@@ -40,66 +33,91 @@ export function SearchSubheader({
   const [modalOpen, setModalOpen] = useState(false);
 
   const typologyOptions = availableTypologies({ listingType: current.listingType });
-  const activeTypologies = current.typologies.filter((t) =>
-    typologyOptions.includes(t),
-  );
+  const activeTypology =
+    current.typology && typologyOptions.includes(current.typology)
+      ? current.typology
+      : undefined;
 
   function applyPatch(patch: Partial<AiSearchPayload>) {
+    const nextListingType = patch.listingType ?? current.listingType;
+    const nextTypology = "typology" in patch ? patch.typology : current.typology;
+    const allowedTypologies = availableTypologies({
+      listingType: nextListingType,
+    });
     const next: AiSearchPayload = {
       ...current,
       ...patch,
-      typologies: (patch.typologies ?? current.typologies).filter((t) =>
-        availableTypologies({
-          listingType: patch.listingType ?? current.listingType,
-        }).includes(t),
-      ),
+      listingType: nextListingType,
+      typology:
+        nextTypology && allowedTypologies.includes(nextTypology)
+          ? nextTypology
+          : undefined,
     };
     onSearch(next);
   }
 
-  function toggleTypology(t: Typology) {
-    const next = activeTypologies.includes(t)
-      ? activeTypologies.filter((x) => x !== t)
-      : [...activeTypologies, t];
-    applyPatch({ typologies: next });
+  function selectTypology(t: Typology) {
+    const next = activeTypology === t ? undefined : t;
+    applyPatch({ typology: next });
   }
 
   return (
     <>
       <div className="border-b border-rule bg-paper sticky top-0 z-30">
         <div className="px-4 py-3 space-y-3">
-          {/* Top row: listing toggle + truncated query button */}
+          {/* Top row: listing toggle + location chip + truncated query button */}
           <div className="flex items-center gap-3">
             <ListingToggle
               value={current.listingType}
               onChange={(listingType) => applyPatch({ listingType })}
             />
 
-            <button
-              type="button"
-              onClick={() => setModalOpen(true)}
-              aria-haspopup="dialog"
-              aria-expanded={modalOpen}
+            <LocationCombobox
+              value={current.location}
+              onChange={(location) => applyPatch({ location })}
+              variant="trigger"
+              placeholder="Localização"
+            />
+
+            <div
               className={cn(
-                "flex-1 min-w-0 flex items-center gap-2 text-left",
-                "h-9 px-3 border border-rule bg-paper hover:bg-paper-muted",
-                "transition-colors cursor-text",
+                "flex-1 min-w-0 flex items-center",
+                "h-9 border border-rule bg-paper hover:bg-paper-muted",
+                "transition-colors",
               )}
               style={{ borderRadius: 18 }}
             >
-              <SearchIcon />
-              <span
-                className={cn(
-                  "flex-1 truncate text-sm",
-                  current.query
-                    ? "text-ink"
-                    : "text-ink-muted italic",
-                )}
+              <button
+                type="button"
+                onClick={() => setModalOpen(true)}
+                aria-haspopup="dialog"
+                aria-expanded={modalOpen}
+                className="flex-1 min-w-0 h-full flex items-center gap-2 text-left px-3 cursor-text"
               >
-                {current.query || placeholderByListingType[current.listingType]}
-              </span>
-              <PencilIcon />
-            </button>
+                <SearchIcon />
+                <span
+                  className={cn(
+                    "flex-1 truncate text-sm",
+                    current.query
+                      ? "text-ink"
+                      : "text-ink-muted italic",
+                  )}
+                >
+                  {current.query ||
+                    placeholderByListingType[current.listingType]}
+                </span>
+              </button>
+              {current.query && (
+                <button
+                  type="button"
+                  onClick={() => applyPatch({ query: "" })}
+                  aria-label="Limpar pesquisa"
+                  className="h-full px-3 flex items-center justify-center text-ink-muted hover:text-ink cursor-pointer"
+                >
+                  <XIcon />
+                </button>
+              )}
+            </div>
 
             {loading && (
               <span
@@ -113,12 +131,12 @@ export function SearchSubheader({
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <div className="flex flex-wrap gap-1.5">
               {typologyOptions.map((t) => {
-                const active = activeTypologies.includes(t);
+                const active = activeTypology === t;
                 return (
                   <button
                     key={t}
                     type="button"
-                    onClick={() => toggleTypology(t)}
+                    onClick={() => selectTypology(t)}
                     aria-pressed={active}
                     className={cn(
                       "px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors",
@@ -132,30 +150,6 @@ export function SearchSubheader({
                 );
               })}
             </div>
-
-            <span className="hidden sm:block w-px h-5 bg-rule" aria-hidden />
-
-            <CompactSelect
-              ariaLabel="Adultos"
-              value={String(current.adults)}
-              options={Array.from({ length: 10 }, (_, i) => ({
-                value: String(i + 1),
-                label: `${i + 1} ${i + 1 === 1 ? "adulto" : "adultos"}`,
-              }))}
-              onChange={(value) => applyPatch({ adults: Number(value) })}
-            />
-            <CompactSelect
-              ariaLabel="Crianças"
-              value={String(current.children)}
-              options={Array.from({ length: 11 }, (_, i) => ({
-                value: String(i),
-                label:
-                  i === 0
-                    ? "Sem crianças"
-                    : `${i} ${i === 1 ? "criança" : "crianças"}`,
-              }))}
-              onChange={(value) => applyPatch({ children: Number(value) })}
-            />
 
             <span className="hidden sm:block w-px h-5 bg-rule" aria-hidden />
 
@@ -224,38 +218,6 @@ function ListingToggle({
   );
 }
 
-function CompactSelect({
-  ariaLabel,
-  value,
-  options,
-  onChange,
-}: {
-  ariaLabel: string;
-  value: string;
-  options: { value: string; label: string }[];
-  onChange: (value: string) => void;
-}) {
-  return (
-    <Select value={value} onValueChange={onChange}>
-      <SelectTrigger
-        aria-label={ariaLabel}
-        className="h-7 w-auto px-2 py-0 text-xs rounded-full border-rule"
-      >
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          {options.map((o) => (
-            <SelectItem key={o.value} value={o.value}>
-              {o.label}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-  );
-}
-
 function PriceField({
   ariaLabel,
   placeholder,
@@ -300,7 +262,7 @@ function SearchIcon() {
   );
 }
 
-function PencilIcon() {
+function XIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -309,11 +271,11 @@ function PencilIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="w-3.5 h-3.5 text-ink-muted shrink-0"
+      className="w-3.5 h-3.5 shrink-0"
       aria-hidden
     >
-      <path d="M12 20h9" />
-      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }
