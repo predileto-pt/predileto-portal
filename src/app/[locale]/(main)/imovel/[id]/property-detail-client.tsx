@@ -1,44 +1,101 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n";
 import { DictionaryProvider } from "@/components/dictionary-provider";
 import { formatPrice, formatArea } from "@/lib/utils";
-import { isEasyBook } from "@/lib/types";
+import { isEasyBook, type Property } from "@/lib/types";
+import type { ListedPoi } from "@/lib/estate-os";
 
 import { PropertyTracker } from "@/components/deal/property-tracker";
 import { SectionTracker } from "@/components/deal/section-tracker";
-import { ScheduleVisitCTA } from "@/components/deal/schedule-visit-cta";
-import { RequestInfoCTA } from "@/components/deal/request-info-cta";
-import { FinancingSimulationCTA } from "@/components/deal/financing-simulation-cta";
-import { ImageCarousel } from "@/components/deal/image-carousel";
-import { NearbyAmenities } from "@/components/nearby-amenities";
-import { NearestPlaces } from "@/components/nearest-places";
-import { PropertyChatbot } from "@/components/deal/property-chatbot";
-import { Button } from "@/components/ui/button";
+import {
+  ImageCarousel,
+  type DetailMediaItem,
+} from "@/components/deal/image-carousel";
+import { PropertyChat } from "@/components/property-chat";
+import type { SearchResultItem } from "@/components/search-results";
 import { Text } from "@/components/ui/text";
-
-import { MOCK_PROPERTY, MOCK_PROPERTY_MEDIA } from "@/lib/mock-deal-data";
-import type { PropertyAmenityResponse } from "@/lib/types/amenities";
 
 interface Props {
   locale: string;
   propertyId: string;
   dict: Dictionary;
+  property: Property;
+  searchResult: SearchResultItem;
+  pois: ListedPoi[];
 }
 
-export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
-  const property = MOCK_PROPERTY;
-  const [amenities, setAmenities] = useState<PropertyAmenityResponse[]>([]);
-  const [descExpanded, setDescExpanded] = useState(false);
+function formatPoiDistance(meters: number): string {
+  if (meters >= 1000) return `${(meters / 1000).toFixed(1)} km`;
+  return `${Math.round(meters)} m`;
+}
 
-  useEffect(() => {
-    fetch(`/api/property/${propertyId}/nearby`)
-      .then((res) => res.json())
-      .then((data) => setAmenities(data.amenities ?? []))
-      .catch(() => setAmenities([]));
-  }, [propertyId]);
+export function PropertyDetailClient({
+  locale,
+  propertyId,
+  dict,
+  property,
+  searchResult,
+  pois,
+}: Props) {
+  const [descExpanded, setDescExpanded] = useState(false);
+  const [chatOpen, setChatOpen] = useState(true);
+
+  const media = useMemo<DetailMediaItem[]>(
+    () =>
+      property.images.map((img) => ({
+        type: "image",
+        url: img.url,
+        alt: img.alt,
+      })),
+    [property.images],
+  );
+
+  const poisByCategory = useMemo(() => {
+    const groups = new Map<string, ListedPoi[]>();
+    for (const poi of pois) {
+      const list = groups.get(poi.category) ?? [];
+      list.push(poi);
+      groups.set(poi.category, list);
+    }
+    for (const list of groups.values()) {
+      list.sort((a, b) => a.distance_meters - b.distance_meters);
+    }
+    const priority = ["hospital", "restaurant"];
+    return Array.from(groups.entries()).sort(([a, av], [b, bv]) => {
+      const ai = priority.indexOf(a);
+      const bi = priority.indexOf(b);
+      if (ai !== -1 || bi !== -1) {
+        return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi);
+      }
+      return av[0].distance_meters - bv[0].distance_meters;
+    });
+  }, [pois]);
+
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set(),
+  );
+  function toggleCategory(category: string) {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+      return next;
+    });
+  }
+
+  function formatCategory(category: string): string {
+    return category
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  const backHref =
+    property.listingType === "rent"
+      ? `/${locale}/arrendar`
+      : `/${locale}/comprar`;
 
   const d = dict.propertyDetail as Record<string, string>;
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
@@ -54,7 +111,7 @@ export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
       {/* Back link */}
       <div className="mb-4">
         <Link
-          href={`/${locale}/comprar`}
+          href={backHref}
           className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 transition-colors"
         >
           <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -67,27 +124,24 @@ export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* ===== MAIN CONTENT (left) ===== */}
         <div className="lg:col-span-8 space-y-6">
+        <div className="space-y-6 pb-8 bg-white border-x border-b border-gray-200">
           {/* Image Carousel */}
-          <ImageCarousel media={MOCK_PROPERTY_MEDIA} />
+          <ImageCarousel media={media} />
 
           {/* Header */}
-          <SectionTracker propertyId={propertyId} section="header">
-            <div className="space-y-2">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h1 className="text-lg font-bold">{property.title}</h1>
-                  <p className="text-sm text-gray-400">
-                    {property.address.fullAddress}
-                  </p>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="text-lg font-bold">
-                    {property.price > 0 ? formatPrice(property.price, locale) : "-"}
-                  </p>
+          <SectionTracker propertyId={propertyId} section="header" className="px-4 lg:px-6">
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <h1 className="text-3xl font-bold leading-tight">{property.title}</h1>
+                <p className="text-base">
+                  {property.address.fullAddress}
+                </p>
+                <p className="text-3xl font-bold pt-2">
+                  {property.price > 0 ? formatPrice(property.price, locale) : "-"}
                   {property.listingType === "rent" && (
-                    <span className="text-xs text-gray-400">{d.perMonth}</span>
+                    <span className="text-base text-gray-400 font-normal ml-1">{d.perMonth}</span>
                   )}
-                </div>
+                </p>
               </div>
 
               {/* Badges */}
@@ -118,46 +172,18 @@ export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
             </div>
           </SectionTracker>
 
-          {/* Property Details Grid */}
-          <SectionTracker propertyId={propertyId} section="details">
-            <div className="border border-gray-200 bg-white p-4">
-              <h3 className="text-xs text-gray-400 uppercase mb-3">{d.details}</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <DetailCard label={d.propertyType} value={propertyTypesDict[property.propertyType] || property.propertyType} />
-                {property.features.bedrooms > 0 && (
-                  <DetailCard label={d.bedrooms} value={`T${property.features.bedrooms}`} />
-                )}
-                {property.features.bathrooms > 0 && (
-                  <DetailCard label={d.bathrooms} value={String(property.features.bathrooms)} />
-                )}
-                {property.features.areaSqm > 0 && (
-                  <DetailCard label={d.area} value={formatArea(property.features.areaSqm)} />
-                )}
-                {property.features.floor !== undefined && (
-                  <DetailCard label={d.floor} value={`${property.features.floor}/${property.features.totalFloors || "?"}`} />
-                )}
-                {property.features.parkingSpaces !== undefined && property.features.parkingSpaces > 0 && (
-                  <DetailCard label={d.parking} value={`${property.features.parkingSpaces} ${d.parkingSpaces}`} />
-                )}
-                {property.features.yearBuilt && (
-                  <DetailCard label={d.yearBuilt} value={String(property.features.yearBuilt)} />
-                )}
-              </div>
-            </div>
-          </SectionTracker>
-
           {/* Description */}
           {property.fullDescription && (
-            <SectionTracker propertyId={propertyId} section="description">
+            <SectionTracker propertyId={propertyId} section="description" className="px-4 lg:px-6">
               <div>
                 <h3 className="text-xs text-gray-400 uppercase mb-2">{d.description}</h3>
-                <Text className={`whitespace-pre-line ${descExpanded ? "" : "line-clamp-4"}`}>
+                <Text className={`text-base whitespace-pre-line ${descExpanded ? "" : "line-clamp-4"}`}>
                   {property.fullDescription}
                 </Text>
                 <button
                   type="button"
                   onClick={() => setDescExpanded((v) => !v)}
-                  className="text-xs text-blue-500 hover:text-blue-600 mt-1"
+                  className="text-base text-blue-500 hover:text-blue-600 mt-1"
                 >
                   {descExpanded ? d.showLess : d.showMore}
                 </button>
@@ -165,25 +191,50 @@ export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
             </SectionTracker>
           )}
 
-          {/* Amenities */}
-          {property.amenities.length > 0 && (
-            <SectionTracker propertyId={propertyId} section="amenities">
-              <div>
-                <h3 className="text-xs text-gray-400 uppercase mb-2">{d.amenities}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {property.amenities.map((a) => (
-                    <span key={a} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 border border-gray-200">
-                      {a}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </SectionTracker>
-          )}
+          {/* Characteristics */}
+          <SectionTracker propertyId={propertyId} section="characteristics" className="px-4 lg:px-6">
+            <h3 className="text-xs text-gray-400 uppercase mb-2">{d.characteristics}</h3>
+            <ul className="list-disc list-inside text-base space-y-1">
+              <li>
+                {d.propertyType}: {propertyTypesDict[property.propertyType] || property.propertyType}
+              </li>
+              {property.features.bedrooms > 0 && (
+                <li>
+                  {d.bedrooms}: T{property.features.bedrooms}
+                </li>
+              )}
+              {property.features.bathrooms > 0 && (
+                <li>
+                  {d.bathrooms}: {property.features.bathrooms}
+                </li>
+              )}
+              {property.features.areaSqm > 0 && (
+                <li>
+                  {d.area}: {formatArea(property.features.areaSqm)}
+                </li>
+              )}
+              {property.features.floor !== undefined && (
+                <li>
+                  {d.floor}: {property.features.floor}
+                  {property.features.totalFloors ? `/${property.features.totalFloors}` : ""}
+                </li>
+              )}
+              {property.features.parkingSpaces !== undefined && property.features.parkingSpaces > 0 && (
+                <li>
+                  {d.parking}: {property.features.parkingSpaces} {d.parkingSpaces}
+                </li>
+              )}
+              {property.features.yearBuilt && (
+                <li>
+                  {d.yearBuilt}: {property.features.yearBuilt}
+                </li>
+              )}
+            </ul>
+          </SectionTracker>
 
           {/* Map */}
           {coords && (
-            <SectionTracker propertyId={propertyId} section="map">
+            <SectionTracker propertyId={propertyId} section="map" className="px-4 lg:px-6">
               <div className="border border-gray-200 bg-white overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100">
                   <h3 className="text-xs text-gray-400 uppercase">{d.location}</h3>
@@ -200,26 +251,9 @@ export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
             </SectionTracker>
           )}
 
-          {/* Structured CTAs */}
-          <SectionTracker propertyId={propertyId} section="ctas">
-            <div className="border border-gray-200 bg-white p-4">
-              <h3 className="text-xs text-gray-400 uppercase mb-3">{d.actions}</h3>
-              <div className="space-y-3">
-                <ScheduleVisitCTA propertyId={propertyId} dict={d} />
-                <RequestInfoCTA propertyId={propertyId} dict={d} />
-                <FinancingSimulationCTA
-                  propertyId={propertyId}
-                  propertyPrice={property.price}
-                  locale={locale}
-                  dict={d}
-                />
-              </div>
-            </div>
-          </SectionTracker>
-
           {/* Source */}
           {sourceUrl && (
-            <div className="border-t border-gray-100 pt-4">
+            <div className="px-4 lg:px-6 pb-4 border-t border-gray-100 pt-4">
               <h3 className="text-xs text-gray-400 uppercase mb-1">{d.source}</h3>
               <a
                 href={sourceUrl}
@@ -241,87 +275,95 @@ export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
 
         </div>
 
+          {/* POIs */}
+          <SectionTracker
+            propertyId={propertyId}
+            section="pois"
+            className="bg-white border border-gray-200 p-4 lg:p-6 space-y-6"
+          >
+            <h3 className="text-xs text-gray-400 uppercase">{d.pointsOfInterest}</h3>
+            {poisByCategory.length === 0 ? (
+              <p className="text-sm text-gray-400">{d.nearbyError}</p>
+            ) : (
+              poisByCategory.map(([category, items]) => {
+                const expanded = expandedCategories.has(category);
+                const visible = expanded ? items : items.slice(0, 3);
+                return (
+                  <div key={category} className="space-y-2">
+                    <h4 className="text-lg font-medium text-gray-600">
+                      {formatCategory(category)}{" "}
+                      <span className="text-xs text-gray-400">({items.length})</span>
+                    </h4>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {visible.map((poi, i) => (
+                        <li
+                          key={`${poi.category}-${poi.name}-${i}`}
+                          className="flex gap-3 border border-gray-200 bg-white p-2"
+                        >
+                          {poi.image_urls?.[0] ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={poi.image_urls[0]}
+                              alt={poi.name}
+                              className="w-14 h-14 object-cover shrink-0 bg-gray-100"
+                            />
+                          ) : (
+                            <div className="w-14 h-14 bg-gray-100 shrink-0" />
+                          )}
+                          <div className="min-w-0 flex-1 flex flex-col justify-center">
+                            <p className="text-sm font-medium truncate">{poi.name}</p>
+                            {poi.address && (
+                              <p className="text-xs text-gray-400 truncate">
+                                {poi.address}
+                              </p>
+                            )}
+                            <p className="text-xs text-gray-500">
+                              {formatPoiDistance(poi.distance_meters)}
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    {items.length > 3 && (
+                      <button
+                        type="button"
+                        onClick={() => toggleCategory(category)}
+                        className="text-sm text-blue-500 hover:text-blue-600"
+                      >
+                        {expanded ? d.showLess : d.showMore}
+                      </button>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </SectionTracker>
+        </div>
+
         {/* ===== SIDEBAR (right) ===== */}
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-4 space-y-4">
-            {/* Property summary card */}
-            <div className="border border-gray-200 bg-white p-4 space-y-3">
-              <h2 className="text-sm font-bold">{property.title}</h2>
-              <p className="text-xs text-gray-400">
-                {property.address.municipality}
-                {property.address.district ? `, ${property.address.district}` : ""}
-              </p>
-              <div className="text-sm font-bold">
-                {property.price > 0 ? formatPrice(property.price, locale) : "-"}
-              </div>
-
-              {/* Quick details */}
-              <div className="space-y-1 text-sm">
-                <h3 className="text-xs text-gray-400 uppercase">{d.details}</h3>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">{d.propertyType}</span>
-                  <span>{propertyTypesDict[property.propertyType] || property.propertyType}</span>
-                </div>
-                {property.features.bedrooms > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">{d.bedrooms}</span>
-                    <span>T{property.features.bedrooms}</span>
-                  </div>
-                )}
-                {property.features.bathrooms > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">{d.bathrooms}</span>
-                    <span>{property.features.bathrooms}</span>
-                  </div>
-                )}
-                {property.features.areaSqm > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">{d.area}</span>
-                    <span>{formatArea(property.features.areaSqm)}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* CTA buttons */}
-              <div className="space-y-2">
-                {sourceUrl && (
-                  <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="block">
-                    <Button variant="primary" className="w-full">{d.viewProperty}</Button>
-                  </a>
-                )}
-                {isEasyBook(property) && (
-                  <Link href={`/${locale}/agendar/${property.id}`} className="block">
-                    <Button variant="default" className="w-full">{d.scheduleVisit}</Button>
-                  </Link>
-                )}
-              </div>
+            {/* Agency card */}
+            <div className="border border-gray-200 bg-white p-4 text-base space-y-1">
+              <h3 className="text-xs text-gray-400 uppercase mb-2">{d.agency}</h3>
+              <p>{property.agent.name || "—"}</p>
+              <p>{property.agent.phone || "—"}</p>
+              <p>{property.agent.email || "—"}</p>
             </div>
 
-            {/* Nearby Amenities */}
-            <div className="border border-gray-200 bg-white p-4">
-              <NearbyAmenities amenities={amenities} dict={dict} />
-            </div>
-
-            {/* Nearest Places */}
-            <div className="border border-gray-200 bg-white p-4">
-              <NearestPlaces amenities={amenities} dict={dict} />
-            </div>
-
-            {/* Chatbot */}
-            <PropertyChatbot propertyId={propertyId} dict={d} />
+            {/* Agent chat (same as listing page) */}
+            <PropertyChat
+              property={searchResult}
+              locale={locale}
+              open={chatOpen}
+              onClose={() => setChatOpen(false)}
+            />
           </div>
         </div>
       </div>
+
       </div>
     </DictionaryProvider>
   );
 }
 
-function DetailCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="border border-gray-200 p-3">
-      <p className="text-xs text-gray-400">{label}</p>
-      <p className="text-sm font-medium mt-0.5">{value}</p>
-    </div>
-  );
-}

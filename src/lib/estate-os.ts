@@ -59,6 +59,15 @@ export interface ListedPropertyCharacteristics {
   has_pool: boolean | null;
 }
 
+export interface ListedPoi {
+  category: string;
+  name: string;
+  distance_meters: number;
+  address?: string | null;
+  image_urls?: string[];
+  reviews?: Record<string, unknown>[] | null;
+}
+
 export interface ListedProperty {
   id: string;
   organization_id: string;
@@ -77,6 +86,18 @@ export interface ListedProperty {
   updated_at: string;
   prices: ListedPropertyPrice[];
   images: ListedPropertyImage[];
+  /**
+   * Full POI snapshot for the property — populated on the detail endpoint
+   * regardless of search query state.
+   */
+  pois?: ListedPoi[];
+  /**
+   * POIs matched against the user's extracted `nearby_pois` (ADR-014 §15).
+   * Only populated on the q-set search path; q-empty calls leave this as `[]`.
+   */
+  matched_pois?: ListedPoi[];
+  /** POI names extracted from the search query that did not match. */
+  unmatched_pois?: string[];
   /** Removed from backend response (privacy fix). Legacy mocks still set it. */
   address?: string;
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { cn } from "@/lib/utils";
 import {
   MediaTypeBadges,
   type MediaCounts,
@@ -106,49 +105,6 @@ export function ImageCarousel({ media }: ImageCarouselProps) {
           {current + 1} / {media.length}
         </span>
       </div>
-
-      {/* Thumbnails */}
-      {media.length > 1 && (
-        <div className="flex gap-1.5 mt-3">
-          {media.map((m, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              className={cn(
-                "relative flex-1 aspect-[16/10] overflow-hidden bg-gray-100 cursor-pointer transition-opacity",
-                i === current
-                  ? "scale-95 border-2 border-gray-400"
-                  : "opacity-60 hover:opacity-100",
-              )}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={
-                  m.type === "video"
-                    ? m.thumbnail ?? "/mock-listings/placeholder-1.svg"
-                    : m.url
-                }
-                alt={`Thumbnail ${i + 1}`}
-                className="w-full h-full object-cover"
-              />
-              {m.type === "video" && (
-                <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <span className="w-6 h-6 rounded-full bg-white/95 text-ink shadow flex items-center justify-center">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-3 h-3 ml-0.5"
-                      aria-hidden
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </span>
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
