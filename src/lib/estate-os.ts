@@ -3,6 +3,8 @@ import type {
   PropertyType as PortalPropertyType,
 } from "@/lib/types";
 import type { PropertyAmenityResponse } from "@/lib/types/amenities";
+import type { SearchResultItem } from "@/components/search-results";
+import type { ResultMediaItem } from "@/components/result-media-carousel";
 
 const ESTATE_OS_BASE_URL =
   process.env.ESTATE_OS_BASE_URL || "http://localhost:8000";
@@ -88,6 +90,60 @@ export interface FetchPublicPropertiesOptions {
   district?: string;
 }
 
+// ── Semantic search ──────────────────────────────────────────────────
+
+export type LocationLevel = "district" | "municipality" | "parish";
+
+export interface LocationSelection {
+  level: LocationLevel;
+  name: string;
+}
+
+export interface MunicipalityNode {
+  name: string;
+  parishes: string[];
+}
+
+export interface DistrictNode {
+  name: string;
+  municipalities: MunicipalityNode[];
+}
+
+export interface CountryNode {
+  /** ISO 3166-1 alpha-2 (e.g. "PT"). */
+  code: string;
+  name: string;
+  districts: DistrictNode[];
+}
+
+/**
+ * Hierarchical location tree from `GET /api/v1/listings/locations`.
+ * Multi-country: v1 ships only Portugal populated; future countries are
+ * appended as additional entries.
+ */
+export interface LocationTree {
+  countries: CountryNode[];
+}
+
+export interface FetchSearchPropertiesOptions
+  extends FetchPublicPropertiesOptions {
+  q?: string;
+  parish?: string;
+  municipality?: string;
+}
+
+/** Thrown when estate-os returns 422 with a typed validation code. */
+export class EstateOsValidationError extends Error {
+  public readonly code: string;
+  public readonly status: number;
+  constructor(code: string, message: string, status = 422) {
+    super(message);
+    this.name = "EstateOsValidationError";
+    this.code = code;
+    this.status = status;
+  }
+}
+
 export async function fetchListedPropertyById(
   id: string,
 ): Promise<ListedProperty | null> {
@@ -128,6 +184,100 @@ export async function fetchPublicProperties(
   }
 
   return res.json();
+}
+
+/**
+ * Server-side helper. Calls `GET /api/v1/listings/properties` with optional
+ * semantic query + location filters. When `q` is set the API requires at least
+ * one of parish/municipality/district and returns 422 otherwise; that 422 is
+ * surfaced as an `EstateOsValidationError`.
+ */
+export async function fetchSearchProperties(
+  options: FetchSearchPropertiesOptions = {},
+): Promise<PaginatedListings> {
+  const params = new URLSearchParams();
+  if (options.q) params.set("q", options.q);
+  if (options.parish) params.set("parish", options.parish);
+  if (options.municipality) params.set("municipality", options.municipality);
+  if (options.district) params.set("district", options.district);
+  if (options.listingType) params.set("listing_type", options.listingType);
+  if (options.typology) params.set("typology", options.typology);
+  if (options.minPrice !== undefined)
+    params.set("min_price", String(options.minPrice));
+  if (options.maxPrice !== undefined)
+    params.set("max_price", String(options.maxPrice));
+  if (options.limit !== undefined) params.set("limit", String(options.limit));
+  if (options.offset !== undefined) params.set("offset", String(options.offset));
+
+  const qs = params.toString();
+  const url = `${ESTATE_OS_BASE_URL}/api/v1/listings/properties${qs ? `?${qs}` : ""}`;
+
+  const res = await fetch(url, { next: { revalidate: 0 } });
+
+  if (res.status === 422) {
+    let code = "validation_error";
+    let message = "Validation failed";
+    try {
+      const body = await res.json();
+      const detail = body?.detail;
+      if (detail && typeof detail === "object" && "code" in detail) {
+        code = String(detail.code);
+        if ("message" in detail) message = String(detail.message);
+      }
+    } catch {
+      // ignore parse errors; fall through with defaults
+    }
+    throw new EstateOsValidationError(code, message, 422);
+  }
+
+  if (!res.ok) {
+    throw new Error(`estate-os error: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+/** Server-side helper. Calls `GET /api/v1/listings/locations`. */
+export async function fetchLocationTree(): Promise<LocationTree> {
+  const res = await fetch(`${ESTATE_OS_BASE_URL}/api/v1/listings/locations`, {
+    next: { revalidate: 300 },
+  });
+
+  if (!res.ok) {
+    throw new Error(`estate-os error: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+/**
+ * Map an estate-os `ListedProperty` to the feed card's `SearchResultItem`.
+ * Source fields are mostly nullable; defaults preserve the strict shape the
+ * card consumer expects.
+ */
+export function mapListedToSearchResult(
+  listed: ListedProperty,
+): SearchResultItem {
+  const priceAmount = listed.prices[0]?.amount
+    ? Number(listed.prices[0].amount)
+    : 0;
+
+  const media: ResultMediaItem[] = listed.images.map((img) => ({
+    type: "image",
+    url: img.download_url,
+    alt: img.filename,
+  }));
+
+  return {
+    id: listed.id,
+    title: listed.address,
+    description: listed.description ?? "",
+    price: priceAmount,
+    areaSqm: listed.characteristics?.area_in_m2 ?? 0,
+    bedrooms: listed.characteristics?.num_of_bedrooms ?? 0,
+    media,
+    listingType: listed.listing_type === "sale" ? "buy" : "rent",
+  };
 }
 
 export function portalListingTypeToEstateOs(

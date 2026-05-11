@@ -4,29 +4,22 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Title } from "@/components/ui/title";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   availableTypologies,
   typologyLabels,
   type Typology,
 } from "@/lib/search-rules";
+import type { LocationSelection } from "@/lib/estate-os";
+import { LocationCombobox } from "@/components/location-combobox";
 
 export type AiSearchListingType = "buy" | "rent";
 
 export interface AiSearchPayload {
   query: string;
-  adults: number;
-  children: number;
+  listingType: AiSearchListingType;
+  location: LocationSelection | null;
   minPrice?: number;
   maxPrice?: number;
-  typologies: Typology[];
-  listingType: AiSearchListingType;
+  typology?: Typology;
 }
 
 interface AIPropertiesSearcherProps {
@@ -35,6 +28,7 @@ interface AIPropertiesSearcherProps {
   compact?: boolean;
   clearOnSubmit?: boolean;
   initialQuery?: string;
+  initialLocation?: LocationSelection | null;
 }
 
 const placeholderByListingType: Record<AiSearchListingType, string> = {
@@ -48,34 +42,37 @@ export function AIPropertiesSearcher({
   compact = false,
   clearOnSubmit = true,
   initialQuery = "",
+  initialLocation = null,
 }: AIPropertiesSearcherProps) {
   const [query, setQuery] = useState(initialQuery);
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
+  const [location, setLocation] = useState<LocationSelection | null>(
+    initialLocation,
+  );
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [typologies, setTypologies] = useState<Typology[]>([]);
+  const [typology, setTypology] = useState<Typology | undefined>(undefined);
 
   const typologyOptions = availableTypologies({ listingType });
+  const trimmedQuery = query.trim();
+  const hasQuery = trimmedQuery.length > 0;
+  // q non-empty needs a location; otherwise the form is submittable
+  // (structured-only browse — query is optional).
+  const canSubmit = !hasQuery || location !== null;
 
-  const canSubmit = query.trim().length > 0;
-
-  const toggleTypology = (t: Typology) => {
-    setTypologies((prev) =>
-      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t],
-    );
+  const selectTypology = (t: Typology) => {
+    setTypology((prev) => (prev === t ? undefined : t));
   };
 
   const submit = () => {
     if (!canSubmit) return;
     onSearch({
-      query: query.trim(),
-      adults,
-      children,
+      query: trimmedQuery,
+      listingType,
+      location,
       minPrice: minPrice ? Number(minPrice) : undefined,
       maxPrice: maxPrice ? Number(maxPrice) : undefined,
-      typologies: typologies.filter((t) => typologyOptions.includes(t)),
-      listingType,
+      typology:
+        typology && typologyOptions.includes(typology) ? typology : undefined,
     });
     if (clearOnSubmit) setQuery("");
   };
@@ -164,56 +161,13 @@ export function AIPropertiesSearcher({
         )}
       >
         <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-stretch gap-4 sm:gap-0">
-          {/* Hóspedes */}
-          <FilterGroup label="Hóspedes" className="sm:pr-5">
-            <div className="flex gap-2">
-              <Select
-                value={String(adults)}
-                onValueChange={(value) => setAdults(Number(value))}
-              >
-                <SelectTrigger
-                  aria-label="Adultos"
-                  className="h-8 w-[72px] px-2 py-0 text-xs rounded-md gap-1"
-                >
-                  <span className="flex items-center gap-1 text-ink-muted">
-                    <AdultIcon />
-                    <SelectValue />
-                  </span>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                      <SelectItem key={n} value={String(n)}>
-                        {n} {n === 1 ? "adulto" : "adultos"}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Select
-                value={String(children)}
-                onValueChange={(value) => setChildren(Number(value))}
-              >
-                <SelectTrigger
-                  aria-label="Crianças"
-                  className="h-8 w-[72px] px-2 py-0 text-xs rounded-md gap-1"
-                >
-                  <span className="flex items-center gap-1 text-ink-muted">
-                    <ChildIcon />
-                    <SelectValue />
-                  </span>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {Array.from({ length: 11 }, (_, i) => i).map((n) => (
-                      <SelectItem key={n} value={String(n)}>
-                        {n} {n === 1 ? "criança" : "crianças"}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Localização */}
+          <FilterGroup label="Localização" className="sm:pr-5">
+            <LocationCombobox
+              value={location}
+              onChange={setLocation}
+              variant="inline"
+            />
           </FilterGroup>
 
           <Divider />
@@ -243,12 +197,12 @@ export function AIPropertiesSearcher({
           <FilterGroup label="Tipologia" className="flex-1 min-w-0 sm:pl-5">
             <div className="flex flex-wrap gap-1.5">
               {typologyOptions.map((t) => {
-                const active = typologies.includes(t);
+                const active = typology === t;
                 return (
                   <button
                     key={t}
                     type="button"
-                    onClick={() => toggleTypology(t)}
+                    onClick={() => selectTypology(t)}
                     aria-pressed={active}
                     className={cn(
                       "px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors",
@@ -265,6 +219,15 @@ export function AIPropertiesSearcher({
           </FilterGroup>
         </div>
       </div>
+
+      {hasQuery && !location && !compact && (
+        <p
+          role="status"
+          className="text-xs text-ink-muted text-center"
+        >
+          Escolha uma localização para pesquisar com texto livre.
+        </p>
+      )}
     </section>
   );
 }
@@ -345,40 +308,3 @@ function EuroIcon() {
   );
 }
 
-function AdultIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-3.5 h-3.5 shrink-0"
-      aria-hidden
-    >
-      <circle cx="12" cy="7" r="4" />
-      <path d="M4 21v-1a8 8 0 0 1 16 0v1" />
-    </svg>
-  );
-}
-
-function ChildIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-3.5 h-3.5 shrink-0"
-      aria-hidden
-    >
-      <circle cx="12" cy="8" r="3" />
-      <path d="M7 21v-3a5 5 0 0 1 10 0v3" />
-      <path d="M9.5 14l-1 2" />
-      <path d="M14.5 14l1 2" />
-    </svg>
-  );
-}

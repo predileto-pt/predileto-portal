@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import dynamic from "next/dynamic";
+import { parseInitialLocation } from "@/lib/search-url";
 
 const AISearchPage = dynamic(
   () => import("@/components/ai-search-page").then((m) => m.AISearchPage),
@@ -18,12 +19,14 @@ export default function ComprarPage({
   const { locale } = use(params);
   const sp = use(searchParams);
   const initialQuery = typeof sp.q === "string" ? sp.q : undefined;
+  const initialLocation = parseInitialLocation(sp);
 
   return (
     <AISearchPage
       listingType="buy"
       locale={locale}
       initialQuery={initialQuery}
+      initialLocation={initialLocation}
     />
   );
 }
