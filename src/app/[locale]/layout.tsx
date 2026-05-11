@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { isValidLocale, getDictionary } from "@/lib/i18n";
 import { DictionaryProvider } from "@/components/dictionary-provider";
+import { UserSessionProvider } from "@/components/session/user-session-provider";
 
 export default async function LocaleLayout({
   children,
@@ -17,7 +18,7 @@ export default async function LocaleLayout({
 
   return (
     <DictionaryProvider dictionary={dictionary}>
-      {children}
+      <UserSessionProvider>{children}</UserSessionProvider>
     </DictionaryProvider>
   );
 }

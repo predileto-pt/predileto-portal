@@ -10,6 +10,7 @@ import {
   type ResultMediaItem,
 } from "@/components/result-media-carousel";
 import { useRegisterActiveProperty } from "@/components/active-property-provider";
+import { useFavorites } from "@/lib/session/slices/favorites";
 
 export interface AiAttribute {
   key: string;
@@ -119,7 +120,8 @@ function ResultCard({
   locale: string;
   onOpenAgent?: (item: SearchResultItem) => void;
 }) {
-  const [interested, setInterested] = useState(false);
+  const favorites = useFavorites();
+  const interested = favorites.isFavorite(item.id);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
   const registerRef = useRegisterActiveProperty(item.id);
@@ -253,7 +255,7 @@ function ResultCard({
         <div className="flex flex-wrap gap-1">
           <CardActionButton
             active={interested}
-            onClick={() => setInterested((v) => !v)}
+            onClick={() => void favorites.toggle(item.id)}
             icon={<HeartIcon filled={interested} />}
             label="Interesse"
           />
