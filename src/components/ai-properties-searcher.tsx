@@ -103,8 +103,21 @@ export function AIPropertiesSearcher({
       <form
         onSubmit={handleSubmit}
         data-type="ai-search-composer"
-        className="group/composer border border-rule bg-paper shadow-sm grid grid-cols-[1fr_auto] items-end gap-2 p-2 transition-colors focus-within:border-ink-subtle"
-        style={{ borderRadius: 20 }}
+        className={cn(
+          "group/composer relative grid grid-cols-[1fr_auto] items-end gap-2 p-2 rounded-[20px] transition-all",
+          // Frosted glass body — linear sheen baked in as bg-image, semi-translucent for backdrop blur to show through
+          "bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(255,255,255,0.78)_45%,rgba(255,255,255,0.88))]",
+          "backdrop-blur-2xl backdrop-saturate-150",
+          // Layered shadows: top inner sheen, hairline bottom inner shadow, contact, mid lift, soft far shadow
+          "shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-12px_rgba(0,0,0,0.18),0_20px_40px_-20px_rgba(0,0,0,0.15)]",
+          // Gradient hairline border via ::before + mask trick (Apple "liquid glass" highlight)
+          "before:pointer-events-none before:absolute before:inset-0 before:rounded-[20px] before:p-px",
+          "before:[background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.3)_25%,rgba(255,255,255,0)_55%,rgba(0,0,0,0.06)_100%)]",
+          "before:[mask:linear-gradient(#000,#000)_content-box,linear-gradient(#000,#000)]",
+          "before:[mask-composite:exclude]",
+          // Focus state: stronger sheen and lift
+          "focus-within:shadow-[inset_0_1px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.06),0_12px_28px_-12px_rgba(0,0,0,0.22),0_24px_48px_-20px_rgba(0,0,0,0.2)]",
+        )}
       >
         <textarea
           value={query}
@@ -144,110 +157,146 @@ export function AIPropertiesSearcher({
         </button>
       </form>
 
-      <div className="flex gap-3">
-        <div className="flex flex-col gap-1">
-          <span className="flex items-center gap-1.5 text-xs text-ink-muted uppercase tracking-body font-heading">
-            <AdultIcon />
-            Adultos
-          </span>
-          <Select
-            value={String(adults)}
-            onValueChange={(value) => setAdults(Number(value))}
-          >
-            <SelectTrigger
-              aria-label="Adultos"
-              className="h-7 w-24 px-2 py-0 text-xs rounded-none"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                  <SelectItem key={n} value={String(n)}>
-                    {n}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="flex items-center gap-1.5 text-xs text-ink-muted uppercase tracking-body font-heading">
-            <ChildIcon />
-            Crianças
-          </span>
-          <Select
-            value={String(children)}
-            onValueChange={(value) => setChildren(Number(value))}
-          >
-            <SelectTrigger
-              aria-label="Crianças"
-              className="h-7 w-24 px-2 py-0 text-xs rounded-none"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {Array.from({ length: 11 }, (_, i) => i).map((n) => (
-                  <SelectItem key={n} value={String(n)}>
-                    {n}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <span className="flex items-center gap-1.5 text-xs text-ink-muted uppercase tracking-body font-heading">
-          <EuroIcon />
-          Preço
-        </span>
-        <div className="flex gap-2">
-          <PriceInput
-            aria-label="Preço mínimo"
-            placeholder="Mín"
-            value={minPrice}
-            onChange={setMinPrice}
-          />
-          <PriceInput
-            aria-label="Preço máximo"
-            placeholder="Máx"
-            value={maxPrice}
-            onChange={setMaxPrice}
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <span className="text-xs text-ink-muted uppercase tracking-body font-heading">
-          Tipologia
-        </span>
-        <div className="flex flex-wrap gap-1.5">
-          {typologyOptions.map((t) => {
-            const active = typologies.includes(t);
-            return (
-              <button
-                key={t}
-                type="button"
-                onClick={() => toggleTypology(t)}
-                aria-pressed={active}
-                className={cn(
-                  "px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors",
-                  active
-                    ? "bg-primary text-paper border-primary"
-                    : "bg-paper text-ink-secondary border-rule hover:border-primary hover:text-primary",
-                )}
+      <div
+        className={cn(
+          "rounded-2xl bg-white border border-rule shadow-sm",
+          compact ? "p-3" : "p-4 lg:p-5",
+        )}
+      >
+        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-stretch gap-4 sm:gap-0">
+          {/* Hóspedes */}
+          <FilterGroup label="Hóspedes" className="sm:pr-5">
+            <div className="flex gap-2">
+              <Select
+                value={String(adults)}
+                onValueChange={(value) => setAdults(Number(value))}
               >
-                {typologyLabels[t]}
-              </button>
-            );
-          })}
+                <SelectTrigger
+                  aria-label="Adultos"
+                  className="h-8 w-[72px] px-2 py-0 text-xs rounded-md gap-1"
+                >
+                  <span className="flex items-center gap-1 text-ink-muted">
+                    <AdultIcon />
+                    <SelectValue />
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                      <SelectItem key={n} value={String(n)}>
+                        {n} {n === 1 ? "adulto" : "adultos"}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select
+                value={String(children)}
+                onValueChange={(value) => setChildren(Number(value))}
+              >
+                <SelectTrigger
+                  aria-label="Crianças"
+                  className="h-8 w-[72px] px-2 py-0 text-xs rounded-md gap-1"
+                >
+                  <span className="flex items-center gap-1 text-ink-muted">
+                    <ChildIcon />
+                    <SelectValue />
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Array.from({ length: 11 }, (_, i) => i).map((n) => (
+                      <SelectItem key={n} value={String(n)}>
+                        {n} {n === 1 ? "criança" : "crianças"}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </FilterGroup>
+
+          <Divider />
+
+          {/* Preço */}
+          <FilterGroup label="Preço" icon={<EuroIcon />} className="sm:px-5">
+            <div className="flex h-8 items-center rounded-md border border-rule bg-paper overflow-hidden focus-within:border-ink-subtle transition-colors">
+              <PriceInput
+                aria-label="Preço mínimo"
+                placeholder="Mín"
+                value={minPrice}
+                onChange={setMinPrice}
+              />
+              <span aria-hidden className="self-center w-px h-4 bg-rule" />
+              <PriceInput
+                aria-label="Preço máximo"
+                placeholder="Máx"
+                value={maxPrice}
+                onChange={setMaxPrice}
+              />
+            </div>
+          </FilterGroup>
+
+          <Divider />
+
+          {/* Tipologia */}
+          <FilterGroup label="Tipologia" className="flex-1 min-w-0 sm:pl-5">
+            <div className="flex flex-wrap gap-1.5">
+              {typologyOptions.map((t) => {
+                const active = typologies.includes(t);
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => toggleTypology(t)}
+                    aria-pressed={active}
+                    className={cn(
+                      "px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors",
+                      active
+                        ? "bg-primary text-paper border-primary"
+                        : "bg-paper text-ink-secondary border-rule hover:border-primary hover:text-primary",
+                    )}
+                  >
+                    {typologyLabels[t]}
+                  </button>
+                );
+              })}
+            </div>
+          </FilterGroup>
         </div>
       </div>
     </section>
+  );
+}
+
+function FilterGroup({
+  label,
+  icon,
+  className,
+  children,
+}: {
+  label: string;
+  icon?: React.ReactNode;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      <span className="flex items-center gap-1.5 text-[10px] text-ink-muted uppercase tracking-body font-heading">
+        {icon}
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+function Divider() {
+  return (
+    <span
+      aria-hidden
+      className="hidden sm:block self-stretch w-px bg-rule"
+    />
   );
 }
 
@@ -272,7 +321,7 @@ function PriceInput({
       aria-label={ariaLabel}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="h-7 w-full px-2 text-xs border border-rule bg-paper outline-none focus:border-ink-subtle"
+      className="h-full w-20 px-2 text-xs bg-transparent outline-none placeholder:text-ink-muted [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
     />
   );
 }

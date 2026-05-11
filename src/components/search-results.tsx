@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { cn, formatPrice, formatArea } from "@/lib/utils";
 import { Small } from "@/components/ui/small";
-import { Title } from "@/components/ui/title";
 import { CommentsList, type CommentData } from "@/components/comments-list";
 import {
   ResultMediaCarousel,
@@ -70,17 +69,6 @@ interface SearchResultsProps {
 export function SearchResults({ items, loading, locale }: SearchResultsProps) {
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between h-7">
-        <Title variant="card" level={2}>
-          Resultados
-        </Title>
-        {items && items.length > 0 && (
-          <Small variant="meta">
-            {items.length} {items.length === 1 ? "imóvel" : "imóveis"}
-          </Small>
-        )}
-      </div>
-
       {loading ? (
         <ul className="space-y-3" aria-busy aria-live="polite">
           {[0, 1, 2].map((i) => (

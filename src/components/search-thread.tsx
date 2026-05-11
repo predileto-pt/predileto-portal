@@ -19,7 +19,6 @@ export function SearchThread({ messages }: SearchThreadProps) {
 
   return (
     <div className="space-y-2">
-      <Small variant="label">Histórico</Small>
       <ul className="space-y-2">
         {messages.map((m) => (
           <li

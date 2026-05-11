@@ -19,7 +19,7 @@ import { PropertyChatbot } from "@/components/deal/property-chatbot";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 
-import { MOCK_PROPERTY } from "@/lib/mock-deal-data";
+import { MOCK_PROPERTY, MOCK_PROPERTY_MEDIA } from "@/lib/mock-deal-data";
 import type { PropertyAmenityResponse } from "@/lib/types/amenities";
 
 interface Props {
@@ -68,7 +68,7 @@ export function PropertyDetailClient({ locale, propertyId, dict }: Props) {
         {/* ===== MAIN CONTENT (left) ===== */}
         <div className="lg:col-span-8 space-y-6">
           {/* Image Carousel */}
-          <ImageCarousel images={property.images} />
+          <ImageCarousel media={MOCK_PROPERTY_MEDIA} />
 
           {/* Header */}
           <SectionTracker propertyId={propertyId} section="header">

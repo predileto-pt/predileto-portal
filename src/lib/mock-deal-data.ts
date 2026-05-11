@@ -1,5 +1,6 @@
 import type { Property } from "./types";
 import type { IntentLevel } from "./tracking";
+import type { DetailMediaItem } from "@/components/deal/image-carousel";
 
 // --- Mock Property for the detail page ---
 
@@ -67,6 +68,29 @@ export const MOCK_PROPERTY: Property = {
   createdAt: "2025-12-15T10:00:00Z",
   updatedAt: "2026-03-18T14:30:00Z",
 };
+
+// --- Mock media (images + videos, including AI-generated) for detail carousel ---
+
+export const MOCK_PROPERTY_MEDIA: DetailMediaItem[] = [
+  { type: "image", url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop", alt: "Exterior view" },
+  {
+    type: "video",
+    url: "https://example.com/mock-tour.mp4",
+    thumbnail: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop",
+    alt: "Property walkthrough",
+  },
+  { type: "image", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop", alt: "Living room" },
+  { type: "image", url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop", alt: "Kitchen" },
+  { type: "image", url: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop", alt: "Terrace view" },
+  {
+    type: "video",
+    url: "https://example.com/mock-ai-staging.mp4",
+    thumbnail: "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800&h=500&fit=crop",
+    alt: "AI virtual staging",
+    aiGenerated: true,
+  },
+  { type: "image", url: "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800&h=500&fit=crop", alt: "Bedroom" },
+];
 
 // --- Mock coordinates for the map ---
 
