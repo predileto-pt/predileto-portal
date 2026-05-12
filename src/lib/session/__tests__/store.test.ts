@@ -56,7 +56,7 @@ describe("createSessionStore", () => {
     expect(store.getSnapshot().hydrated).toBe(true);
     expect(store.getSnapshot().kind).toBe("ANONYMOUS");
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0][0]).toContain("/api/v1/session/me");
+    expect(fetchMock.mock.calls[0][0]).toContain("/api/v1/portal/session/me");
   });
 
   it("bootstrap: /me returns SESSION_MISSING → calls /init", async () => {
@@ -72,8 +72,8 @@ describe("createSessionStore", () => {
     const store = createSessionStore({ isolated: true });
     await store.bootstrap();
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(fetchMock.mock.calls[0][0]).toContain("/api/v1/session/me");
-    expect(fetchMock.mock.calls[1][0]).toContain("/api/v1/session/init");
+    expect(fetchMock.mock.calls[0][0]).toContain("/api/v1/portal/session/me");
+    expect(fetchMock.mock.calls[1][0]).toContain("/api/v1/portal/session/init");
     expect(store.getSnapshot().favorites.has("x")).toBe(true);
     expect(store.getSnapshot().hydrated).toBe(true);
   });
@@ -186,9 +186,9 @@ describe("createSessionStore", () => {
     expect(store.getSnapshot().favorites.has("p1")).toBe(false);
     // Three calls total: GET /me, PATCH /me, POST /init.
     expect(fetchMock).toHaveBeenCalledTimes(3);
-    expect(fetchMock.mock.calls[0][0]).toContain("/api/v1/session/me");
-    expect(fetchMock.mock.calls[1][0]).toContain("/api/v1/session/me");
-    expect(fetchMock.mock.calls[2][0]).toContain("/api/v1/session/init");
+    expect(fetchMock.mock.calls[0][0]).toContain("/api/v1/portal/session/me");
+    expect(fetchMock.mock.calls[1][0]).toContain("/api/v1/portal/session/me");
+    expect(fetchMock.mock.calls[2][0]).toContain("/api/v1/portal/session/init");
     // The original PATCH was NOT re-issued (no 4th call).
     // Notifier fired with kind=invalid on write.
     expect(notifier).toHaveBeenCalledWith(

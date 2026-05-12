@@ -41,7 +41,7 @@ describe("api layer", () => {
     expect(view.user_id).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe("http://example.test/api/v1/session/me");
+    expect(url).toBe("http://example.test/api/v1/portal/session/me");
     expect(init.credentials).toBe("include");
     expect(init.method).toBe("GET");
   });

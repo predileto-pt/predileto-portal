@@ -73,33 +73,33 @@ async function send(
   return parseSessionView(body);
 }
 
-/** `POST /api/v1/session/init` — mints a session, sets the cookie. */
+/** `POST /api/v1/portal/session/init` — mints a session, sets the cookie. */
 export function initSession(): Promise<SessionView> {
-  return send("POST", "/api/v1/session/init");
+  return send("POST", "/api/v1/portal/session/init");
 }
 
-/** `GET /api/v1/session/me` — returns the public session view. */
+/** `GET /api/v1/portal/session/me` — returns the public session view. */
 export function getSession(): Promise<SessionView> {
-  return send("GET", "/api/v1/session/me");
+  return send("GET", "/api/v1/portal/session/me");
 }
 
-/** `PATCH /api/v1/session/me` — slice writes. */
+/** `PATCH /api/v1/portal/session/me` — slice writes. */
 export function patchSession(patch: SessionPatch): Promise<SessionView> {
-  return send("PATCH", "/api/v1/session/me", { body: patch });
+  return send("PATCH", "/api/v1/portal/session/me", { body: patch });
 }
 
 /**
- * `POST /api/v1/session/claim` — exchange portal auth token for an
+ * `POST /api/v1/portal/session/claim` — exchange portal auth token for an
  * authenticated session. Token is sent in the Authorization header.
  * (Wired here so the auth spec doesn't have to redo the plumbing.)
  */
 export function claimSession(authToken: string): Promise<SessionView> {
-  return send("POST", "/api/v1/session/claim", {
+  return send("POST", "/api/v1/portal/session/claim", {
     headers: { Authorization: `Bearer ${authToken}` },
   });
 }
 
-/** `POST /api/v1/session/logout`. */
+/** `POST /api/v1/portal/session/logout`. */
 export function logoutSession(): Promise<SessionView> {
-  return send("POST", "/api/v1/session/logout");
+  return send("POST", "/api/v1/portal/session/logout");
 }

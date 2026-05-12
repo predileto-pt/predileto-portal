@@ -44,7 +44,7 @@ export interface SessionSnapshot {
   hydrated: boolean;
 }
 
-/** Patch shape for `PATCH /api/v1/session/me`. */
+/** Patch shape for `PATCH /api/v1/portal/session/me`. */
 export interface SessionPatch {
   favorites?: { add?: string[]; remove?: string[] };
   prefs?: { merge?: Record<string, unknown> };
