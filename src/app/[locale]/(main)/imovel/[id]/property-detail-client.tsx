@@ -149,7 +149,20 @@ export function PropertyDetailClient({
                     <h1 className="text-3xl font-bold leading-tight">
                       {property.title}
                     </h1>
-                    <p className="text-base text-gray-600">
+                    <p className="inline-flex items-center gap-1.5 text-base text-gray-600">
+                      <svg
+                        className="size-4 shrink-0"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
                       {property.address.fullAddress}
                     </p>
                     <p className="text-3xl font-bold pt-2">
@@ -165,7 +178,7 @@ export function PropertyDetailClient({
 
                     {agency &&
                       (agency.name || agency.email || agency.phone) && (
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-2 text-sm text-blue-600">
+                        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 bg-gray-50 px-3 py-2 text-sm text-blue-600">
                           {agency.name && (
                             <span className="inline-flex items-center gap-1.5">
                               <svg
