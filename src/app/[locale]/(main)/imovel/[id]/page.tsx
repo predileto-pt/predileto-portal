@@ -30,6 +30,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
       property={property}
       searchResult={searchResult}
       pois={listed.pois ?? listed.matched_pois ?? []}
+      agency={listed.agency ?? null}
     />
   );
 }

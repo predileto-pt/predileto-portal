@@ -59,6 +59,12 @@ export interface ListedPropertyCharacteristics {
   has_pool: boolean | null;
 }
 
+export interface ListedAgency {
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+}
+
 export interface ListedPoi {
   category: string;
   name: string;
@@ -98,6 +104,12 @@ export interface ListedProperty {
   matched_pois?: ListedPoi[];
   /** POI names extracted from the search query that did not match. */
   unmatched_pois?: string[];
+  /**
+   * Display contact for the listing's agency. Resolved from
+   * `Organization.name` + the creating user's email/phone at projection
+   * time. Spec `2026-05-listings-agency-contact`.
+   */
+  agency?: ListedAgency | null;
   /** Removed from backend response (privacy fix). Legacy mocks still set it. */
   address?: string;
 }

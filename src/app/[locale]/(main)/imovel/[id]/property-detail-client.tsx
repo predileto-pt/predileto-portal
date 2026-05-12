@@ -6,7 +6,7 @@ import type { Dictionary } from "@/lib/i18n";
 import { DictionaryProvider } from "@/components/dictionary-provider";
 import { formatPrice, formatArea } from "@/lib/utils";
 import { isEasyBook, type Property } from "@/lib/types";
-import type { ListedPoi } from "@/lib/estate-os";
+import type { ListedAgency, ListedPoi } from "@/lib/estate-os";
 
 import { PropertyTracker } from "@/components/deal/property-tracker";
 import { SectionTracker } from "@/components/deal/section-tracker";
@@ -25,6 +25,7 @@ interface Props {
   property: Property;
   searchResult: SearchResultItem;
   pois: ListedPoi[];
+  agency: ListedAgency | null;
 }
 
 function formatPoiDistance(meters: number): string {
@@ -39,6 +40,7 @@ export function PropertyDetailClient({
   property,
   searchResult,
   pois,
+  agency,
 }: Props) {
   const [descExpanded, setDescExpanded] = useState(false);
   const [chatOpen, setChatOpen] = useState(true);
@@ -346,9 +348,9 @@ export function PropertyDetailClient({
             {/* Agency card */}
             <div className="border border-gray-200 bg-white p-4 text-base space-y-1">
               <h3 className="text-xs text-gray-400 uppercase mb-2">{d.agency}</h3>
-              <p>{property.agent.name || "—"}</p>
-              <p>{property.agent.phone || "—"}</p>
-              <p>{property.agent.email || "—"}</p>
+              <p>{agency?.name || "—"}</p>
+              <p>{agency?.phone || "—"}</p>
+              <p>{agency?.email || "—"}</p>
             </div>
 
             {/* Agent chat (same as listing page) */}
