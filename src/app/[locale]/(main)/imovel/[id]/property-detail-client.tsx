@@ -89,9 +89,10 @@ export function PropertyDetailClient({
   }
 
   function formatCategory(category: string): string {
-    return category
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
+    return (
+      poiCategoriesDict[category] ??
+      category.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    );
   }
 
   const backHref =
@@ -101,6 +102,7 @@ export function PropertyDetailClient({
 
   const d = dict.propertyDetail as Record<string, string>;
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
+  const poiCategoriesDict = dict.poiCategories as Record<string, string>;
   const sourceUrl = property.sources?.[0]?.url;
   const sourceName = property.sources?.[0]?.name || "";
   const coords = property.address.coordinates;
@@ -135,7 +137,7 @@ export function PropertyDetailClient({
             <div className="space-y-3">
               <div className="space-y-1">
                 <h1 className="text-3xl font-bold leading-tight">{property.title}</h1>
-                <p className="text-base">
+                <p className="text-base text-gray-600">
                   {property.address.fullAddress}
                 </p>
                 <p className="text-3xl font-bold pt-2">
@@ -179,16 +181,24 @@ export function PropertyDetailClient({
             <SectionTracker propertyId={propertyId} section="description" className="px-4 lg:px-6">
               <div>
                 <h3 className="text-xs text-gray-400 uppercase mb-2">{d.description}</h3>
-                <Text className={`text-base whitespace-pre-line ${descExpanded ? "" : "line-clamp-4"}`}>
+                <Text
+                  className={`text-base whitespace-pre-line ${
+                    property.fullDescription.length > 300 && !descExpanded
+                      ? "line-clamp-4"
+                      : ""
+                  }`}
+                >
                   {property.fullDescription}
                 </Text>
-                <button
-                  type="button"
-                  onClick={() => setDescExpanded((v) => !v)}
-                  className="text-base text-blue-500 hover:text-blue-600 mt-1"
-                >
-                  {descExpanded ? d.showLess : d.showMore}
-                </button>
+                {property.fullDescription.length > 300 && (
+                  <button
+                    type="button"
+                    onClick={() => setDescExpanded((v) => !v)}
+                    className="text-base text-blue-500 hover:text-blue-600 mt-1"
+                  >
+                    {descExpanded ? d.showLess : d.showMore}
+                  </button>
+                )}
               </div>
             </SectionTracker>
           )}
@@ -196,7 +206,7 @@ export function PropertyDetailClient({
           {/* Characteristics */}
           <SectionTracker propertyId={propertyId} section="characteristics" className="px-4 lg:px-6">
             <h3 className="text-xs text-gray-400 uppercase mb-2">{d.characteristics}</h3>
-            <ul className="list-disc list-inside text-base space-y-1">
+            <ul className="list-disc list-inside text-base text-gray-600 space-y-1">
               <li>
                 {d.propertyType}: {propertyTypesDict[property.propertyType] || property.propertyType}
               </li>

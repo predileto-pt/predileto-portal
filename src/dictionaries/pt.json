@@ -142,6 +142,28 @@
     "penthouse": "Penthouse",
     "townhouse": "Moradia Geminada"
   },
+  "poiCategories": {
+    "hospital": "Hospital",
+    "bank": "Banco",
+    "grocery": "Mercearia",
+    "school": "Escola",
+    "pharmacy": "Farmácia",
+    "gym": "Ginásio",
+    "restaurant": "Restaurante",
+    "coffee_shop": "Café",
+    "laundry": "Lavandaria",
+    "gas_station": "Bomba de Gasolina",
+    "public_transit": "Transporte Público",
+    "kindergarten": "Infantário",
+    "park": "Parque",
+    "post_office": "Correios",
+    "library": "Biblioteca",
+    "shopping_mall": "Centro Comercial",
+    "bakery": "Padaria",
+    "police_station": "Esquadra",
+    "tire_shop": "Loja de Pneus",
+    "auto_shop": "Oficina Automóvel"
+  },
   "breadcrumbs": {
     "home": "Início"
   },

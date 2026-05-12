@@ -142,6 +142,28 @@
     "penthouse": "Penthouse",
     "townhouse": "Townhouse"
   },
+  "poiCategories": {
+    "hospital": "Hospital",
+    "bank": "Bank",
+    "grocery": "Grocery Store",
+    "school": "School",
+    "pharmacy": "Pharmacy",
+    "gym": "Gym",
+    "restaurant": "Restaurant",
+    "coffee_shop": "Coffee Shop",
+    "laundry": "Laundry",
+    "gas_station": "Gas Station",
+    "public_transit": "Public Transit",
+    "kindergarten": "Kindergarten",
+    "park": "Park",
+    "post_office": "Post Office",
+    "library": "Library",
+    "shopping_mall": "Shopping Mall",
+    "bakery": "Bakery",
+    "police_station": "Police Station",
+    "tire_shop": "Tire Shop",
+    "auto_shop": "Auto Shop"
+  },
   "breadcrumbs": {
     "home": "Home"
   },
