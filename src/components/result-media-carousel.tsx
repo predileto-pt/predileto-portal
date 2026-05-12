@@ -37,7 +37,7 @@ export function ResultMediaCarousel({
   const showControls = slides.length >= 2;
 
   const counts = useMemo(() => {
-    const c = { image: 0, video: 0, ai: 0 };
+    const c = { image: 0, video: 0, panorama: 0, ai: 0 };
     for (const m of slides) {
       c[m.type] += 1;
       if (m.type === "video" && m.aiGenerated) c.ai += 1;

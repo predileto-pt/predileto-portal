@@ -16,6 +16,10 @@ import {
 } from "@/components/deal/image-carousel";
 import { PropertyChat } from "@/components/property-chat";
 import type { SearchResultItem } from "@/components/search-results";
+import {
+  MediaTypeBadges,
+  type MediaCounts,
+} from "@/components/media-type-badges";
 import { Text } from "@/components/ui/text";
 
 interface Props {
@@ -54,6 +58,15 @@ export function PropertyDetailClient({
       })),
     [property.images]
   );
+
+  const mediaCounts = useMemo<MediaCounts>(() => {
+    const c: MediaCounts = { image: 0, video: 0, panorama: 0, ai: 0 };
+    for (const m of media) {
+      c[m.type] += 1;
+      if (m.type === "video" && m.aiGenerated) c.ai += 1;
+    }
+    return c;
+  }, [media]);
 
   const poisByCategory = useMemo(() => {
     const groups = new Map<string, ListedPoi[]>();
@@ -146,6 +159,11 @@ export function PropertyDetailClient({
               >
                 <div className="space-y-3">
                   <div className="space-y-1">
+                    <MediaTypeBadges
+                      counts={mediaCounts}
+                      ariaLabel="Tipos de média"
+                      className="mb-2"
+                    />
                     <h1 className="text-3xl font-bold leading-tight">
                       {property.title}
                     </h1>

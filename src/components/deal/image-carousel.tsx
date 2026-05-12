@@ -24,7 +24,7 @@ export function ImageCarousel({ media }: ImageCarouselProps) {
   const [current, setCurrent] = useState(0);
 
   const counts = useMemo<MediaCounts>(() => {
-    const c = { image: 0, video: 0, ai: 0 };
+    const c: MediaCounts = { image: 0, video: 0, panorama: 0, ai: 0 };
     for (const m of media) {
       c[m.type] += 1;
       if (m.type === "video" && m.aiGenerated) c.ai += 1;

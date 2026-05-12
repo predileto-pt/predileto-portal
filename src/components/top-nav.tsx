@@ -17,7 +17,7 @@ export function TopNav({ locale }: { locale: Locale }) {
   const dict = useDictionary();
 
   return (
-    <nav className="bg-slate-900 text-white">
+    <nav className="border-b border-gray-200 bg-white">
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4 lg:gap-6">
         <Link href={`/${locale}`} className="text-sm font-bold font-heading">
@@ -35,7 +35,7 @@ export function TopNav({ locale }: { locale: Locale }) {
                   "text-sm font-heading",
                   active
                     ? "font-bold underline underline-offset-4"
-                    : "text-slate-400 hover:text-white",
+                    : "text-gray-400 hover:text-gray-600",
                 )}
               >
                 {dict.nav[item.key]}
@@ -50,8 +50,8 @@ export function TopNav({ locale }: { locale: Locale }) {
           className={cn(
             "text-sm font-heading flex items-center gap-1",
             pathname.startsWith(`/${locale}/imobiliarias`)
-              ? "font-bold underline underline-offset-4"
-              : "text-slate-200 hover:text-white",
+              ? "font-bold text-black underline underline-offset-4"
+              : "text-black",
           )}
         >
           {dict.nav.agencies}

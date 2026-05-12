@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 export type MediaCounts = {
   image: number;
   video: number;
+  panorama: number;
   ai: number;
 };
 
@@ -15,7 +16,13 @@ export function MediaTypeBadges({
   ariaLabel?: string;
   className?: string;
 }) {
-  if (counts.image === 0 && counts.video === 0 && counts.ai === 0) return null;
+  if (
+    counts.image === 0 &&
+    counts.video === 0 &&
+    counts.panorama === 0 &&
+    counts.ai === 0
+  )
+    return null;
   return (
     <div
       className={cn("flex items-center gap-1.5", className)}
@@ -27,10 +34,33 @@ export function MediaTypeBadges({
       {counts.video > 0 && (
         <MediaTypeBadge icon={<VideoIcon />} count={counts.video} />
       )}
+      {counts.panorama > 0 && (
+        <MediaTypeBadge icon={<PanoramaIcon />} count={counts.panorama} />
+      )}
       {counts.ai > 0 && (
         <MediaTypeBadge icon={<SparkleIcon />} count={counts.ai} tone="ai" />
       )}
     </div>
+  );
+}
+
+function PanoramaIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-4 h-4"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a13.5 13.5 0 0 1 0 18" />
+      <path d="M12 3a13.5 13.5 0 0 0 0 18" />
+    </svg>
   );
 }
 
