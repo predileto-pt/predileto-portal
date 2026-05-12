@@ -157,10 +157,10 @@ export function LocationCombobox({
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex items-center gap-1.5 text-xs cursor-pointer transition-colors",
+          "flex items-center gap-2 text-sm cursor-pointer transition-colors",
           variant === "trigger"
-            ? "h-8 px-3 rounded-full border border-rule bg-paper hover:border-ink-subtle"
-            : "h-8 px-2 rounded-md border border-rule bg-paper hover:border-ink-subtle",
+            ? "h-9 px-3 border border-rule bg-paper hover:border-ink-subtle"
+            : "h-9 px-3 border border-rule bg-paper hover:border-ink-subtle",
           value ? "text-ink" : "text-ink-muted",
         )}
       >
@@ -174,7 +174,7 @@ export function LocationCombobox({
           ref={panelRef}
           role="listbox"
           aria-label="Localização"
-          className="absolute z-40 left-0 mt-1 w-[20rem] max-h-[24rem] overflow-y-auto rounded-lg border border-rule bg-paper shadow-lg p-1"
+          className="absolute z-50 left-0 mt-1 w-[20rem] max-h-[24rem] overflow-y-auto border border-rule bg-paper shadow-lg p-1"
         >
           {status === "loading" && (
             <div className="px-3 py-6 text-center text-xs text-ink-muted">
@@ -228,7 +228,7 @@ export function LocationCombobox({
                         role="option"
                         aria-selected={isSelectedDistrict}
                         className={cn(
-                          "flex-1 text-left text-xs px-2 py-1 rounded hover:bg-paper-muted cursor-pointer",
+                          "flex-1 text-left text-sm px-2 py-1.5 hover:bg-paper-muted cursor-pointer",
                           isSelectedDistrict && "bg-primary/10 text-primary",
                         )}
                       >
@@ -270,7 +270,7 @@ export function LocationCombobox({
                                   role="option"
                                   aria-selected={isSelectedMuni}
                                   className={cn(
-                                    "flex-1 text-left text-xs px-2 py-1 rounded hover:bg-paper-muted cursor-pointer",
+                                    "flex-1 text-left text-sm px-2 py-1.5 hover:bg-paper-muted cursor-pointer",
                                     isSelectedMuni &&
                                       "bg-primary/10 text-primary",
                                   )}
@@ -297,7 +297,7 @@ export function LocationCombobox({
                                           role="option"
                                           aria-selected={isSelectedParish}
                                           className={cn(
-                                            "block w-full text-left text-xs px-2 py-1 rounded hover:bg-paper-muted cursor-pointer",
+                                            "block w-full text-left text-sm px-2 py-1.5 hover:bg-paper-muted cursor-pointer",
                                             isSelectedParish &&
                                               "bg-primary/10 text-primary",
                                           )}
@@ -328,7 +328,7 @@ export function LocationCombobox({
                   setOpen(false);
                   triggerRef.current?.focus();
                 }}
-                className="w-full text-left text-xs px-2 py-1 rounded hover:bg-paper-muted text-ink-secondary cursor-pointer"
+                className="w-full text-left text-xs px-2 py-1 hover:bg-paper-muted text-ink-secondary cursor-pointer"
               >
                 Limpar seleção
               </button>

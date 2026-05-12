@@ -17,10 +17,16 @@ export function TopNav({ locale }: { locale: Locale }) {
   const dict = useDictionary();
 
   return (
-    <nav className="border-b border-gray-200 bg-white">
+    <nav
+      className="border-b border-gray-200"
+      style={{
+        background:
+          "linear-gradient(135deg, hsl(172 66% 95%) 0%, hsl(172 66% 90%) 50%, hsl(38 92% 95%) 100%)",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4 lg:gap-6">
-        <Link href={`/${locale}`} className="text-sm font-bold font-heading">
+        <Link href={`/${locale}`} className="text-base font-bold font-heading">
           {dict.nav.title}
         </Link>
         <div className="flex gap-4">
@@ -32,10 +38,10 @@ export function TopNav({ locale }: { locale: Locale }) {
                 key={item.key}
                 href={href}
                 className={cn(
-                  "text-sm font-heading",
+                  "text-base font-heading",
                   active
                     ? "font-bold underline underline-offset-4"
-                    : "text-gray-400 hover:text-gray-600",
+                    : "text-ink hover:text-ink-secondary",
                 )}
               >
                 {dict.nav[item.key]}
@@ -48,7 +54,7 @@ export function TopNav({ locale }: { locale: Locale }) {
         <Link
           href={`/${locale}/imobiliarias`}
           className={cn(
-            "text-sm font-heading flex items-center gap-1",
+            "text-base font-heading flex items-center gap-1",
             pathname.startsWith(`/${locale}/imobiliarias`)
               ? "font-bold text-black underline underline-offset-4"
               : "text-black",

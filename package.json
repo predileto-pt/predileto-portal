@@ -20,6 +20,7 @@
     "@radix-ui/react-select": "^2.2.6",
     "@supabase/supabase-js": "^2.97.0",
     "gray-matter": "^4.0.3",
+    "jotai": "^2.20.0",
     "marked": "^17.0.3",
     "motion": "^12.34.3",
     "next": "16.1.6",

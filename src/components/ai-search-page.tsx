@@ -1,7 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
+import {
+  messagesAtom,
+  resultsAtom,
+  nextCursorAtom,
+  lastPayloadAtom,
+  filterStateAtom,
+  chatOpenAtom,
+} from "@/lib/state/search-atoms";
 import {
   AIPropertiesSearcher,
   type AiSearchListingType,
@@ -35,6 +44,10 @@ import {
   useActivePropertyId,
 } from "@/components/active-property-provider";
 import { PropertyChat } from "@/components/property-chat";
+import { useDictionary } from "@/components/dictionary-provider";
+import { HomePromptExamples } from "@/components/landing/home-sections";
+import { LocationTreeSection } from "@/components/landing/location-tree";
+import { FeaturedDestinations } from "@/components/landing/featured-destinations";
 
 interface AISearchPageProps {
   listingType: AiSearchListingType;
@@ -91,16 +104,15 @@ export function AISearchPage({
   initialLocation = null,
 }: AISearchPageProps) {
   const router = useRouter();
-  const [messages, setMessages] = useState<SearchMessage[]>([]);
-  const [results, setResults] = useState<SearchResultItem[] | null>(null);
+  const [messages, setMessages] = useAtom(messagesAtom(listingType));
+  const [results, setResults] = useAtom(resultsAtom(listingType));
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [nextCursor, setNextCursor] = useAtom(nextCursorAtom(listingType));
   const [error, setError] = useState<SearchError | null>(null);
-  const [lastPayload, setLastPayload] = useState<AiSearchPayload | null>(null);
-  const [filterState, setFilterState] =
-    useState<ResultsFilterState>(initialFilterState);
-  const [chatOpen, setChatOpen] = useState(true);
+  const [lastPayload, setLastPayload] = useAtom(lastPayloadAtom(listingType));
+  const [filterState, setFilterState] = useAtom(filterStateAtom(listingType));
+  const [chatOpen, setChatOpen] = useAtom(chatOpenAtom(listingType));
   const bootstrappedRef = useRef(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -236,12 +248,15 @@ export function AISearchPage({
     if (!seed) return;
     if (!initialLocation) return; // q+location both required to auto-fire
     bootstrappedRef.current = true;
+    // Persisted atom already has state from a prior search on this
+    // listing type — don't clobber it by re-firing the seeded query.
+    if (messages.length > 0) return;
     void handleSearch({
       query: seed,
       listingType,
       location: initialLocation,
     });
-  }, [initialQuery, initialLocation, listingType, handleSearch]);
+  }, [initialQuery, initialLocation, listingType, handleSearch, messages.length]);
 
   const availableBedrooms = useMemo(() => {
     if (!results || results.length === 0) return [];
@@ -255,14 +270,13 @@ export function AISearchPage({
 
   if (!hasSearched) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
-        <AIPropertiesSearcher
-          listingType={listingType}
-          onSearch={handleSearch}
-          initialQuery={initialQuery}
-          initialLocation={initialLocation}
-        />
-      </div>
+      <UnsearchedLanding
+        listingType={listingType}
+        locale={locale}
+        initialQuery={initialQuery}
+        initialLocation={initialLocation}
+        onSearch={handleSearch}
+      />
     );
   }
 
@@ -409,6 +423,110 @@ function SearchErrorBanner({
           Tentar novamente
         </button>
       )}
+    </div>
+  );
+}
+
+/**
+ * Landing layout shown when the user lands on `/comprar` or `/arrendar`
+ * with no active search. Hero composer at the top, then prompt examples
+ * and a browsable location tree (idealista-style) for discoverability.
+ */
+function UnsearchedLanding({
+  listingType,
+  locale,
+  initialQuery,
+  initialLocation,
+  onSearch,
+}: {
+  listingType: AiSearchListingType;
+  locale: string;
+  initialQuery?: string;
+  initialLocation?: LocationSelection | null;
+  onSearch: (payload: AiSearchPayload) => void;
+}) {
+  const dict = useDictionary() as unknown as Record<
+    string,
+    Record<string, string>
+  >;
+  const prompts = dict.homePrompts ?? {};
+  const browse = dict.locationsBrowse ?? {};
+  const landing = dict.searchLanding ?? {};
+  const mode = listingType === "buy" ? "comprar" : "arrendar";
+
+  return (
+    <div className="grid grid-cols-12 gap-0">
+      {/* ── Hero ─────────────────────────────────────────────────── */}
+      <section
+        aria-labelledby="search-hero-heading"
+        className="col-span-12 relative bg-canvas"
+      >
+        {/* Soft warm radial glow as backdrop — no images, pure CSS */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% 0%, hsl(38 92% 50% / 0.10), transparent 70%), radial-gradient(ellipse 60% 50% at 20% 40%, hsl(172 66% 50% / 0.08), transparent 60%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-5xl px-4 sm:px-6 pt-14 sm:pt-20 pb-10 sm:pb-14">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-primary font-semibold mb-4">
+              {landing.eyebrow ??
+                (listingType === "buy"
+                  ? "Comprar em Portugal"
+                  : "Arrendar em Portugal")}
+            </p>
+            <h1
+              id="search-hero-heading"
+              className="text-balance text-4xl sm:text-5xl lg:text-6xl font-heading font-bold leading-heading tracking-heading text-ink"
+            >
+              {landing.heading ?? "Descreve a casa."}{" "}
+              <span className="landing-gradient-text italic">
+                {landing.headingAccent ?? "Nós encontramos."}
+              </span>
+            </h1>
+            <p className="mt-4 text-base sm:text-lg text-ink-secondary leading-body max-w-xl mx-auto">
+              {landing.subheading ??
+                "Pesquisa em linguagem natural. Sem filtros, sem formulários, só o que importa."}
+            </p>
+          </div>
+
+          <AIPropertiesSearcher
+            listingType={listingType}
+            onSearch={onSearch}
+            initialQuery={initialQuery}
+            initialLocation={initialLocation ?? null}
+          />
+        </div>
+      </section>
+
+      {/* ── Featured destinations ────────────────────────────────── */}
+      <FeaturedDestinations
+        locale={locale}
+        mode={mode}
+        eyebrow={landing.destinationsEyebrow ?? "Por onde queres viver"}
+        heading={landing.destinationsHeading ?? "Destinos em Portugal"}
+        cta={landing.destinationsCta ?? "Ver todos os distritos"}
+      />
+
+      {/* ── Prompt examples ──────────────────────────────────────── */}
+      <HomePromptExamples copy={prompts} locale={locale} />
+
+      {/* ── Full location tree (anchor target from destinations CTA) */}
+      <div id="all-locations" className="col-span-12 contents">
+        <LocationTreeSection
+          locale={locale}
+          mode={mode}
+          heading={
+            (listingType === "buy"
+              ? browse.headingBuy
+              : browse.headingRent) ?? ""
+          }
+          subheading={browse.subheading ?? ""}
+        />
+      </div>
     </div>
   );
 }

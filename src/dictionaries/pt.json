@@ -544,6 +544,20 @@
     "primary": "Começar a procurar",
     "secondary": "Como funciona"
   },
+  "locationsBrowse": {
+    "headingBuy": "Comprar imóveis em Portugal",
+    "headingRent": "Arrendar imóveis em Portugal",
+    "subheading": "Explora por distrito ou concelho"
+  },
+  "searchLanding": {
+    "eyebrow": "Procura inteligente",
+    "heading": "Descreve a casa.",
+    "headingAccent": "Nós encontramos.",
+    "subheading": "Pesquisa em linguagem natural. Sem filtros, sem formulários — apenas o que importa para ti.",
+    "destinationsEyebrow": "Por onde queres viver",
+    "destinationsHeading": "Destinos em Portugal",
+    "destinationsCta": "Ver todos os distritos"
+  },
   "feedCard": {
     "chipBuy": "Comprar",
     "chipRent": "Arrendar",

@@ -91,7 +91,7 @@ export function ResultsFilterSidebar({
           aria-label="Ordenar por"
           value={state.sort}
           onChange={(e) => set("sort", e.target.value as ResultsSort)}
-          className="w-full h-8 px-2 text-xs border border-rule bg-paper rounded-sm"
+          className="w-full h-9 px-2 text-sm border border-rule bg-paper"
         >
           {SORT_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
@@ -114,7 +114,7 @@ export function ResultsFilterSidebar({
                   onClick={() => toggleBedroom(b.value)}
                   aria-pressed={active}
                   className={cn(
-                    "px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors",
+                    "px-2.5 py-1.5 text-sm border cursor-pointer transition-colors",
                     active
                       ? "bg-primary text-paper border-primary"
                       : "bg-paper text-ink-secondary border-rule hover:border-primary hover:text-primary",
@@ -164,7 +164,7 @@ export function ResultsFilterSidebar({
             onChange={(e) => set("withComments", e.target.checked)}
             className="cursor-pointer accent-[hsl(172_66%_42%)]"
           />
-          <span className="text-xs text-ink-secondary">
+          <span className="text-sm text-ink-secondary">
             Apenas com comentários
           </span>
         </label>
@@ -296,7 +296,7 @@ function NumberInput({
       aria-label={ariaLabel}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="h-8 w-full px-2 text-xs border border-rule bg-paper rounded-sm outline-none focus:border-ink-subtle"
+      className="h-9 w-full px-2 text-sm border border-rule bg-paper outline-none focus:border-ink-subtle"
     />
   );
 }

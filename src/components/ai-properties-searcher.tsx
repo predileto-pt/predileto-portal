@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import { Title } from "@/components/ui/title";
 import {
   availableTypologies,
-  typologyLabels,
   type Typology,
 } from "@/lib/search-rules";
 import type { LocationSelection } from "@/lib/estate-os";
 import { LocationCombobox } from "@/components/location-combobox";
+import { TypologyMultiSelect } from "@/components/typology-multi-select";
 
 export type AiSearchListingType = "buy" | "rent";
 
@@ -48,7 +48,7 @@ export function AIPropertiesSearcher({
   const [location, setLocation] = useState<LocationSelection | null>(
     initialLocation,
   );
-  const [typology, setTypology] = useState<Typology | undefined>(undefined);
+  const [typologies, setTypologies] = useState<Typology[]>([]);
 
   const typologyOptions = availableTypologies({ listingType });
   const trimmedQuery = query.trim();
@@ -57,18 +57,16 @@ export function AIPropertiesSearcher({
   // (structured-only browse — query is optional).
   const canSubmit = !hasQuery || location !== null;
 
-  const selectTypology = (t: Typology) => {
-    setTypology((prev) => (prev === t ? undefined : t));
-  };
-
   const submit = () => {
     if (!canSubmit) return;
+    // TODO: BE accepts a single `typology` param — pass the first valid
+    // selection. Multi-typology requires a query-param list change.
+    const valid = typologies.filter((t) => typologyOptions.includes(t));
     onSearch({
       query: trimmedQuery,
       listingType,
       location,
-      typology:
-        typology && typologyOptions.includes(typology) ? typology : undefined,
+      typology: valid[0],
     });
     if (clearOnSubmit) setQuery("");
   };
@@ -97,19 +95,8 @@ export function AIPropertiesSearcher({
         onSubmit={handleSubmit}
         data-type="ai-search-composer"
         className={cn(
-          "group/composer relative grid grid-cols-[1fr_auto] items-end gap-2 p-2 rounded-[20px] transition-all",
-          // Frosted glass body — linear sheen baked in as bg-image, semi-translucent for backdrop blur to show through
-          "bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(255,255,255,0.78)_45%,rgba(255,255,255,0.88))]",
-          "backdrop-blur-2xl backdrop-saturate-150",
-          // Layered shadows: top inner sheen, hairline bottom inner shadow, contact, mid lift, soft far shadow
-          "shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-12px_rgba(0,0,0,0.18),0_20px_40px_-20px_rgba(0,0,0,0.15)]",
-          // Gradient hairline border via ::before + mask trick (Apple "liquid glass" highlight)
-          "before:pointer-events-none before:absolute before:inset-0 before:rounded-[20px] before:p-px",
-          "before:[background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.3)_25%,rgba(255,255,255,0)_55%,rgba(0,0,0,0.06)_100%)]",
-          "before:[mask:linear-gradient(#000,#000)_content-box,linear-gradient(#000,#000)]",
-          "before:[mask-composite:exclude]",
-          // Focus state: stronger sheen and lift
-          "focus-within:shadow-[inset_0_1px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.06),0_12px_28px_-12px_rgba(0,0,0,0.22),0_24px_48px_-20px_rgba(0,0,0,0.2)]",
+          "group/composer relative grid grid-cols-[1fr_auto] items-end gap-2 p-2 rounded-[20px] transition-colors",
+          "bg-white border border-gray-200 focus-within:border-gray-400",
         )}
       >
         <textarea
@@ -168,29 +155,13 @@ export function AIPropertiesSearcher({
 
           <Divider />
 
-          {/* Tipologia */}
+          {/* Tipologia — multi-select dropdown */}
           <FilterGroup label="Tipologia" className="flex-1 min-w-0 sm:pl-5">
-            <div className="flex flex-wrap gap-1.5">
-              {typologyOptions.map((t) => {
-                const active = typology === t;
-                return (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => selectTypology(t)}
-                    aria-pressed={active}
-                    className={cn(
-                      "px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors",
-                      active
-                        ? "bg-primary text-paper border-primary"
-                        : "bg-paper text-ink-secondary border-rule hover:border-primary hover:text-primary",
-                    )}
-                  >
-                    {typologyLabels[t]}
-                  </button>
-                );
-              })}
-            </div>
+            <TypologyMultiSelect
+              options={typologyOptions}
+              value={typologies}
+              onChange={setTypologies}
+            />
           </FilterGroup>
         </div>
       </div>

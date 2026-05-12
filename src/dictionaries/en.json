@@ -544,6 +544,20 @@
     "primary": "Start searching",
     "secondary": "How it works"
   },
+  "locationsBrowse": {
+    "headingBuy": "Buy properties in Portugal",
+    "headingRent": "Rent properties in Portugal",
+    "subheading": "Browse by district or municipality"
+  },
+  "searchLanding": {
+    "eyebrow": "Smart search",
+    "heading": "Describe the home.",
+    "headingAccent": "We'll find it.",
+    "subheading": "Natural-language search. No filters, no forms — just what matters to you.",
+    "destinationsEyebrow": "Where do you want to live",
+    "destinationsHeading": "Destinations in Portugal",
+    "destinationsCta": "See all districts"
+  },
   "feedCard": {
     "chipBuy": "Buy",
     "chipRent": "Rent",
