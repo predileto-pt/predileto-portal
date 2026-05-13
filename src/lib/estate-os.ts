@@ -378,6 +378,8 @@ export function mapListedToSearchResult(
     country: listed.country,
     areaSqm: listed.characteristics?.area_in_m2 ?? 0,
     bedrooms: listed.characteristics?.num_of_bedrooms ?? 0,
+    floor: listed.characteristics?.floor ?? undefined,
+    hasElevator: listed.characteristics?.has_elevator ?? undefined,
     media,
     listingType: listed.listing_type === "sale" ? "buy" : "rent",
     propertyType: listed.typology,

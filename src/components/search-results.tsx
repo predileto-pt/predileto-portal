@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { cn, formatArea, formatPriceParts } from "@/lib/utils";
+import { cn, formatPriceParts } from "@/lib/utils";
 import { Small } from "@/components/ui/small";
 import { CommentsList, type CommentData } from "@/components/comments-list";
 import {
@@ -53,6 +53,10 @@ export interface SearchResultItem {
   country?: string;
   areaSqm: number;
   bedrooms: number;
+  /** Building floor (0 = ground floor). */
+  floor?: number;
+  /** Whether the building has an elevator — drives the "sem/com elevador" hint. */
+  hasElevator?: boolean;
   /** @deprecated prefer `media`. Kept as a fallback for single-image entries. */
   imageUrl?: string;
   /** Mixed image / video carousel items. Wins over `imageUrl` when present. */
@@ -205,12 +209,7 @@ function ResultCard({
           )}
         </p>
 
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-secondary">
-          {item.bedrooms > 0 && (
-            <span className="font-medium">T{item.bedrooms}</span>
-          )}
-          {item.areaSqm > 0 && <span>{formatArea(item.areaSqm)}</span>}
-        </div>
+        <ResultCharRow item={item} />
       </div>
 
       {/* AI attributes */}
@@ -677,4 +676,46 @@ function CharacteristicIconSvg({ name }: { name: CharacteristicIcon }) {
         </svg>
       );
   }
+}
+
+/**
+ * Inline characteristics row shown directly below the price — idealista
+ * style. Each fact is its own <span>; missing data is skipped silently so
+ * cards never show empty separators or "—" placeholders.
+ */
+function ResultCharRow({ item }: { item: SearchResultItem }) {
+  const facts: { key: string; text: string }[] = [];
+
+  if (item.bedrooms > 0) {
+    facts.push({ key: "bedrooms", text: `T${item.bedrooms}` });
+  }
+  if (item.areaSqm > 0) {
+    facts.push({ key: "area", text: `${item.areaSqm} m² área bruta` });
+  }
+  if (item.floor !== undefined) {
+    const floorLabel =
+      item.floor === 0 ? "Rés-do-chão" : `${item.floor}º andar`;
+    const elevatorHint =
+      item.hasElevator === false
+        ? " sem elevador"
+        : item.hasElevator
+          ? " com elevador"
+          : "";
+    facts.push({ key: "floor", text: `${floorLabel}${elevatorHint}` });
+  }
+
+  if (facts.length === 0) return null;
+
+  return (
+    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-secondary">
+      {facts.map((f) => (
+        <span
+          key={f.key}
+          className={cn(f.key === "bedrooms" && "font-medium text-ink")}
+        >
+          {f.text}
+        </span>
+      ))}
+    </div>
+  );
 }
