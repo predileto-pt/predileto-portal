@@ -35,7 +35,7 @@ export default async function AgenciesPage({
   if (!isValidLocale(locale)) notFound();
 
   const dict = await getDictionary(locale as Locale);
-  const ag = (dict as Record<string, Record<string, string>>).agencies;
+  const ag = (dict as unknown as Record<string, Record<string, string>>).agencies;
   const screenshots = getScreenshots();
 
   return (

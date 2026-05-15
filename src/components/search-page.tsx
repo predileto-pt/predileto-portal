@@ -120,7 +120,7 @@ export async function SearchPage({
 
         <LocationBreadcrumbs
           items={breadcrumbs}
-          homeLabel={(dict as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
+          homeLabel={(dict as unknown as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
           homeHref={`/${locale}`}
           listingLabel={listingLabel}
           listingHref={`/${locale}/${listingSlug}`}
