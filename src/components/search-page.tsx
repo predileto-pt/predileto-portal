@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { getProperties, getLatestProperties } from "@/lib/api";
+import { getProperties } from "@/lib/api";
 import type { PropertySearchParams } from "@/lib/types";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import {
@@ -52,9 +52,6 @@ export async function SearchPage({
   const dict = await getDictionary(locale as Locale);
   const hasLocation = locationSlugs.length > 0;
   const hasFilters = hasActiveFilters(sp) || hasLocation;
-  const latestProperties = !hasFilters
-    ? await getLatestProperties(listingType, 10)
-    : [];
 
   const rawParams: Record<string, string | undefined> = {};
   for (const [key, value] of Object.entries(sp)) {
@@ -123,7 +120,7 @@ export async function SearchPage({
 
         <LocationBreadcrumbs
           items={breadcrumbs}
-          homeLabel={(dict as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
+          homeLabel={(dict as unknown as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
           homeHref={`/${locale}`}
           listingLabel={listingLabel}
           listingHref={`/${locale}/${listingSlug}`}
@@ -142,15 +139,16 @@ export async function SearchPage({
               currentUrl={currentUrl}
             />
           </Suspense>
-        ) : latestProperties.length > 0 ? (
-          <PropertyList
-            properties={latestProperties}
-            total={latestProperties.length}
-            page={1}
-            pageSize={10}
-            locale={locale}
-          />
-        ) : null}
+        ) : (
+          <div className="text-center py-16 px-4 border border-rule bg-paper">
+            <h2 className="text-base font-semibold mb-2">
+              {dict.properties.searchEmpty.heading}
+            </h2>
+            <p className="text-sm text-gray-600 max-w-md mx-auto">
+              {dict.properties.searchEmpty.sub}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Desktop history sidebar (right, 3 cols) */}

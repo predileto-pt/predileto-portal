@@ -37,7 +37,11 @@
     "found": "{count} property(ies) found",
     "noResults": "No properties found",
     "showing": "showing {from}-{to} of {total}",
-    "searchPrompt": "Use the search bar to find properties"
+    "searchPrompt": "Use the search bar to find properties",
+    "searchEmpty": {
+      "heading": "Start searching",
+      "sub": "Use the search bar above or pick a location to begin."
+    }
   },
   "propertyDetail": {
     "about": "About This Property",

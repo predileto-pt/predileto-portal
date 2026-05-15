@@ -1,32 +1,26 @@
-"use client";
+import { SearchPage } from "@/components/search-page";
 
-import { use } from "react";
-import dynamic from "next/dynamic";
-import { parseInitialLocation } from "@/lib/search-url";
+export const dynamic = "force-dynamic";
 
-const AISearchPage = dynamic(
-  () => import("@/components/ai-search-page").then((m) => m.AISearchPage),
-  { ssr: false },
-);
-
-export default function ComprarPage({
+export default async function ComprarPage({
   params,
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { locale } = use(params);
-  const sp = use(searchParams);
-  const initialQuery = typeof sp.q === "string" ? sp.q : undefined;
-  const initialLocation = parseInitialLocation(sp);
+  const { locale } = await params;
+  const sp = await searchParams;
 
   return (
-    <AISearchPage
-      listingType="buy"
-      locale={locale}
-      initialQuery={initialQuery}
-      initialLocation={initialLocation}
-    />
+    <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
+      <SearchPage
+        locationSlugs={[]}
+        listingType="buy"
+        listingSlug="comprar"
+        locale={locale}
+        searchParams={sp}
+      />
+    </div>
   );
 }
