@@ -15,6 +15,13 @@ interface Destination {
   image?: string;
   /** Tailwind class for the gradient behind the image. */
   bg: string;
+  /**
+   * Tailwind `from-*` color for the bottom-to-top colored shade overlay.
+   * Pick a 600/700-weight saturated color so white text remains readable
+   * at the bottom; the gradient fades to fully transparent at the top so
+   * the image is visible across the upper half.
+   */
+  tint: string;
 }
 
 const DESTINATIONS: Destination[] = [
@@ -24,6 +31,7 @@ const DESTINATIONS: Destination[] = [
     tagline: "Capital · histórica",
     image: "/images/lisboa.jpeg",
     bg: "bg-gradient-to-br from-amber-200 to-rose-300",
+    tint: "from-rose-700/85",
   },
   {
     name: "Porto",
@@ -31,6 +39,7 @@ const DESTINATIONS: Destination[] = [
     tagline: "Douro · vinho",
     image: "/images/porto.jpeg",
     bg: "bg-gradient-to-br from-orange-200 to-amber-300",
+    tint: "from-orange-700/85",
   },
   {
     name: "Algarve",
@@ -38,6 +47,7 @@ const DESTINATIONS: Destination[] = [
     tagline: "Sul · costa atlântica",
     image: "/images/algarve.jpg",
     bg: "bg-gradient-to-br from-sky-200 to-cyan-300",
+    tint: "from-cyan-700/85",
   },
   {
     name: "Sintra",
@@ -45,6 +55,7 @@ const DESTINATIONS: Destination[] = [
     tagline: "Serra · palácios",
     image: "/images/sintra.jpeg",
     bg: "bg-gradient-to-br from-emerald-200 to-teal-300",
+    tint: "from-emerald-700/85",
   },
   {
     name: "Coimbra",
@@ -52,6 +63,7 @@ const DESTINATIONS: Destination[] = [
     tagline: "Universitária",
     image: "/images/coimbra.jpg",
     bg: "bg-gradient-to-br from-stone-200 to-amber-200",
+    tint: "from-amber-800/85",
   },
   {
     name: "Braga",
@@ -59,6 +71,7 @@ const DESTINATIONS: Destination[] = [
     tagline: "Minho · barroca",
     image: "/images/braga.jpg",
     bg: "bg-gradient-to-br from-amber-100 to-orange-200",
+    tint: "from-amber-700/85",
   },
   {
     name: "Cascais",
@@ -66,6 +79,7 @@ const DESTINATIONS: Destination[] = [
     tagline: "Linha · costa",
     image: "/images/cascais.jpeg",
     bg: "bg-gradient-to-br from-blue-200 to-indigo-200",
+    tint: "from-indigo-700/85",
   },
   {
     name: "Madeira",
@@ -73,6 +87,7 @@ const DESTINATIONS: Destination[] = [
     tagline: "Ilha · atlântica",
     image: "/images/madeira.jpeg",
     bg: "bg-gradient-to-br from-emerald-300 to-cyan-400",
+    tint: "from-teal-700/85",
   },
 ];
 
@@ -139,17 +154,14 @@ export function FeaturedDestinations({
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                     />
                   ) : null}
-                  {/* Per-card colored tint over the image — each city keeps
-                      its signature palette while the photo shows through.
-                      Inline opacity bypasses Tailwind's JIT scan; the
-                      tint level isn't tied to whether the build picked
-                      up the right utility class. */}
+                  {/* Per-card colored shade fading bottom → top. Solid at
+                      the bottom (text contrast), transparent at the top
+                      (image visible). Replaces the old neutral dark-bottom
+                      gradient so each card carries its own mood. */}
                   <div
                     aria-hidden
-                    style={{ opacity: 0.35 }}
-                    className={`absolute inset-0 ${d.bg}`}
+                    className={`absolute inset-0 bg-gradient-to-t ${d.tint} to-transparent`}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
                     <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-white/90 bg-black/30 backdrop-blur-sm px-2 py-1">
                       {d.tagline}
