@@ -1,4 +1,5 @@
 import locationData from "@/data/portugal-locations.json";
+import type { LocationSelection } from "@/lib/estate-os";
 
 // --- Types ---
 
@@ -258,4 +259,32 @@ export function searchLocations(
   }
 
   return [...startsWithMatches, ...substringMatches].slice(0, limit);
+}
+
+// Pick the deepest level (parish > municipality > district) from a
+// ResolvedLocation. Region is intentionally excluded — AISearchPage's
+// LocationSelection doesn't carry it.
+export function resolvedToLocationSelection(
+  r: ResolvedLocation,
+): LocationSelection | null {
+  if (r.parish) return { level: "parish", name: r.parish.name };
+  if (r.municipality)
+    return { level: "municipality", name: r.municipality.name };
+  if (r.district) return { level: "district", name: r.district.name };
+  return null;
+}
+
+// Read district/municipality/parish from a searchParams record and pick
+// the deepest one. The backend's search API accepts location *names* (not
+// slugs) for each level, which is what AISearchPage forwards verbatim.
+export function pickLocationFromSearchParams(
+  sp: Record<string, string | string[] | undefined>,
+): LocationSelection | null {
+  if (typeof sp.parish === "string" && sp.parish)
+    return { level: "parish", name: sp.parish };
+  if (typeof sp.municipality === "string" && sp.municipality)
+    return { level: "municipality", name: sp.municipality };
+  if (typeof sp.district === "string" && sp.district)
+    return { level: "district", name: sp.district };
+  return null;
 }

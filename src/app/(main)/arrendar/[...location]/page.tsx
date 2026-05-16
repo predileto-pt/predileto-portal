@@ -1,9 +1,14 @@
-import { SearchPage } from "@/components/search-page";
+import { notFound } from "next/navigation";
+import { AISearchClient } from "@/components/ai-search-client";
 import { getServerLocale } from "@/lib/server-locale";
+import {
+  resolveLocationFromSlugs,
+  resolvedToLocationSelection,
+} from "@/lib/locations";
 
 export const dynamic = "force-dynamic";
 
-export default async function AlugarLocationPage({
+export default async function ArrendarLocationPage({
   params,
   searchParams,
 }: {
@@ -14,15 +19,18 @@ export default async function AlugarLocationPage({
   const { location } = await params;
   const sp = await searchParams;
 
+  const resolved = resolveLocationFromSlugs(location);
+  if (!resolved.valid) notFound();
+
+  const initialQuery = typeof sp.q === "string" ? sp.q : undefined;
+  const initialLocation = resolvedToLocationSelection(resolved);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
-      <SearchPage
-        locationSlugs={location}
-        listingType="rent"
-        listingSlug="arrendar"
-        locale={locale}
-        searchParams={sp}
-      />
-    </div>
+    <AISearchClient
+      listingType="rent"
+      locale={locale}
+      initialQuery={initialQuery}
+      initialLocation={initialLocation}
+    />
   );
 }
