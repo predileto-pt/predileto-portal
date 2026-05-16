@@ -17,6 +17,8 @@ export type Capability =
   | "CONTACT_AGENT"
   | "SAVE_PROPERTY";
 
+export type CookiesConsentValue = "accepted" | "declined";
+
 /** Wire-format SessionView (snake_case, matches BE response). */
 export interface SessionView {
   kind: Kind;
@@ -24,6 +26,7 @@ export interface SessionView {
   capabilities: Capability[];
   prefs: Record<string, unknown>;
   favorites: string[];
+  cookies_consent?: CookiesConsentValue | null;
   limits?: {
     favorites_max: number;
     prefs_max_bytes: number;
@@ -48,6 +51,7 @@ export interface SessionSnapshot {
 export interface SessionPatch {
   favorites?: { add?: string[]; remove?: string[] };
   prefs?: { merge?: Record<string, unknown> };
+  cookies_consent?: CookiesConsentValue;
 }
 
 /** Fallback limits when BE doesn't surface `SessionView.limits`. */

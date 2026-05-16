@@ -585,5 +585,34 @@
     "in": "in",
     "upTo": "up to",
     "entryFallback": "Search"
+  },
+  "cookieConsent": {
+    "title": "Cookies & privacy",
+    "body": "We use essential cookies to run the site and, with your consent, analytics cookies (PostHog) to understand how the product is used and improve it. You can change your mind at any time.",
+    "accept": "Accept all",
+    "decline": "Essentials only",
+    "learnMore": "Learn more"
+  },
+  "footer": {
+    "tagline": "Natural-language property search.",
+    "privacy": "Privacy policy",
+    "agencies": "Solutions for agencies",
+    "rights": "All rights reserved."
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "updated": "Last updated: 16 May 2026",
+    "intro": "This policy describes how Predileto collects, uses, and protects your personal data when you use the site. It complies with the European Union's General Data Protection Regulation (GDPR).",
+    "essentialHeading": "1. Essential cookies",
+    "essentialBody": "We use strictly necessary cookies for the site to function — authentication, session persistence, and language preferences. These cookies don't require consent because they're indispensable for the service.",
+    "analyticsHeading": "2. Analytics cookies (PostHog)",
+    "analyticsBody": "With your consent, we use PostHog to collect aggregated data about how the site is used: pages visited, clicks, performance. This data helps us improve the experience and is never sold to third parties. You can refuse or withdraw consent without affecting your access to the site.",
+    "rightsHeading": "3. Your rights",
+    "rightsBody": "You have the right to access, rectify, delete, port, and object to the processing of your personal data. To exercise any of these rights, contact us by email.",
+    "contactHeading": "4. Contact",
+    "contactBody": "For any question about this policy or about the processing of your data, send an email to",
+    "manageHeading": "5. Manage consent",
+    "manageBody": "You can change your choice at any time by clicking the button below. The page will reload.",
+    "manageButton": "Review my cookie preferences"
   }
 }
