@@ -3,6 +3,7 @@ import { PostHogProvider } from "@/components/posthog-provider";
 import { DictionaryProvider } from "@/components/dictionary-provider";
 import { LocaleProvider } from "@/lib/locale-context";
 import { UserSessionProvider } from "@/components/session/user-session-provider";
+import { CookieConsentModal } from "@/components/cookie-consent-modal";
 import { getDictionary } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/server-locale";
 import "./globals.css";
@@ -30,6 +31,7 @@ export default async function RootLayout({
           <LocaleProvider locale={locale}>
             <DictionaryProvider dictionary={dictionary}>
               <UserSessionProvider>{children}</UserSessionProvider>
+              <CookieConsentModal />
             </DictionaryProvider>
           </LocaleProvider>
         </PostHogProvider>

@@ -585,5 +585,34 @@
     "in": "em",
     "upTo": "até",
     "entryFallback": "Pesquisa"
+  },
+  "cookieConsent": {
+    "title": "Cookies e privacidade",
+    "body": "Utilizamos cookies essenciais ao funcionamento do site e, com o teu consentimento, cookies de análise (PostHog) para perceber como o produto é usado e melhorá-lo. Podes mudar de ideias a qualquer momento.",
+    "accept": "Aceitar tudo",
+    "decline": "Apenas essenciais",
+    "learnMore": "Saber mais"
+  },
+  "footer": {
+    "tagline": "Pesquisa de imóveis em linguagem natural.",
+    "privacy": "Política de privacidade",
+    "agencies": "Soluções para imobiliárias",
+    "rights": "Todos os direitos reservados."
+  },
+  "privacy": {
+    "title": "Política de privacidade",
+    "updated": "Última atualização: 16 de maio de 2026",
+    "intro": "Esta política descreve como a Predileto recolhe, utiliza e protege os teus dados pessoais ao usares o site. Cumpre o Regulamento Geral de Proteção de Dados (RGPD / GDPR) da União Europeia.",
+    "essentialHeading": "1. Cookies essenciais",
+    "essentialBody": "Usamos cookies estritamente necessários para o funcionamento do site — autenticação, manutenção da sessão e preferências de idioma. Estes cookies não requerem consentimento porque são imprescindíveis para que o serviço funcione.",
+    "analyticsHeading": "2. Cookies de análise (PostHog)",
+    "analyticsBody": "Com o teu consentimento, usamos a PostHog para recolher dados agregados sobre como o site é utilizado: páginas visitadas, cliques, performance. Estes dados ajudam-nos a melhorar a experiência e nunca são vendidos a terceiros. Podes recusar ou retirar o consentimento sem afetar o acesso ao site.",
+    "rightsHeading": "3. Os teus direitos",
+    "rightsBody": "Tens direito de acesso, retificação, eliminação, portabilidade e oposição ao tratamento dos teus dados pessoais. Para exercer qualquer destes direitos, contacta-nos por email.",
+    "contactHeading": "4. Contacto",
+    "contactBody": "Para qualquer questão sobre esta política ou sobre o tratamento dos teus dados, envia um email para",
+    "manageHeading": "5. Gerir consentimento",
+    "manageBody": "Podes alterar a tua escolha a qualquer momento clicando no botão abaixo. A página será recarregada.",
+    "manageButton": "Rever as minhas preferências de cookies"
   }
 }
