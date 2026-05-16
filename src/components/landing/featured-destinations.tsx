@@ -139,6 +139,12 @@ export function FeaturedDestinations({
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                     />
                   ) : null}
+                  {/* Per-card colored tint over the image — each city keeps
+                      its signature palette while the photo shows through. */}
+                  <div
+                    aria-hidden
+                    className={`absolute inset-0 mix-blend-multiply opacity-60 ${d.bg}`}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
                     <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-white/90 bg-black/30 backdrop-blur-sm px-2 py-1">
