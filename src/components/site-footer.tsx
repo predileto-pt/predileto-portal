@@ -21,7 +21,7 @@ export async function SiteFooter() {
             </p>
           </div>
           <nav>
-            <ul className="flex flex-col gap-2 text-sm font-heading sm:items-end">
+            <ul className="flex flex-col gap-2 text-sm font-heading">
               <li>
                 <Link
                   href="/politica-privacidade"
@@ -41,7 +41,7 @@ export async function SiteFooter() {
             </ul>
           </nav>
         </div>
-        <div className="mt-12 pt-10 border-t border-rule text-[11px] uppercase tracking-[0.18em] text-ink-muted font-semibold">
+        <div className="mt-12 pt-10 text-[11px] uppercase tracking-[0.18em] text-ink-muted font-semibold">
           © {year} {dict.nav.title}. {f.rights}
         </div>
       </div>
