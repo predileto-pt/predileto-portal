@@ -124,7 +124,6 @@ export function AISearchPage({
     setChatOpen(true);
   }
 
-  const hasSearched = messages.length > 0;
 
   const handleSearch = useCallback(async (payload: AiSearchPayload) => {
     const message: SearchMessage = {
@@ -268,17 +267,13 @@ export function AISearchPage({
     return Array.from(set).sort((a, b) => a - b);
   }, [results]);
 
-  if (!hasSearched) {
-    return (
-      <UnsearchedLanding
-        listingType={listingType}
-        locale={locale}
-        initialQuery={initialQuery}
-        initialLocation={initialLocation}
-        onSearch={handleSearch}
-      />
-    );
-  }
+  // Previously: pre-search returned <UnsearchedLanding /> (editorial
+  // landing). Operator wants the subheader (typology + locations +
+  // searchbar) visible immediately so users can search from the
+  // arrendar/comprar landing without first interacting with a
+  // separate intro screen. SearchResults handles items={null} as the
+  // pre-search empty state. UnsearchedLanding kept below as dead code
+  // for now in case we want to revisit.
 
   const subheaderPayload: AiSearchPayload = lastPayload ?? {
     query: initialQuery ?? "",
