@@ -20,19 +20,25 @@ export async function SiteFooter() {
               {f.tagline}
             </p>
           </div>
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-heading">
-            <Link
-              href="/politica-privacidade"
-              className="text-ink-secondary hover:text-ink transition-colors"
-            >
-              {f.privacy}
-            </Link>
-            <Link
-              href="/imobiliarias"
-              className="text-ink-secondary hover:text-ink transition-colors"
-            >
-              {f.agencies}
-            </Link>
+          <nav>
+            <ul className="flex flex-col gap-2 text-sm font-heading sm:items-end">
+              <li>
+                <Link
+                  href="/politica-privacidade"
+                  className="text-ink-secondary hover:text-ink transition-colors"
+                >
+                  {f.privacy}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/imobiliarias"
+                  className="text-ink-secondary hover:text-ink transition-colors"
+                >
+                  {f.agencies}
+                </Link>
+              </li>
+            </ul>
           </nav>
         </div>
         <div className="mt-10 pt-6 border-t border-rule text-[11px] uppercase tracking-[0.18em] text-ink-muted font-semibold">
