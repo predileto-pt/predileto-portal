@@ -140,10 +140,12 @@ export function FeaturedDestinations({
                     />
                   ) : null}
                   {/* Per-card colored tint over the image — each city keeps
-                      its signature palette while the photo shows through. */}
+                      its signature palette while the photo shows through.
+                      Pastel gradient at ~45% opacity (no blend mode — multiply
+                      against light colors barely shifts the image). */}
                   <div
                     aria-hidden
-                    className={`absolute inset-0 mix-blend-multiply opacity-60 ${d.bg}`}
+                    className={`absolute inset-0 opacity-45 ${d.bg}`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
