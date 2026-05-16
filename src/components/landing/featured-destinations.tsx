@@ -141,11 +141,13 @@ export function FeaturedDestinations({
                   ) : null}
                   {/* Per-card colored tint over the image — each city keeps
                       its signature palette while the photo shows through.
-                      Pastel gradient at ~45% opacity (no blend mode — multiply
-                      against light colors barely shifts the image). */}
+                      Inline opacity bypasses Tailwind's JIT scan; the
+                      tint level isn't tied to whether the build picked
+                      up the right utility class. */}
                   <div
                     aria-hidden
-                    className={`absolute inset-0 opacity-45 ${d.bg}`}
+                    style={{ opacity: 0.35 }}
+                    className={`absolute inset-0 ${d.bg}`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
