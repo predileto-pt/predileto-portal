@@ -18,7 +18,7 @@ export function PropertyFeedCard({ property, locale }: PropertyFeedCardProps) {
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;
   const cardDict = (dict as unknown as Record<string, Record<string, string>>)
     .feedCard;
-  const detailHref = `/${locale}/imovel/${property.id}`;
+  const detailHref = `/imovel/${property.id}`;
 
   const sourceName = property.sources?.[0]?.name ?? "";
   const initials = sourceName

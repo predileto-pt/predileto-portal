@@ -75,7 +75,7 @@ export function HomePromptExamples({
 
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {prompts.map((p, i) => {
-            const href = `/${locale}/${p.mode}?q=${encodeURIComponent(p.text)}`;
+            const href = `/${p.mode}?q=${encodeURIComponent(p.text)}`;
             return (
               <li key={i}>
                 <Link
@@ -398,7 +398,7 @@ export function HomeFinalCta({
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
-                href={`/${locale}/comprar`}
+                href={`/comprar`}
                 className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-bold font-heading bg-white text-primary shadow-md transition-opacity hover:opacity-90"
               >
                 {copy.primary}

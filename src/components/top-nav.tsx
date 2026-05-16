@@ -26,12 +26,12 @@ export function TopNav({ locale }: { locale: Locale }) {
     >
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4 lg:gap-6">
-        <Link href={`/${locale}`} className="text-base font-bold font-heading">
+        <Link href={`/`} className="text-base font-bold font-heading">
           {dict.nav.title}
         </Link>
         <div className="flex gap-4">
           {navItems.map((item) => {
-            const href = `/${locale}/${item.href}`;
+            const href = `/${item.href}`;
             const active = pathname.startsWith(href);
             return (
               <Link
@@ -52,10 +52,10 @@ export function TopNav({ locale }: { locale: Locale }) {
       </div>
       <div className="flex items-center gap-4">
         <Link
-          href={`/${locale}/imobiliarias`}
+          href={`/imobiliarias`}
           className={cn(
             "text-base font-heading flex items-center gap-1",
-            pathname.startsWith(`/${locale}/imobiliarias`)
+            pathname.startsWith(`/imobiliarias`)
               ? "font-bold text-black underline underline-offset-4"
               : "text-black",
           )}

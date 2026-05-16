@@ -68,7 +68,7 @@ export function LocationTreeSection({
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
             {country.districts.map((district) => {
-              const districtHref = `/${locale}/${mode}?district=${encodeURIComponent(
+              const districtHref = `/${mode}?district=${encodeURIComponent(
                 district.name,
               )}`;
               return (
@@ -93,7 +93,7 @@ export function LocationTreeSection({
                   <div className="h-px w-12 bg-primary/40 mb-3" />
                   <p className="text-xs text-ink-secondary leading-relaxed">
                     {district.municipalities.map((m, i) => {
-                      const href = `/${locale}/${mode}?district=${encodeURIComponent(
+                      const href = `/${mode}?district=${encodeURIComponent(
                         district.name,
                       )}&municipality=${encodeURIComponent(m.name)}`;
                       return (

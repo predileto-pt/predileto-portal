@@ -60,7 +60,7 @@ export async function SearchPage({
 
   const breadcrumbs = buildBreadcrumbs(resolved, locale, listingSlug);
   const basePath =
-    `/${locale}/${listingSlug}` +
+    `/${listingSlug}` +
     (locationSlugs.length > 0 ? `/${locationSlugs.join("/")}` : "");
   const currentUrl = (() => {
     const qs = new URLSearchParams();
@@ -121,9 +121,9 @@ export async function SearchPage({
         <LocationBreadcrumbs
           items={breadcrumbs}
           homeLabel={(dict as unknown as Record<string, Record<string, string>>).breadcrumbs?.home ?? "Home"}
-          homeHref={`/${locale}`}
+          homeHref={`/`}
           listingLabel={listingLabel}
-          listingHref={`/${locale}/${listingSlug}`}
+          listingHref={`/${listingSlug}`}
         />
         <h1 className="text-sm font-bold mb-4">{title}</h1>
         {hasFilters ? (

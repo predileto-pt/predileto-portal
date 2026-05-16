@@ -131,7 +131,7 @@ function ResultCard({
   const registerRef = useRegisterActiveProperty(item.id);
 
   const commentCount = item.comments?.length ?? 0;
-  const detailHref = `/${locale}/imovel/${item.id}`;
+  const detailHref = `/imovel/${item.id}`;
   const media: ResultMediaItem[] =
     item.media && item.media.length > 0
       ? item.media
