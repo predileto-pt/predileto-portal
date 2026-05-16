@@ -8,11 +8,9 @@ interface Destination {
   /** Eyebrow shown above the name — region, vibe, or count. */
   tagline: string;
   /**
-   * Image path relative to /public — e.g. `/destinations/lisboa.jpg`.
+   * Image path relative to /public — e.g. `/images/lisboa.jpeg`.
    * Optional: when omitted, the card renders just the gradient + name
    * overlay, which is also the fallback if the image fails to load.
-   * Drop a 900×1125 (4:5) jpg/webp into `public/destinations/` and add
-   * the path here.
    */
   image?: string;
   /** Tailwind class for the gradient behind the image. */
@@ -24,48 +22,56 @@ const DESTINATIONS: Destination[] = [
     name: "Lisboa",
     district: "Lisboa",
     tagline: "Capital · histórica",
+    image: "/images/lisboa.jpeg",
     bg: "bg-gradient-to-br from-amber-200 to-rose-300",
   },
   {
     name: "Porto",
     district: "Porto",
     tagline: "Douro · vinho",
+    image: "/images/porto.jpeg",
     bg: "bg-gradient-to-br from-orange-200 to-amber-300",
   },
   {
     name: "Algarve",
     district: "Faro",
     tagline: "Sul · costa atlântica",
+    image: "/images/algarve.jpg",
     bg: "bg-gradient-to-br from-sky-200 to-cyan-300",
   },
   {
     name: "Sintra",
     district: "Lisboa",
     tagline: "Serra · palácios",
+    image: "/images/sintra.jpeg",
     bg: "bg-gradient-to-br from-emerald-200 to-teal-300",
   },
   {
     name: "Coimbra",
     district: "Coimbra",
     tagline: "Universitária",
+    image: "/images/coimbra.jpg",
     bg: "bg-gradient-to-br from-stone-200 to-amber-200",
   },
   {
     name: "Braga",
     district: "Braga",
     tagline: "Minho · barroca",
+    image: "/images/braga.jpg",
     bg: "bg-gradient-to-br from-amber-100 to-orange-200",
   },
   {
     name: "Cascais",
     district: "Lisboa",
     tagline: "Linha · costa",
+    image: "/images/cascais.jpeg",
     bg: "bg-gradient-to-br from-blue-200 to-indigo-200",
   },
   {
     name: "Madeira",
     district: "Madeira",
     tagline: "Ilha · atlântica",
+    image: "/images/madeira.jpeg",
     bg: "bg-gradient-to-br from-emerald-300 to-cyan-400",
   },
 ];
