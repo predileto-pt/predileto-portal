@@ -1,19 +1,9 @@
-"use client";
+import { AISearchClient } from "@/components/ai-search-client";
+import { getServerLocale } from "@/lib/server-locale";
 
-import dynamic from "next/dynamic";
-import { useLocale } from "@/lib/locale-context";
-
-const AISearchPage = dynamic(
-  () => import("@/components/ai-search-page").then((m) => m.AISearchPage),
-  { ssr: false },
-);
-
-export default function HomePage() {
-  // Home renders the same hero + featured-destinations + location-tree
-  // experience that lives at /arrendar (AISearchPage). Default mode is
-  // "rent" — the page's internal search UI handles switching intent
-  // via the prompt. If we want an explicit buy/rent toggle at the top
-  // of the page, that's a follow-up.
-  const { locale } = useLocale();
-  return <AISearchPage listingType="rent" locale={locale} />;
+export default async function HomePage() {
+  const locale = await getServerLocale();
+  // Home defaults to rent. Users switch listing type via the AI search
+  // UI or by navigating to /comprar.
+  return <AISearchClient listingType="rent" locale={locale} />;
 }

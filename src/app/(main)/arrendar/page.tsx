@@ -1,5 +1,6 @@
-import { SearchPage } from "@/components/search-page";
+import { AISearchClient } from "@/components/ai-search-client";
 import { getServerLocale } from "@/lib/server-locale";
+import { pickLocationFromSearchParams } from "@/lib/locations";
 
 export const dynamic = "force-dynamic";
 
@@ -10,16 +11,15 @@ export default async function ArrendarPage({
 }) {
   const locale = await getServerLocale();
   const sp = await searchParams;
+  const initialQuery = typeof sp.q === "string" ? sp.q : undefined;
+  const initialLocation = pickLocationFromSearchParams(sp);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-3 lg:px-6 lg:py-4">
-      <SearchPage
-        locationSlugs={[]}
-        listingType="rent"
-        listingSlug="arrendar"
-        locale={locale}
-        searchParams={sp}
-      />
-    </div>
+    <AISearchClient
+      listingType="rent"
+      locale={locale}
+      initialQuery={initialQuery}
+      initialLocation={initialLocation}
+    />
   );
 }
