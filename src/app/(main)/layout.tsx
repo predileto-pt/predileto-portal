@@ -1,20 +1,18 @@
 import { PrototypeBanner } from "@/components/prototype-banner";
 import { TopNav } from "@/components/top-nav";
-import type { Locale } from "@/lib/i18n";
+import { getServerLocale } from "@/lib/server-locale";
 
 export default async function MainLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const locale = await getServerLocale();
 
   return (
     <>
       <PrototypeBanner />
-      <TopNav locale={locale as Locale} />
+      <TopNav locale={locale} />
       <main>{children}</main>
     </>
   );

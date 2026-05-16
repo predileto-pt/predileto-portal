@@ -34,7 +34,7 @@ export function SearchBar({
     (slugs: string[]) => {
       const params = new URLSearchParams(searchParams.toString());
       params.delete("page");
-      const base = `/${locale}/${listingSlug}`;
+      const base = `/${listingSlug}`;
       const path = slugs.length > 0 ? `${base}/${slugs.join("/")}` : base;
       const qs = params.toString();
       router.push(qs ? `${path}?${qs}` : path);

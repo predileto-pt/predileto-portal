@@ -23,7 +23,7 @@ export function Step5Success({ locale }: Step5Props) {
       <p className="text-sm text-gray-600">{d.successMessage}</p>
 
       <Link
-        href={`/${locale}`}
+        href={`/`}
         className="inline-block py-2.5 px-6 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
       >
         {d.backToHome}

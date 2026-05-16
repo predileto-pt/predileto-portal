@@ -236,7 +236,7 @@ export function AISearchPage({
       const loc = locationParam(payload.location);
       if (loc) params.set(loc.key, loc.value);
       const qs = params.toString();
-      router.push(`/${locale}/${target}${qs ? `?${qs}` : ""}`);
+      router.push(`/${target}${qs ? `?${qs}` : ""}`);
       return;
     }
     void handleSearch(payload);

@@ -18,7 +18,7 @@ export function BlogSidebar({ locale, posts }: BlogSidebarProps) {
         {posts.map((post) => (
           <li key={post.slug}>
             <Link
-              href={`/${locale}/blog/${post.slug}`}
+              href={`/blog/${post.slug}`}
               className="hover:underline underline-offset-2"
             >
               <span className="text-sm text-gray-600">{post.title}</span>

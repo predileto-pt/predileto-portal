@@ -12,7 +12,7 @@ export function ListingToggle({ locale }: { locale: string }) {
   return (
     <div className="flex gap-3 text-sm">
       <Link
-        href={`/${locale}/comprar`}
+        href={`/comprar`}
         className={
           !isRent
             ? "font-bold underline underline-offset-4"
@@ -22,7 +22,7 @@ export function ListingToggle({ locale }: { locale: string }) {
         {dict.nav.buy}
       </Link>
       <Link
-        href={`/${locale}/arrendar`}
+        href={`/arrendar`}
         className={
           isRent
             ? "font-bold underline underline-offset-4"

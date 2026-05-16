@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n";
+import { getServerLocale } from "@/lib/server-locale";
 import {
   fetchListedPropertyById,
   mapListedToProperty,
@@ -9,12 +9,13 @@ import {
 import { PropertyDetailClient } from "./property-detail-client";
 
 interface PageProps {
-  params: Promise<{ locale: string; id: string }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function PropertyDetailPage({ params }: PageProps) {
-  const { locale, id } = await params;
-  const dict = await getDictionary(locale as Locale);
+  const locale = await getServerLocale();
+  const { id } = await params;
+  const dict = await getDictionary(locale);
 
   const listed = await fetchListedPropertyById(id);
   if (!listed) notFound();

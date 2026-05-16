@@ -42,7 +42,7 @@ export function HomeHero({ locale, copy }: HomeHeroProps) {
 
   function submit() {
     if (!canSubmit) return;
-    const path = `/${locale}/${routeFor[mode]}`;
+    const path = `/${routeFor[mode]}`;
     const qs = new URLSearchParams({ q: query.trim() }).toString();
     router.push(`${path}?${qs}`);
   }

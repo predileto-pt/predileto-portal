@@ -110,8 +110,8 @@ export function PropertyDetailClient({
 
   const backHref =
     property.listingType === "rent"
-      ? `/${locale}/arrendar`
-      : `/${locale}/comprar`;
+      ? `/arrendar`
+      : `/comprar`;
 
   const d = dict.propertyDetail as Record<string, string>;
   const propertyTypesDict = dict.propertyTypes as Record<string, string>;

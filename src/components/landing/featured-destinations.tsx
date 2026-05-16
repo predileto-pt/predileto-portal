@@ -119,7 +119,7 @@ export function FeaturedDestinations({
 
         <ul className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
           {DESTINATIONS.map((d, i) => {
-            const href = `/${locale}/${mode}?district=${encodeURIComponent(d.district)}`;
+            const href = `/${mode}?district=${encodeURIComponent(d.district)}`;
             // Slight vertical offset on alternating cards for editorial feel
             const offset = i % 4 === 1 || i % 4 === 2 ? "lg:translate-y-6" : "";
             return (

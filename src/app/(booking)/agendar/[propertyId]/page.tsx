@@ -1,11 +1,13 @@
 import { BookingClientPage } from "@/components/booking/booking-client-page";
+import { getServerLocale } from "@/lib/server-locale";
 
 export default async function BookingPage({
   params,
 }: {
-  params: Promise<{ locale: string; propertyId: string }>;
+  params: Promise<{ propertyId: string }>;
 }) {
-  const { locale, propertyId } = await params;
+  const locale = await getServerLocale();
+  const { propertyId } = await params;
 
   return <BookingClientPage locale={locale} propertyId={propertyId} />;
 }

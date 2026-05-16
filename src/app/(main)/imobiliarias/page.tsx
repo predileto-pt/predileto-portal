@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation";
-import { isValidLocale, getDictionary, type Locale } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n";
+import { getServerLocale } from "@/lib/server-locale";
 import { ScreenshotCarousel } from "@/components/screenshot-carousel";
 import { HeroAuroraBackground } from "@/components/landing/hero-aurora-background";
 import {
@@ -26,15 +26,9 @@ function getScreenshots(): string[] {
     .map((f) => `/screenshots/${f}`);
 }
 
-export default async function AgenciesPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  if (!isValidLocale(locale)) notFound();
-
-  const dict = await getDictionary(locale as Locale);
+export default async function AgenciesPage() {
+  const locale = await getServerLocale();
+  const dict = await getDictionary(locale);
   const ag = (dict as unknown as Record<string, Record<string, string>>).agencies;
   const screenshots = getScreenshots();
 

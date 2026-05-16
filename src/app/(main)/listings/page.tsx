@@ -1,14 +1,11 @@
 import { fetchPublicProperties, type ListedProperty } from "@/lib/estate-os";
 import { formatPrice, formatArea } from "@/lib/utils";
+import { getServerLocale } from "@/lib/server-locale";
 
 export const dynamic = "force-dynamic";
 
-export default async function ListingsPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+export default async function ListingsPage() {
+  const locale = await getServerLocale();
   const result = await fetchPublicProperties({ limit: 20 });
 
   return (

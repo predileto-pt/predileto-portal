@@ -17,7 +17,7 @@ interface LocationBrowserProps {
 
 export function LocationBrowser({ locale, listingSlug }: LocationBrowserProps) {
   const regions = getRegions();
-  const base = `/${locale}/${listingSlug}`;
+  const base = `/${listingSlug}`;
 
   return (
     <div className="py-4 text-sm">

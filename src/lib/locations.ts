@@ -126,7 +126,7 @@ export function buildBreadcrumbs(
   listingSlug: string,
 ): BreadcrumbItem[] {
   const crumbs: BreadcrumbItem[] = [];
-  let path = `/${locale}/${listingSlug}`;
+  let path = `/${listingSlug}`;
 
   if (resolved.region) {
     path += `/${resolved.region.slug}`;
