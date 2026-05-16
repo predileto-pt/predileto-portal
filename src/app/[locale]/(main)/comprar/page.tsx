@@ -27,6 +27,7 @@ export default function ComprarPage({
       locale={locale}
       initialQuery={initialQuery}
       initialLocation={initialLocation}
+      landingMode="subheader"
     />
   );
 }

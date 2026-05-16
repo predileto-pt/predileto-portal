@@ -54,6 +54,18 @@ interface AISearchPageProps {
   locale: string;
   initialQuery?: string;
   initialLocation?: LocationSelection | null;
+  /**
+   * Picks the pre-search UI:
+   * - "editorial" (default) → renders <UnsearchedLanding>: hero
+   *   prompt, featured destinations, location tree. Suited to the
+   *   home page where discoverability matters.
+   * - "subheader" → skips the editorial intro. Renders the same
+   *   subheader-based layout as the post-search state, with empty
+   *   SearchResults. Suited to /arrendar and /comprar where the
+   *   user already chose a listing type and expects search controls
+   *   immediately.
+   */
+  landingMode?: "editorial" | "subheader";
 }
 
 type SearchError =
@@ -102,6 +114,7 @@ export function AISearchPage({
   locale,
   initialQuery,
   initialLocation = null,
+  landingMode = "editorial",
 }: AISearchPageProps) {
   const router = useRouter();
   const [messages, setMessages] = useAtom(messagesAtom(listingType));
@@ -268,7 +281,10 @@ export function AISearchPage({
     return Array.from(set).sort((a, b) => a - b);
   }, [results]);
 
-  if (!hasSearched) {
+  // Editorial landing intercepts the pre-search render. The "subheader"
+  // mode (used on /arrendar and /comprar) skips it so users see the
+  // SearchSubheader immediately and can search without an intro screen.
+  if (!hasSearched && landingMode === "editorial") {
     return (
       <UnsearchedLanding
         listingType={listingType}

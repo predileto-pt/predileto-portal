@@ -27,6 +27,7 @@ export default function ArrendarPage({
       locale={locale}
       initialQuery={initialQuery}
       initialLocation={initialLocation}
+      landingMode="subheader"
     />
   );
 }
