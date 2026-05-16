@@ -23,6 +23,7 @@ export const sessionViewSchema = z.object({
   capabilities: z.array(CAPABILITY),
   prefs: z.record(z.string(), z.unknown()),
   favorites: z.array(z.string()),
+  cookies_consent: z.enum(["accepted", "declined"]).nullable().optional(),
   limits: LIMITS.optional(),
 }) satisfies z.ZodType<SessionView>;
 

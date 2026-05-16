@@ -7,11 +7,25 @@ import {
   getConsent,
   setConsent,
   subscribeConsent,
+  type ConsentValue,
 } from "@/lib/cookie-consent";
+import { patchSession } from "@/lib/session/api";
 
 export function CookieConsentModal() {
   const dict = useDictionary();
   const c = dict.cookieConsent;
+
+  function recordDecision(value: Exclude<ConsentValue, "undecided">) {
+    // Local cookie first — gates PostHog and dismisses the banner without
+    // waiting for the network. Server PATCH is fire-and-forget so the
+    // banner UX isn't blocked by a slow API or a missing base URL.
+    setConsent(value);
+    void patchSession({ cookies_consent: value }).catch(() => {
+      // Failure is acceptable: the local cookie still drives runtime
+      // behavior, and the next session bootstrap will see the FE's
+      // intent if we ever rewire to push from there.
+    });
+  }
 
   // Mount marker — needed because consent is read from `document.cookie`
   // and we must not render the banner during SSR (would flash for users
@@ -50,14 +64,14 @@ export function CookieConsentModal() {
         <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
           <button
             type="button"
-            onClick={() => setConsent("declined")}
+            onClick={() => recordDecision("declined")}
             className="text-xs font-heading font-semibold px-4 py-2 border border-rule hover:bg-paper-muted transition-colors"
           >
             {c.decline}
           </button>
           <button
             type="button"
-            onClick={() => setConsent("accepted")}
+            onClick={() => recordDecision("accepted")}
             className="text-xs font-heading font-semibold px-4 py-2 bg-ink text-white hover:bg-ink-secondary transition-colors"
           >
             {c.accept}
