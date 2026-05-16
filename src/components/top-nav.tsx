@@ -26,7 +26,11 @@ export function TopNav({ locale }: { locale: Locale }) {
     >
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4 lg:gap-6">
-        <Link href={`/`} className="text-base font-bold font-heading">
+        <Link
+          href="/"
+          aria-label={dict.nav.title}
+          className="text-base font-bold font-heading hover:text-ink-secondary transition-colors"
+        >
           {dict.nav.title}
         </Link>
         <div className="flex gap-4">
